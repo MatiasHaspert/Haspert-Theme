@@ -14,20 +14,36 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
-        "item_dGx3De": {
+        "item_orig": {
           "type": "item",
           "settings": {
-            "text": "💥 Oferta Navideña limitada: 50% OFF. 🌙 Calma, descanso y compañía para quienes más amás · 50% OFF disponible hoy",
+            "text": "✅ Originalidad garantizada",
+            "link": ""
+          }
+        },
+        "item_envio": {
+          "type": "item",
+          "settings": {
+            "text": "🚚 Envíos a todo el país",
+            "link": ""
+          }
+        },
+        "item_cuotas": {
+          "type": "item",
+          "settings": {
+            "text": "💳 Hasta 3 cuotas sin interés",
             "link": ""
           }
         }
       },
       "block_order": [
-        "item_dGx3De"
+        "item_orig",
+        "item_envio",
+        "item_cuotas"
       ],
       "settings": {
-        "bg_color": "#edffa7",
-        "text_color": "#2e2a39",
+        "bg_color": "#16120F",
+        "text_color": "#FBF8F3",
         "font_size": 16,
         "speed": 10,
         "speed_mobile": 10,

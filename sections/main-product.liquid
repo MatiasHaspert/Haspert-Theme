@@ -1,0 +1,722 @@
+{%- comment -%}
+  Main product (PDP) — Perfumería
+  Reconstruye la sección main-product de Sense usando el stack JS intacto
+  (product-info.js, product-form.js, media-gallery.js, global.js > variant-selects)
+  y suma la ficha olfativa desde metafields custom.* + ladder de presentaciones ($/ml)
+  + garantía de originalidad. Precios SIEMPRE desde Shopify (variant.price | money).
+{%- endcomment -%}
+
+{%- liquid
+  assign product_form_id = 'product-form-' | append: section.id
+  assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src'
+  if section.settings.media_position == 'right'
+    assign media_position = 'right'
+  else
+    assign media_position = 'left'
+  endif
+-%}
+
+<product-info
+  id="MainProduct-{{ section.id }}"
+  class="section-{{ section.id }}-padding"
+  data-section="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-url="{{ product.url }}"
+  data-update-url="true"
+  {% if section.settings.image_zoom == 'hover' %}
+    data-zoom-on-hover
+  {% endif %}
+>
+  {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+  {{ 'component-price.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+  {{ 'component-rating.css' | asset_url | stylesheet_tag }}
+  {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+  {%- unless product.has_only_default_variant -%}
+    {{ 'component-product-variant-picker.css' | asset_url | stylesheet_tag }}
+    {{ 'component-swatch.css' | asset_url | stylesheet_tag }}
+    {{ 'component-swatch-input.css' | asset_url | stylesheet_tag }}
+  {%- endunless -%}
+
+  {%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+    #MainProduct-{{ section.id }} {
+      --perfume-accent: {{ section.settings.accent_color }};
+    }
+  {%- endstyle -%}
+
+  <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  {%- if product.media.size > 0 -%}
+    <script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'product-modal.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+  {%- if section.settings.image_zoom == 'hover' -%}
+    <script id="EnableZoomOnHover" src="{{ 'magnify.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+  {%- if request.design_mode -%}
+    <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  <section class="color-{{ section.settings.color_scheme }} gradient">
+    <div class="page-width">
+      <div class="product product--{{ section.settings.media_size }} grid grid--1-col product--{{ media_position }}{% if product.media.size > 0 %} grid--2-col-tablet{% else %} product--no-media{% endif %}">
+        {%- comment -%} ---------- Media ---------- {%- endcomment -%}
+        <div class="grid__item product__media-wrapper">
+          {%- if product.media.size > 0 -%}
+            {% render 'product-media-gallery', product: product, variant_images: variant_images %}
+          {%- else -%}
+            <div class="product__media-item">
+              <div class="product-media-container global-media-settings gradient" style="--ratio: 1.0; --preview-ratio: 1.0;">
+                {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} ---------- Info ---------- {%- endcomment -%}
+        <div class="product__info-wrapper grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+          <section
+            id="ProductInfo-{{ section.id }}"
+            class="product__info-container"
+            data-section="{{ section.id }}"
+            data-url="{{ product.url }}"
+          >
+            {%- if product.vendor != blank -%}
+              <a class="perfume-vendor caption-with-letter-spacing" href="{{ routes.collections_url }}/vendors?q={{ product.vendor | url_encode }}">
+                {{- product.vendor -}}
+              </a>
+            {%- endif -%}
+
+            <h1 class="product__title perfume-title">{{ product.title | escape }}</h1>
+
+            {%- comment -%} Rating (lo poblará la app de reviews vía metafield reviews.rating) {%- endcomment -%}
+            {%- if product.metafields.reviews.rating.value != blank -%}
+              {% liquid
+                assign rating_decimal = 0
+                assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1
+                if decimal >= 0.3 and decimal <= 0.7
+                  assign rating_decimal = 0.5
+                elsif decimal > 0.7
+                  assign rating_decimal = 1
+                endif
+              %}
+              <div class="rating-wrapper">
+                <div
+                  class="rating"
+                  role="img"
+                  aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="rating-star"
+                    style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"
+                  ></span>
+                </div>
+                <p class="rating-text caption">
+                  <span aria-hidden="true">
+                    {{- product.metafields.reviews.rating.value }} / {{ product.metafields.reviews.rating.value.scale_max -}}
+                  </span>
+                </p>
+                <p class="rating-count caption">
+                  <span aria-hidden="true">({{ product.metafields.reviews.rating_count }})</span>
+                </p>
+              </div>
+            {%- endif -%}
+
+            <div id="price-{{ section.id }}" role="status">
+              {%- render 'price',
+                product: product,
+                use_variant: true,
+                show_badges: true,
+                price_class: 'price--large'
+              -%}
+            </div>
+
+            {%- if shop.shipping_policy.body != blank -%}
+              <div class="product__tax caption rte">
+                {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} ---------- Variant picker (Presentación, pills) ---------- {%- endcomment -%}
+            {%- unless product.has_only_default_variant -%}
+              {%- assign picker_type = section.settings.picker_type -%}
+              <variant-selects id="variant-selects-{{ section.id }}" data-section="{{ section.id }}">
+                {%- for option in product.options_with_values -%}
+                  {%- if picker_type == 'dropdown' -%}
+                    <div class="product-form__input product-form__input--dropdown">
+                      <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+                        {{ option.name }}
+                      </label>
+                      <div class="select">
+                        <select
+                          id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                          class="select__select"
+                          name="options[{{ option.name | escape }}]"
+                          form="{{ product_form_id }}"
+                        >
+                          {% render 'product-variant-options', product: product, option: option, picker_type: 'dropdown' %}
+                        </select>
+                        <span class="svg-wrapper">
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </span>
+                      </div>
+                    </div>
+                  {%- else -%}
+                    <fieldset class="js product-form__input product-form__input--pill">
+                      <legend class="form__label">{{ option.name }}</legend>
+                      {% render 'product-variant-options', product: product, option: option, picker_type: 'button' %}
+                    </fieldset>
+                  {%- endif -%}
+                {%- endfor -%}
+
+                <script type="application/json" data-selected-variant>
+                  {{ product.selected_or_first_available_variant | json }}
+                </script>
+              </variant-selects>
+            {%- endunless -%}
+
+            {%- comment -%} ---------- Buy buttons ---------- {%- endcomment -%}
+            <product-form class="product-form" data-section-id="{{ section.id }}">
+              <div class="product-form__error-message-wrapper" role="alert" hidden>
+                <span class="svg-wrapper">
+                  {{- 'icon-error.svg' | inline_asset_content -}}
+                </span>
+                <span class="product-form__error-message"></span>
+              </div>
+
+              {%- form 'product',
+                product,
+                id: product_form_id,
+                class: 'form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+              -%}
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ product.selected_or_first_available_variant.id }}"
+                  {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
+                  class="product-variant-id"
+                >
+                <div class="product-form__buttons">
+                  <button
+                    id="ProductSubmitButton-{{ section.id }}"
+                    type="submit"
+                    name="add"
+                    class="product-form__submit button button--full-width {% if section.settings.show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
+                    {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
+                  >
+                    <span>
+                      {%- if product.selected_or_first_available_variant == null -%}
+                        {{ 'products.product.unavailable' | t }}
+                      {%- elsif product.selected_or_first_available_variant.available == false -%}
+                        {{ 'products.product.sold_out' | t }}
+                      {%- else -%}
+                        {{ 'products.product.add_to_cart' | t }}
+                      {%- endif -%}
+                    </span>
+                    {%- render 'loading-spinner' -%}
+                  </button>
+                  {%- if section.settings.show_dynamic_checkout -%}
+                    {{ form | payment_button }}
+                  {%- endif -%}
+                </div>
+              {%- endform -%}
+            </product-form>
+
+            {%- comment -%} ---------- Garantía de originalidad (objeción #1) ---------- {%- endcomment -%}
+            {%- if section.settings.show_originality and product.metafields.custom.original_garantizado.value -%}
+              <div class="perfume-originality">
+                <span class="perfume-originality__icon svg-wrapper">
+                  {{- 'icon-padlock.svg' | inline_asset_content -}}
+                </span>
+                <div class="perfume-originality__body">
+                  <p class="perfume-originality__title">{{ section.settings.originality_heading }}</p>
+                  {%- if section.settings.originality_text != blank -%}
+                    <div class="perfume-originality__text rte">{{ section.settings.originality_text }}</div>
+                  {%- endif -%}
+                  {%- if product.metafields.custom.pais_origen.value != blank -%}
+                    <p class="perfume-originality__origin">
+                      <span class="svg-wrapper">{{- 'icon-map-pin.svg' | inline_asset_content -}}</span>
+                      {{ product.metafields.custom.pais_origen.value }}
+                    </p>
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} ---------- Ficha olfativa (chips) ---------- {%- endcomment -%}
+            {%- if section.settings.show_facts -%}
+              {%- assign m_familia = product.metafields.custom.familia_olfativa.value -%}
+              {%- assign m_genero = product.metafields.custom.genero.value -%}
+              {%- assign m_conc = product.metafields.custom.concentracion.value -%}
+              {%- assign m_longev = product.metafields.custom.longevidad.value -%}
+              {%- assign m_estela = product.metafields.custom.estela.value -%}
+              {%- if m_familia != blank or m_genero != blank or m_conc != blank or m_longev != blank or m_estela != blank -%}
+                <ul class="perfume-chips list-unstyled">
+                  {%- if m_familia != blank -%}
+                    {%- for f in m_familia -%}<li class="perfume-chip">{{ f }}</li>{%- endfor -%}
+                  {%- endif -%}
+                  {%- if m_genero != blank -%}<li class="perfume-chip">{{ m_genero }}</li>{%- endif -%}
+                  {%- if m_conc != blank -%}<li class="perfume-chip">{{ m_conc }}</li>{%- endif -%}
+                  {%- if m_longev != blank -%}<li class="perfume-chip perfume-chip--accent">{{ m_longev }}</li>{%- endif -%}
+                  {%- if m_estela != blank -%}<li class="perfume-chip perfume-chip--accent">{{ m_estela }}</li>{%- endif -%}
+                </ul>
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- comment -%} ---------- Pirámide olfativa ---------- {%- endcomment -%}
+            {%- if section.settings.show_pyramid -%}
+              {%- assign n_salida = product.metafields.custom.notas_salida.value -%}
+              {%- assign n_corazon = product.metafields.custom.notas_corazon.value -%}
+              {%- assign n_fondo = product.metafields.custom.notas_fondo.value -%}
+              {%- if n_salida != blank or n_corazon != blank or n_fondo != blank -%}
+                <div class="perfume-pyramid">
+                  {%- if section.settings.pyramid_heading != blank -%}
+                    <p class="perfume-section-title">{{ section.settings.pyramid_heading }}</p>
+                  {%- endif -%}
+                  {%- if n_salida != blank -%}
+                    <div class="perfume-pyramid__tier">
+                      <span class="perfume-pyramid__label">{{ section.settings.label_top }}</span>
+                      <span class="perfume-pyramid__notes">{{ n_salida | join: ' · ' }}</span>
+                    </div>
+                  {%- endif -%}
+                  {%- if n_corazon != blank -%}
+                    <div class="perfume-pyramid__tier">
+                      <span class="perfume-pyramid__label">{{ section.settings.label_heart }}</span>
+                      <span class="perfume-pyramid__notes">{{ n_corazon | join: ' · ' }}</span>
+                    </div>
+                  {%- endif -%}
+                  {%- if n_fondo != blank -%}
+                    <div class="perfume-pyramid__tier">
+                      <span class="perfume-pyramid__label">{{ section.settings.label_base }}</span>
+                      <span class="perfume-pyramid__notes">{{ n_fondo | join: ' · ' }}</span>
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- comment -%} ---------- Ladder de presentaciones ($/ml) ---------- {%- endcomment -%}
+            {%- if section.settings.show_ladder and product.has_only_default_variant == false -%}
+              <div class="perfume-ladder">
+                {%- if section.settings.ladder_heading != blank -%}
+                  <p class="perfume-section-title">{{ section.settings.ladder_heading }}</p>
+                {%- endif -%}
+                <ul class="perfume-ladder__list list-unstyled">
+                  {%- for variant in product.variants -%}
+                    {%- if variant.price > 0 -%}
+                      {%- assign vtitle = variant.title | downcase -%}
+                      {%- assign ml = vtitle | split: 'ml' | first | split: ' ' | last | times: 1 -%}
+                      <li class="perfume-ladder__row{% if variant.id == product.selected_or_first_available_variant.id %} is-selected{% endif %}">
+                        <span class="perfume-ladder__name">{{ variant.title }}</span>
+                        <span class="perfume-ladder__price">{{ variant.price | money }}</span>
+                        {%- if ml > 0 -%}
+                          <span class="perfume-ladder__perml">{{ variant.price | divided_by: ml | money }}/ml</span>
+                        {%- endif -%}
+                      </li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+
+            {%- if product.description != blank -%}
+              <div class="perfume-description rte">{{ product.description }}</div>
+            {%- endif -%}
+
+            {%- comment -%} ---------- Equivalencia "inspirado en" (LEGAL: opcional, copy prudente) ---------- {%- endcomment -%}
+            {%- if product.metafields.custom.inspirado_en.value != blank -%}
+              <p class="perfume-inspired">
+                {{ section.settings.inspired_prefix }} {{ product.metafields.custom.inspirado_en.value }}.
+              </p>
+            {%- endif -%}
+
+            {%- comment -%} App blocks (ej. widget de la app de reviews) {%- endcomment -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == '@app' -%}
+                {% render block %}
+              {%- endif -%}
+            {%- endfor -%}
+          </section>
+        </div>
+      </div>
+      {% render 'product-media-modal', product: product, variant_images: variant_images %}
+    </div>
+  </section>
+
+  <script type="application/ld+json">
+    {{ product | structured_data }}
+  </script>
+</product-info>
+
+{% stylesheet %}
+.perfume-vendor {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  text-decoration: none;
+  opacity: 0.75;
+}
+.perfume-vendor:hover { opacity: 1; }
+.perfume-title { margin: 0 0 1rem; }
+.perfume-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.6rem 0 0;
+  padding: 0;
+}
+.perfume-chip {
+  font-size: 1.2rem;
+  letter-spacing: 0.04rem;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.18);
+  border-radius: var(--badge-corner-radius, 0.2rem);
+  line-height: 1.2;
+}
+.perfume-chip--accent {
+  border-color: var(--perfume-accent);
+  color: var(--perfume-accent);
+}
+.perfume-section-title {
+  font-size: 1.3rem;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin: 0 0 0.8rem;
+}
+.perfume-pyramid { margin-top: 2.2rem; }
+.perfume-pyramid__tier {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.1);
+}
+.perfume-pyramid__label {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06rem;
+  opacity: 0.6;
+  align-self: center;
+}
+.perfume-pyramid__notes { font-weight: 500; }
+.perfume-originality {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 1.8rem;
+  padding: 1.4rem 1.6rem;
+  border: 0.1rem solid var(--perfume-accent);
+  border-radius: var(--media-radius, 0.4rem);
+  background: rgba(var(--color-foreground), 0.02);
+}
+.perfume-originality__icon { color: var(--perfume-accent); flex-shrink: 0; }
+.perfume-originality__icon .icon { width: 2.2rem; height: 2.2rem; }
+.perfume-originality__title { font-weight: 600; margin: 0 0 0.3rem; }
+.perfume-originality__text { font-size: 1.4rem; opacity: 0.85; }
+.perfume-originality__text > * { margin: 0; }
+.perfume-originality__origin {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+  opacity: 0.7;
+  margin: 0.6rem 0 0;
+}
+.perfume-originality__origin .icon { width: 1.4rem; height: 1.4rem; }
+.perfume-ladder { margin-top: 2.2rem; }
+.perfume-ladder__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.12);
+  border-radius: var(--media-radius, 0.4rem);
+  margin-bottom: 0.6rem;
+}
+.perfume-ladder__row.is-selected {
+  border-color: var(--perfume-accent);
+  box-shadow: inset 0 0 0 0.1rem var(--perfume-accent);
+}
+.perfume-ladder__name { font-weight: 500; flex: 1 1 auto; }
+.perfume-ladder__price { font-weight: 600; }
+.perfume-ladder__perml {
+  font-size: 1.2rem;
+  opacity: 0.6;
+  flex-basis: 100%;
+  text-align: right;
+}
+.perfume-description { margin-top: 2.2rem; }
+.perfume-inspired {
+  font-style: italic;
+  font-size: 1.3rem;
+  opacity: 0.7;
+  margin-top: 1.6rem;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Producto (perfume)",
+  "tag": "section",
+  "class": "section",
+  "templates": ["product"],
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color de acento (oro/marca)",
+      "default": "#C2A24C"
+    },
+    {
+      "type": "header",
+      "content": "Galería de imágenes"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Posición de la galería (desktop)",
+      "options": [
+        { "value": "left", "label": "Izquierda" },
+        { "value": "right", "label": "Derecha" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "gallery_layout",
+      "label": "Layout de la galería",
+      "options": [
+        { "value": "stacked", "label": "Apilada" },
+        { "value": "thumbnail_slider", "label": "Slider con miniaturas" },
+        { "value": "thumbnail", "label": "Miniaturas" }
+      ],
+      "default": "thumbnail_slider"
+    },
+    {
+      "type": "select",
+      "id": "media_size",
+      "label": "Tamaño de la galería",
+      "options": [
+        { "value": "small", "label": "Chico" },
+        { "value": "medium", "label": "Medio" },
+        { "value": "large", "label": "Grande" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Ajuste de imagen",
+      "options": [
+        { "value": "contain", "label": "Contener" },
+        { "value": "cover", "label": "Cubrir" }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "checkbox",
+      "id": "constrain_to_viewport",
+      "label": "Limitar alto al viewport",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "mobile_thumbnails",
+      "label": "Miniaturas en mobile",
+      "options": [
+        { "value": "columns", "label": "Columnas" },
+        { "value": "show", "label": "Mostrar" },
+        { "value": "hide", "label": "Ocultar" }
+      ],
+      "default": "hide"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_info",
+      "label": "Galería fija (sticky) en desktop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_variants",
+      "label": "Ocultar imágenes de otras variantes",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label": "Loop de video",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "image_zoom",
+      "label": "Zoom de imagen",
+      "options": [
+        { "value": "lightbox", "label": "Lightbox" },
+        { "value": "hover", "label": "Hover + lightbox" },
+        { "value": "none", "label": "Sin zoom" }
+      ],
+      "default": "lightbox"
+    },
+    {
+      "type": "header",
+      "content": "Compra"
+    },
+    {
+      "type": "select",
+      "id": "picker_type",
+      "label": "Estilo del selector de presentación",
+      "options": [
+        { "value": "button", "label": "Botones (pills)" },
+        { "value": "dropdown", "label": "Desplegable" }
+      ],
+      "default": "button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Mostrar botón de pago dinámico (Mercado Pago / express)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Ficha olfativa"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_facts",
+      "label": "Mostrar chips (familia, género, concentración, longevidad, estela)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pyramid",
+      "label": "Mostrar pirámide olfativa",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "pyramid_heading",
+      "label": "Título pirámide",
+      "default": "Pirámide olfativa"
+    },
+    {
+      "type": "text",
+      "id": "label_top",
+      "label": "Etiqueta notas de salida",
+      "default": "Salida"
+    },
+    {
+      "type": "text",
+      "id": "label_heart",
+      "label": "Etiqueta notas de corazón",
+      "default": "Corazón"
+    },
+    {
+      "type": "text",
+      "id": "label_base",
+      "label": "Etiqueta notas de fondo",
+      "default": "Fondo"
+    },
+    {
+      "type": "header",
+      "content": "Confianza / Originalidad"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_originality",
+      "label": "Mostrar garantía de originalidad",
+      "info": "Se muestra sólo si el producto tiene el metacampo custom.original_garantizado en verdadero.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "originality_heading",
+      "label": "Título originalidad",
+      "default": "Garantía de originalidad"
+    },
+    {
+      "type": "richtext",
+      "id": "originality_text",
+      "label": "Texto originalidad",
+      "default": "<p>100% original e importado. Frasco sellado, lote verificable y política de devolución clara.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Presentaciones"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ladder",
+      "label": "Mostrar comparativa de presentaciones ($/ml)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "ladder_heading",
+      "label": "Título comparativa",
+      "default": "Comparar presentaciones"
+    },
+    {
+      "type": "header",
+      "content": "Equivalencia (legal)"
+    },
+    {
+      "type": "text",
+      "id": "inspired_prefix",
+      "label": "Prefijo de 'inspirado en'",
+      "info": "Copy prudente. Nunca afirmar ser la marca original.",
+      "default": "Inspirado en el perfil olfativo de"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding superior",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding inferior",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    { "type": "@app" }
+  ]
+}
+{% endschema %}

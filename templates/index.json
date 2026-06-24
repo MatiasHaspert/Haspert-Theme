@@ -9,463 +9,86 @@
  */
 {
   "sections": {
-    "hero_calmi_KxMQbj": {
-      "type": "hero-calmi",
-      "name": "Hero Calmi (Video)",
-      "settings": {
-        "show_badge": true,
-        "badge_main": "+4.8★ Padres y familias felices",
-        "badge_sub": "Respiración real + latidos calmantes comprobados",
-        "heading": "Calmi — Porque todos merecen sentirse tranquilos",
-        "heading_size": "h1",
-        "subheading": "<p>El peluche con respiración y latidos reales que calma, relaja y ayuda a dormir, ya sea a tu bebé o a tu compañero peludo.<br/>Porque cuando ellos descansan tranquilos, vos también recuperás la calma que merecés.</p>",
-        "button_label_1": "Ver línea Bebés →",
-        "button_link_1": "shopify://products/nutria-calmi",
-        "button_label_2": "Ver línea Mascotas →",
-        "button_link_2": "shopify://products/calmi-pets",
-        "benefit_1": "💛 Simula compañía real (respira y late)",
-        "benefit_2": "🐾 Acompaña cuando no estás",
-        "benefit_3": "✔ 30 días de prueba sin riesgo",
-        "video": "shopify://files/videos/calmiHomePage.mp4",
-        "video_url": "",
-        "description": "",
-        "enable_video_looping": true,
-        "color_scheme": "",
-        "padding_top": 60,
-        "padding_bottom": 60
-      }
-    },
-    "multicolumn_JawLKH": {
-      "type": "multicolumn",
+    "hero": {
+      "type": "rich-text",
       "blocks": {
-        "column_zbgG7M": {
-          "type": "column",
+        "heading": {
+          "type": "heading",
           "settings": {
-            "image": "shopify://shop_images/Peluche_De_Apego_Con_Luz_Y_Sonido_Respira_Para_Bebes_24005_D_671885-MLA89356762325_082025-O-768x768.jpg",
-            "title": "Calmi Baby",
-            "text": "<p>El peluche con respiración y latidos reales que calma a tu bebé, reduce el llanto y ayuda a dormir incluso cuando no estás a su lado.  <br/>Más descanso para él… y para vos.</p>",
-            "badge_1_text": "🍼 Aprobado por padres",
-            "badge_2_text": "🌙 Respiración real",
-            "micro_copy_text": "+4.8⭐ mamás felices",
-            "offer_text": "¡Últimos días con 50% OFF!",
-            "button_label": "Quiero Calmi Baby →",
-            "price_text": "$35.900 (50% OFF)   -                                                                                Antes: $71.800",
-            "button_link": "shopify://products/nutria-calmi"
+            "heading": "Perfumería importada & árabe",
+            "heading_size": "h1"
           }
         },
-        "column_UFnrKa": {
-          "type": "column",
+        "text": {
+          "type": "text",
           "settings": {
-            "image": "shopify://shop_images/Zensy_6_9bbe7a24-70df-465d-a7d8-68a7a5924728.webp",
-            "title": "Calmi Pets",
-            "text": "<p>Para perros y gatos que sienten ansiedad cuando no estás.  <br/>Su mecanismo suave de respiración + latidos reduce estrés, evita llanto/ladridos y los ayuda a relajarse y dormir mejor.</p>",
-            "badge_1_text": "🐾 Reduce ansiedad por separación",
-            "badge_2_text": "💤 Compañía real",
-            "micro_copy_text": "🧸 Diseñado por expertos en calma y bienestar.",
-            "offer_text": "¡Últimos días con 50% OFF!",
-            "button_label": "Quiero Calmi Pets →",
-            "price_text": "$35.900 (50% OFF)   -                                                                                Antes: $71.800",
-            "button_link": "shopify://products/calmi-pets"
+            "text": "<p>Originalidad garantizada · Envíos a todo el país · Hasta 3 cuotas sin interés</p>"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Ver catálogo",
+            "button_link": "shopify://collections/all"
           }
         }
       },
-      "block_order": [
-        "column_zbgG7M",
-        "column_UFnrKa"
-      ],
-      "name": "t:sections.multicolumn.presets.name",
+      "block_order": ["heading", "text", "button"],
       "settings": {
-        "title": "Calma para quienes más amás — bebés y mascotas",
-        "heading_size": "h1",
-        "image_width": "full",
-        "image_ratio": "square",
-        "centered_text": "<h4></h4><h4><strong>Un peluche, dos formas de llevar calma real a tu hogar.</strong></h4>",
-        "columns_desktop": 2,
-        "column_alignment": "center",
-        "background_style": "primary",
+        "color_scheme": "scheme-3",
+        "content_alignment": "center",
+        "full_width": true,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Más buscados",
+        "heading_size": "h2",
+        "collection": "all",
+        "products_to_show": 8,
+        "columns_desktop": 4,
         "color_scheme": "scheme-1",
-        "columns_mobile": "1",
+        "image_ratio": "portrait",
+        "show_secondary_image": false,
+        "show_vendor": true,
+        "show_rating": false,
+        "show_view_all": true,
+        "view_all_style": "outline",
+        "columns_mobile": "2",
         "swipe_on_mobile": true,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "padding_top": 48,
+        "padding_bottom": 48
       }
     },
-    "custom_testimonialsv2_KHXYVf": {
-      "type": "custom-testimonialsv2",
+    "about": {
+      "type": "rich-text",
       "blocks": {
-        "testimonial_chat_MxLCrG": {
-          "type": "testimonial_chat",
+        "heading": {
+          "type": "heading",
           "settings": {
-            "align": "left",
-            "person_image": "shopify://shop_images/PORTFOLIO.jpg",
-            "name": "Valentina R., mamá de Abril (3 meses)",
-            "rating_image": "shopify://shop_images/Gemini_Generated_Image_kexycvkexycvkexy.png",
-            "text": "“Antes de Calmi, las noches eran una lucha. Abril solo podía dormir en brazos y yo estaba agotada. El movimiento de respiración y los latidos la calman instantáneamente. Ahora duerme en su cuna, y yo puedo descansar sin culpa. Fue un antes y un después.”"
+            "heading": "Originalidad garantizada",
+            "heading_size": "h2"
           }
         },
-        "testimonial_chat_DgnxPB": {
-          "type": "testimonial_chat",
+        "text": {
+          "type": "text",
           "settings": {
-            "align": "left",
-            "person_image": "shopify://shop_images/descarga_1.jpg",
-            "name": "Lucas M., papá de Milo (caniche toy)",
-            "rating_image": "shopify://shop_images/Gemini_Generated_Image_kexycvkexycvkexy.png",
-            "text": "“Milo lloraba cada vez que cerrábamos la puerta. Probamos mil cosas. Con Calmi, se acurruca al lado y automáticamente baja la inquietud. Es impresionante cómo lo relaja. Ya no rompe nada ni ladra desesperado.”"
-          }
-        },
-        "testimonial_chat_BghAp4": {
-          "type": "testimonial_chat",
-          "settings": {
-            "align": "left",
-            "person_image": "shopify://shop_images/descarga_2.jpg",
-            "name": "Florencia A., mamá primeriza",
-            "rating_image": "shopify://shop_images/Gemini_Generated_Image_kexycvkexycvkexy.png",
-            "text": "“Los primeros meses fueron muy duros. Estaba sobrepasada y dormía pésimo. Cuando descubrimos Calmi, fue como respirar de nuevo. Lo abraza, siente los latidos y se relaja enseguida. Ahora nuestras noches son muchísimo más suaves. Es el mejor regalo que me pude hacer.”"
+            "text": "<p>Seleccionamos perfumería importada y árabe original. Frasco sellado, lote verificable y devolución clara. ¿No querés arriesgar con el frasco completo? Probá primero con nuestros decants.</p>"
           }
         }
       },
-      "block_order": [
-        "testimonial_chat_MxLCrG",
-        "testimonial_chat_DgnxPB",
-        "testimonial_chat_BghAp4"
-      ],
-      "name": "Testimonios Chat Screenshot",
+      "block_order": ["heading", "text"],
       "settings": {
-        "title": "Miles de familias ya descubrieron la calma real. La tranquilidad que otros ya están disfrutando"
-      }
-    },
-    "benefits_key_EAEUpW": {
-      "type": "benefits-key",
-      "blocks": {
-        "benefit_HP8MUM": {
-          "type": "benefit",
-          "settings": {
-            "icon": "shopify://shop_images/resena_zensleep_nutria_2.webp",
-            "title": "💤Calma y reduce la ansiedad en minutos",
-            "text": "El movimiento suave de respiración y los latidos generan un efecto inmediato de contención.\nAyuda a que tu bebé —o tu mascota— baje revoluciones, se tranquilice y se sienta acompañado sin necesidad de brazos constantes o tu atención permanente."
-          }
-        },
-        "benefit_7CRGTH": {
-          "type": "benefit",
-          "settings": {
-            "icon": "shopify://shop_images/Peluche_De_Apego_Con_Luz_Y_Sonido_Respira_Para_Bebes_24005_D_883737-MLA89356871543_082025-O-768x768.jpg",
-            "title": "🤱Imita la sensación de estar acompañado",
-            "text": "El ritmo realista de respiración y latidos replica la presencia física de un cuidador o del dueño.\nPara bebés, es como estar en el pecho de mamá.\nPara mascotas, es la sensación de que su humano está cerca incluso cuando están solos."
-          }
-        },
-        "benefit_CGTDyL": {
-          "type": "benefit",
-          "settings": {
-            "icon": "shopify://shop_images/Zensy_6_9bbe7a24-70df-465d-a7d8-68a7a5924728.webp",
-            "title": "🧠Regula emociones y reduce el estrés",
-            "text": "La simulación de respiración profunda activa una respuesta biológica de calma.\nMenos llanto, menos ladridos, menos ansiedad por separación y menos episodios de estrés."
-          }
-        }
-      },
-      "block_order": [
-        "benefit_HP8MUM",
-        "benefit_7CRGTH",
-        "benefit_CGTDyL"
-      ],
-      "name": "Beneficios Clave",
-      "settings": {
-        "title": "⭐ Beneficios Clave de Calmi",
-        "subtitle": "",
-        "icon_size": 120,
-        "title_size": 32,
-        "subtitle_size": 18,
-        "container_width": "boxed",
-        "bg_color": "#ffffff",
-        "padding_top": 60,
-        "padding_bottom": 60
-      }
-    },
-    "how_it_works_7LAH9i": {
-      "type": "how-it-works",
-      "name": "Cómo funciona Calmi",
-      "settings": {
-        "title": "La calma real empieza con una respiración",
-        "description": "Calmi imita el movimiento natural de la respiración y los latidos humanos, creando una sensación inmediata de compañía y seguridad.\nEste ritmo constante ayuda a regular el sistema nervioso, reducir la ansiedad y promover un sueño más profundo tanto en bebés como en mascotas.",
-        "video": "shopify://files/videos/snaptik_7433963025511501061_v2.mp4",
-        "steps_image": "shopify://shop_images/ComoFunciona.jpg",
-        "bg_color": "#ffffff",
-        "padding_top": 15,
-        "padding_bottom": 60,
-        "title_size": 34,
-        "desc_size": 18
-      }
-    },
-    "ugc_social_proof_mQH4Kr": {
-      "type": "ugc-social-proof",
-      "blocks": {
-        "ugc_video_TVWE79": {
-          "type": "ugc_video",
-          "settings": {
-            "video": "shopify://files/videos/premium.mp4",
-            "author_photo": "shopify://shop_images/Desde_que_soy_mama_de_dos_es_mas_dificil_para_mi_sacar_tiempo_y_arreglarme_pero_cuanta_falta_hace_Me_sentia_otra___mamadedos_mamatime_mamatips_mamadevarones.jpg",
-            "author_name": "Carla D.",
-            "label": "\"Dudaba si comprar el 'famoso peluche', ¡pero fue la mejor decisión! Tal cual como se ve: mi hijo ahora duerme toda la noche tranquilo y se despierta feliz y con mucha energía. ¡Un antes y un después!\""
-          }
-        },
-        "ugc_video_P7Cx3h": {
-          "type": "ugc_video",
-          "settings": {
-            "video": "shopify://files/videos/1115.mp4",
-            "author_photo": "shopify://shop_images/descarga_6.jpg",
-            "author_name": "María P.",
-            "label": "\"Mi perrito sufría mucho de ansiedad por las noches. ¡Este peluche fue un cambio total! Ahora duerme mucho más tranquilo y relajado. ¡Totalmente recomendado!\""
-          }
-        },
-        "ugc_video_BQXCFg": {
-          "type": "ugc_video",
-          "settings": {
-            "video": "shopify://files/videos/SilenciadoVideo.mp4",
-            "author_photo": "shopify://shop_images/descarga_7.jpg",
-            "author_name": "Valentina C.",
-            "label": "\"1000% recomendado. ¡La paz que me da ver a mi hija dormir así de profundo! Se abraza al peluche y cae dormida. Es súper suave y la función de respiración es genial.\""
-          }
-        },
-        "photo_testimonial_xatmQQ": {
-          "type": "photo_testimonial",
-          "settings": {
-            "image": "shopify://shop_images/resena_zensleep_nutria_8.jpg",
-            "author_photo": "shopify://shop_images/descarga_3.jpg",
-            "name": "Mariana R. | Buenos Aires, Argentina",
-            "quote": "“Mi bebé solo dormía en mis brazos y cada noche era una batalla. Probé ruido blanco, masaje, todo… nada funcionaba. Con Calmi fue increíble: a los 5 minutos ya estaba relajado y en 10 se durmió solo en la cuna. Hace meses que no sentía tanta paz. Gracias por devolverme el sueño y la tranquilidad.”",
-            "rating": 5
-          }
-        },
-        "photo_testimonial_PYxWh7": {
-          "type": "photo_testimonial",
-          "settings": {
-            "image": "shopify://shop_images/Captura_de_pantalla_2025-11-15_230241.png",
-            "author_photo": "shopify://shop_images/descarga_4.jpg",
-            "name": "Santiago M. | Rosario, Santa Fe",
-            "quote": "“Mi perrita lloraba cada vez que salía de casa, incluso por ratitos. Desde que tiene Calmi, se acurruca con el peluche y se queda tranquila. Los latidos la calman un montón. Ya no la escucho ladrar desde el ascensor. Es la mejor compra que hice para ella.”",
-            "rating": 5
-          }
-        },
-        "photo_testimonial_NeQKK6": {
-          "type": "photo_testimonial",
-          "settings": {
-            "image": "shopify://shop_images/resena_zensleep_nutria_1.webp",
-            "author_photo": "shopify://shop_images/descarga_5.jpg",
-            "name": "Teresa L. | Córdoba, Argentina",
-            "quote": "“Se lo compré a mi nietito porque le costaba mucho dormirse. Cuando lo vi abrazado a Calmi, respirando calmadito, me emocioné. Mi hija ahora duerme mejor y el bebé también. Es un regalo con amor y con propósito. Lo recomiendo de corazón.”",
-            "rating": 5
-          }
-        }
-      },
-      "block_order": [
-        "ugc_video_TVWE79",
-        "ugc_video_P7Cx3h",
-        "ugc_video_BQXCFg",
-        "photo_testimonial_xatmQQ",
-        "photo_testimonial_PYxWh7",
-        "photo_testimonial_NeQKK6"
-      ],
-      "name": "Prueba social extendida (UGC)",
-      "settings": {
-        "microclaim": "⭐ Más de 2.500 familias ya duermen mejor con Calmi",
-        "badge_main": "95% de los usuarios reporta más calma y mejor descanso",
-        "badge_sub": "Miles de experiencias que avalan su efecto tranquilizador.",
-        "title": "Lo que otras familias dicen de Calmi",
-        "subtitle": "Mirá cómo Calmi transformó noches difíciles en momentos de paz para miles de familias y mascotas.",
-        "bg_color": "#f5f5f7",
-        "padding_top": 60,
-        "padding_bottom": 60,
-        "card_bg": "#ffffff",
-        "title_color": "#1c1c1c",
-        "subtitle_color": "#4b5563",
-        "accent_color": "#2b4e52",
-        "badge_bg": "#ffeaa3",
-        "badge_text": "#7a5200",
-        "title_size": 30,
-        "subtitle_size": 16
-      }
-    },
-    "promo_band_gCY7Fr": {
-      "type": "promo-band",
-      "blocks": {
-        "promo_item_6yrgAd": {
-          "type": "promo_item",
-          "settings": {
-            "text": "✨ Promoción exclusiva: 50% OFF en toda la línea Calmi."
-          }
-        },
-        "promo_item_E9URPj": {
-          "type": "promo_item",
-          "settings": {
-            "text": "🎁 50% OFF + 3 cuotas sin interés · Solo por tiempo limitado"
-          }
-        }
-      },
-      "block_order": [
-        "promo_item_6yrgAd",
-        "promo_item_E9URPj"
-      ],
-      "name": "Banda Promocional",
-      "settings": {
-        "bg_color": "#ffe5e5",
-        "text_color": "#b81f24",
-        "text_size": 28,
-        "speed": 10,
-        "speed_mobile": 20,
-        "padding_top": 10,
-        "padding_bottom": 10
-      }
-    },
-    "cta_final_calmi_WBCW3R": {
-      "type": "cta-final-calmi",
-      "blocks": {
-        "card_QEBnfi": {
-          "type": "card",
-          "settings": {
-            "image": "shopify://shop_images/Peluche_De_Apego_Con_Luz_Y_Sonido_Respira_Para_Bebes_24005_D_883737-MLA89356871543_082025-O-768x768.jpg",
-            "title": "Calmi Baby",
-            "benefit_1": "Ayuda a dormir más rápido y por más tiempo",
-            "benefit_2": "Reduce llanto y ansiedad",
-            "benefit_3": "Ideal para siestas, noches difíciles y rutinas",
-            "price_compare": "$71.800",
-            "price": "$35.900",
-            "button_label": "Comprar ahora y obtener 50% OFF",
-            "button_link": "shopify://products/nutria-calmi"
-          }
-        },
-        "card_UwRrwA": {
-          "type": "card",
-          "settings": {
-            "image": "shopify://shop_images/Captura_de_pantalla_2025-11-16_155116.png",
-            "title": "Calmi Pets",
-            "benefit_1": "Reduce la ansiedad por separación",
-            "benefit_2": "Facilita descanso y relajación",
-            "benefit_3": "Refuerza la sensación de seguridad",
-            "price_compare": "$71.800",
-            "price": "$35.900",
-            "button_label": "Comprar ahora y obtener 40% OFF",
-            "button_link": "shopify://products/calmi-pets"
-          }
-        }
-      },
-      "block_order": [
-        "card_QEBnfi",
-        "card_UwRrwA"
-      ],
-      "name": "CTA Final Calmi (Doble)",
-      "settings": {
-        "heading": "Elegí tu Calmi y llevá calma a tu hogar hoy mismo",
-        "bg_color": "#f9f9f9",
-        "columns": 2,
-        "padding_top": 4,
-        "padding_bottom": 60
-      }
-    },
-    "faq_calmi_RwMXdB": {
-      "type": "faq-calmi",
-      "blocks": {
-        "item_cqqPWP": {
-          "type": "item",
-          "settings": {
-            "question": "❓¿Es seguro para mi bebé o mi mascota?",
-            "answer": "<p>Sí. Calmi está hecho con materiales hipoalergénicos, ultra suaves y libres de tóxicos.<br/>El mecanismo interno va bien protegido y no está en contacto directo con el bebé o la mascota.<br/>Como con cualquier peluche, se recomienda <strong>uso responsable y supervisado</strong>, sobre todo con recién nacidos.</p>"
-          }
-        },
-        "item_PKbhDN": {
-          "type": "item",
-          "settings": {
-            "question": "❓¿Realmente ayuda a dormir mejor y a reducir la ansiedad?",
-            "answer": "<p>La mayoría de las familias nos cuentan que:</p><ul><li>Sus bebés se calman más rápido.</li><li>Sus mascotas están mucho menos ansiosas cuando se quedan solas.</li><li>Todos duermen mejor.</li></ul><p>El truco está en la <strong>respiración y los latidos suaves</strong>, que imitan la sensación de compañía real.</p>"
-          }
-        },
-        "item_wNfqAy": {
-          "type": "item",
-          "settings": {
-            "question": "❓¿Cómo funciona exactamente Calmi?",
-            "answer": "<p>Calmi tiene un mecanismo interno silencioso que:</p><ul><li>Simula una respiración lenta y profunda.</li><li>Emite latidos suaves y rítmicos.</li></ul><p>Ese ritmo constante ayuda a que bebés y mascotas se sientan acompañados, bajen revoluciones y entren en modo descanso.</p>"
-          }
-        },
-        "item_nDiWR8": {
-          "type": "item",
-          "settings": {
-            "question": "❓¿Desde qué edad se puede usar?",
-            "answer": "<p><strong>Bebés:</strong> desde recién nacidos, siempre con supervisión.<br/><strong>Mascotas:</strong> cachorros, adultos y mayores que sufran ansiedad, duerman mal o estén muy apegados.</p>"
-          }
-        },
-        "item_X88DNg": {
-          "type": "item",
-          "settings": {
-            "question": "❓¿Se puede lavar el peluche?",
-            "answer": "<p>Sí.<br/>El mecanismo se retira fácilmente y el peluche se puede lavar (a mano o en programa suave, según tus cuidados habituales).<br/>Así mantenés a Calmi limpio, suave e higiénico.</p>"
-          }
-        },
-        "item_Cf7iDN": {
-          "type": "item",
-          "settings": {
-            "question": "❓¿Qué métodos de pago aceptan?",
-            "answer": "<p>Podés abonar con Mercado pago o tarjeta de débito/crédito.</p><p>¡Hasta 3 cuotas sin interés!</p>"
-          }
-        },
-        "item_qyjL6C": {
-          "type": "item",
-          "settings": {
-            "question": "❓¿Hacen envíos a todo el país?",
-            "answer": "<p>Sí, enviamos <strong>a todo el país</strong>.<br/>Los tiempos de entrega suelen ser entre <strong>2 y 7 días hábiles</strong>, dependiendo de tu localidad.<br/>Una vez realizado el pedido, vas a recibir el número de seguimiento para monitorear el envío en todo momento.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "item_cqqPWP",
-        "item_PKbhDN",
-        "item_wNfqAy",
-        "item_nDiWR8",
-        "item_X88DNg",
-        "item_Cf7iDN",
-        "item_qyjL6C"
-      ],
-      "name": "FAQ Calmi – Objeciones fuertes",
-      "settings": {
-        "microbadge_text": "📘 Información importante",
-        "heading": "Preguntas frecuentes",
-        "heading_size": "h1",
-        "bg_color": "#f9f9f9",
-        "title_color": "#111111",
-        "card_bg": "#ffffff",
-        "card_border": "#e2e8f0",
-        "accent_color": "#f97373",
-        "question_color": "#111111",
-        "question_hover_bg": "#f8fafc",
-        "answer_color": "#475569",
-        "microbadge_bg": "#eef0ff",
-        "microbadge_color": "#3a3dff",
+        "color_scheme": "scheme-2",
+        "content_alignment": "center",
+        "full_width": false,
         "padding_top": 40,
         "padding_bottom": 40
       }
-    },
-    "contact_calmi_4YcjRp": {
-      "type": "contact-calmi",
-      "name": "Sección de contacto Calmi",
-      "settings": {
-        "heading": "¿Necesitás ayuda?",
-        "heading_size": "h1",
-        "intro": "<p>Estamos acá para ayudarte. Escribinos y te respondemos en menos de 24 horas.</p>",
-        "enable_phone": true,
-        "enable_subject": true,
-        "bg_color": "#f9f9f9",
-        "padding_top": 4,
-        "padding_bottom": 48
-      }
     }
   },
-  "order": [
-    "hero_calmi_KxMQbj",
-    "multicolumn_JawLKH",
-    "custom_testimonialsv2_KHXYVf",
-    "benefits_key_EAEUpW",
-    "how_it_works_7LAH9i",
-    "ugc_social_proof_mQH4Kr",
-    "promo_band_gCY7Fr",
-    "cta_final_calmi_WBCW3R",
-    "faq_calmi_RwMXdB",
-    "contact_calmi_4YcjRp"
-  ]
+  "order": ["hero", "featured", "about"]
 }

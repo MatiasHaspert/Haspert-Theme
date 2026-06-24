@@ -11,37 +11,37 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "footer_calmi_LKXkVJ": {
-      "type": "footer-calmi",
-      "name": "Footer Profesional Calmi",
+    "footer_shop": {
+      "type": "footer-shop",
+      "name": "Footer",
       "settings": {
         "g_title": "Garantías",
-        "g_1": "30 días de prueba o reembolso",
-        "g_2": "Cambios fáciles y rápidos",
-        "g_3": "Productos certificados y seguros",
+        "g_1": "Originalidad garantizada",
+        "g_2": "Cambios y devoluciones simples",
+        "g_3": "Productos 100% originales e importados",
         "s_title": "Soporte",
         "s_email": "info.laboratorios.prod@gmail.com",
         "s_whatsapp": "+54 3406 461636",
         "m_title": "Nuestra Marca",
-        "m_desc": "Diseñamos productos para calmar, relajar y mejorar el descanso de bebés y mascotas.",
-        "reviews_text": "+1200 reseñas verificadas",
-        "instagram": "https://www.instagram.com/calmi_ar/",
-        "tiktok": "https://www.tiktok.com/@calmiarg",
-        "facebook": "https://www.facebook.com/profile.php?id=61584574434647",
+        "m_desc": "Perfumería importada y árabe original. Frasco sellado, lote verificable y envíos a todo el país.",
+        "reviews_text": "",
+        "instagram": "",
+        "tiktok": "",
+        "facebook": "",
         "icon_visa": "shopify://shop_images/png-transparent-visa-logo-credit-card-visa-debit-card-payment-card-mastercard-visa-blue-text-trademark.png",
         "icon_mastercard": "shopify://shop_images/png-transparent-card-master-mastercard-shift-ecommerce-icon-thumbnail.png",
         "icon_amex": "shopify://shop_images/png-transparent-american-express-amex-charge-credit-card-payment-credit-cards-icon-thumbnail.png",
         "icon_mp": "shopify://shop_images/descarga.png",
-        "bg_color": "#f4f4f5",
-        "text_color": "#333333",
-        "title_color": "#111111",
-        "link_color": "#111111",
-        "icon_color": "#111111",
-        "mini_icon_color": "#111111",
-        "social_color": "#111111",
-        "trust_text_color": "#111111",
-        "bottom_border_color": "#0000001a",
-        "bottom_text_color": "#111111",
+        "bg_color": "#16120F",
+        "text_color": "#C9C2B8",
+        "title_color": "#FBF8F3",
+        "link_color": "#FBF8F3",
+        "icon_color": "#C2A24C",
+        "mini_icon_color": "#FBF8F3",
+        "social_color": "#FBF8F3",
+        "trust_text_color": "#FBF8F3",
+        "bottom_border_color": "#ffffff1a",
+        "bottom_text_color": "#C9C2B8",
         "card_bg": "rgba(0,0,0,0)"
       }
     },
@@ -65,7 +65,7 @@
     }
   },
   "order": [
-    "footer_calmi_LKXkVJ",
+    "footer_shop",
     "footer"
   ]
 }
