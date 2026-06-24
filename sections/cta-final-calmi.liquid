@@ -1,0 +1,252 @@
+{% comment %}
+  Sección CTA final – Cards de compra
+  - Cards flexibles (Baby, Pet, etc.)
+  - Foto / Beneficios / Precios / Botón
+  - Diseñada como cierre de venta
+{% endcomment %}
+
+{% style %}
+.final-cta-{{ section.id }} {
+  padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px 0;
+  background: {{ section.settings.bg_color }};
+}
+
+.final-cta-{{ section.id }}__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.final-cta-{{ section.id }}__grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.columns }}, 1fr);
+  gap: 28px;
+}
+
+.final-cta-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.final-cta-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+}
+
+/* --- Fix tamaño imagen --- */
+.final-cta-card__image img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+}
+
+/* --- Fix textos invisibles por color scheme --- */
+.final-cta-card__title,
+.final-cta-card__benefit,
+.final-cta-card__price,
+.final-cta-card__price strong {
+  color: #111 !important;
+}
+
+
+.final-cta-card__title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.final-cta-card__benefits {
+  margin-bottom: 12px;
+}
+
+.final-cta-card__benefit {
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.final-cta-card__price {
+  margin-top: 12px;
+  font-size: 1.6rem;
+}
+
+.final-cta-card__price s {
+  opacity: 0.55;
+  margin-right: 6px;
+}
+
+.final-cta-card__price strong {
+  font-size: 1.9rem;
+  color: #111;
+}
+
+.final-cta-card__button {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px;
+  font-size: 1.55rem;
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 749px) {
+  .final-cta-{{ section.id }}__grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .final-cta-card {
+    padding: 18px;
+  }
+
+  .final-cta-card__title {
+    font-size: 1.65rem;
+  }
+}
+{% endstyle %}
+
+<section class="final-cta-{{ section.id }}">
+  <div class="final-cta-{{ section.id }}__inner">
+    
+    {% if section.settings.heading != blank %}
+      <h2 class="title h1" style="text-align:center; margin-bottom:28px;">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    <div class="final-cta-{{ section.id }}__grid">
+
+      {% for block in section.blocks %}
+        <div class="final-cta-card" {{ block.shopify_attributes }}>
+
+          {% if block.settings.image %}
+          <div class="final-cta-card__image">
+            {{ block.settings.image | image_url: width: 1200 | image_tag }}
+          </div>
+          {% endif %}
+
+          {% if block.settings.title %}
+          <h3 class="final-cta-card__title">{{ block.settings.title }}</h3>
+          {% endif %}
+
+          <div class="final-cta-card__benefits">
+            {% if block.settings.benefit_1 != blank %}
+              <div class="final-cta-card__benefit">✓ {{ block.settings.benefit_1 }}</div>
+            {% endif %}
+            {% if block.settings.benefit_2 != blank %}
+              <div class="final-cta-card__benefit">✓ {{ block.settings.benefit_2 }}</div>
+            {% endif %}
+            {% if block.settings.benefit_3 != blank %}
+              <div class="final-cta-card__benefit">✓ {{ block.settings.benefit_3 }}</div>
+            {% endif %}
+          </div>
+
+          {% if block.settings.price_compare or block.settings.price %}
+          <div class="final-cta-card__price">
+            {% if block.settings.price_compare %}
+              <s>{{ block.settings.price_compare }}</s>
+            {% endif %}
+            {% if block.settings.price %}
+              <strong>{{ block.settings.price }}</strong>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {% if block.settings.button_label %}
+            <a href="{{ block.settings.button_link | default: '#' }}" 
+               class="button button--primary final-cta-card__button">
+              {{ block.settings.button_label }}
+            </a>
+          {% endif %}
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CTA final Cards de compra",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título de la sección",
+      "default": "Elegí tu Calmi"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#F9F9F9"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columnas desktop",
+      "default": 2,
+      "min": 1,
+      "max": 4,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card de producto",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Imagen del producto" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Calmi Baby" },
+
+        { "type": "text", "id": "benefit_1", "label": "Beneficio 1", "default": "Respiración real" },
+        { "type": "text", "id": "benefit_2", "label": "Beneficio 2", "default": "Alivia ansiedad" },
+        { "type": "text", "id": "benefit_3", "label": "Beneficio 3", "default": "Ayuda a dormir mejor" },
+
+        { "type": "text", "id": "price_compare", "label": "Precio tachado (opcional)", "default": "$59.999" },
+        { "type": "text", "id": "price", "label": "Precio actual", "default": "$34.999" },
+
+        { "type": "text", "id": "button_label", "label": "Texto del botón", "default": "Comprar ahora" },
+        { "type": "url", "id": "button_link", "label": "Link del botón" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "CTA final – Cards de compra",
+      "blocks": [
+        { "type": "card", "settings": { "title": "Calmi Baby" } },
+        { "type": "card", "settings": { "title": "Calmi Pet" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

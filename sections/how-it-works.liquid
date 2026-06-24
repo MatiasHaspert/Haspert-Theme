@@ -1,0 +1,240 @@
+{% comment %}
+  Sección "Cómo funciona Calmi" – Mecanismo único
+  Explica claramente respiración + latidos + pasos visuales.
+  Elementos: título, descripción, video-loop y una imagen explicativa.
+  100% compatible con Shopify OS 2.0.
+{% endcomment %}
+
+{% style %}
+  .how-works-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  .how-works-{{ section.id }}__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .how-works-{{ section.id }}__title {
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .how-works-{{ section.id }}__desc {
+    font-size: {{ section.settings.desc_size }}px;
+    opacity: .85;
+    margin-bottom: 24px;
+  }
+
+  .how-works-{{ section.id }}__video video {
+    width: 100%;
+    border-radius: 16px;
+    display: block;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all .6s ease;
+  }
+
+  .how-works-{{ section.id }}__video.visible video {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .how-works-{{ section.id }}__steps img {
+    width: 100%;
+    border-radius: 12px;
+    transition: transform .3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .how-works-{{ section.id }}__steps.visible img {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .how-works-{{ section.id }}__steps img:hover {
+    transform: scale(1.03);
+  }
+
+  @media (max-width: 768px) {
+    .how-works-{{ section.id }}__inner {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+  }
+{% endstyle %}
+
+<div class="how-works-{{ section.id }}" 
+     data-howworks-section 
+     data-section-id="{{ section.id }}">
+
+  <div class="how-works-{{ section.id }}__inner">
+
+    <!-- VIDEO -->
+    <div class="how-works-{{ section.id }}__video" data-video-container>
+      {% if section.settings.video != blank %}
+        {{ section.settings.video
+          | video_tag: autoplay: true,
+                        loop: true,
+                        muted: true,
+                        controls: false,
+                        playsinline: true
+        }}
+      {% else %}
+        <p>Sube un video desde el editor del tema.</p>
+      {% endif %}
+    </div>
+
+    <!-- TEXTO + IMAGEN DE PASOS -->
+    <div class="how-works-{{ section.id }}__content">
+      <h2 class="how-works-{{ section.id }}__title">
+        {{ section.settings.title }}
+      </h2>
+
+      <p class="how-works-{{ section.id }}__desc">
+        {{ section.settings.description }}
+      </p>
+
+      <div class="how-works-{{ section.id }}__steps" data-steps-container>
+        {% if section.settings.steps_image %}
+          {{ section.settings.steps_image
+            | image_url: width: 800
+            | image_tag: loading: 'lazy', alt: 'Cómo funciona Calmi'
+          }}
+        {% else %}
+          <p>Sube una imagen mostrando los 3 pasos.</p>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% javascript %}
+  document.addEventListener("DOMContentLoaded", function() {
+
+    const root = document.querySelector('[data-howworks-section]');
+    if (!root) return;
+
+    const sectionId = root.getAttribute('data-section-id');
+    const videoContainer = root.querySelector('[data-video-container]');
+    const stepsContainer = root.querySelector('[data-steps-container]');
+
+    // Fade-in observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.2 });
+
+    if (videoContainer) observer.observe(videoContainer);
+    if (stepsContainer) observer.observe(stepsContainer);
+
+    // Video autoplay pause/resume when in viewport
+    const videos = root.querySelectorAll("video");
+    if (videos.length > 0) {
+      const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const vid = entry.target;
+          if (entry.isIntersecting) {
+            vid.play().catch(() => {});
+          } else {
+            vid.pause();
+          }
+        });
+      }, { threshold: 0.5 });
+
+      videos.forEach(v => videoObserver.observe(v));
+    }
+
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Cómo funciona Calmi",
+  "tag": "section",
+  "class": "how-works-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título principal",
+      "default": "La magia detrás de Calmi: respiración real que calma de verdad"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción breve",
+      "default": "Un mecanismo interno simula respiración y latidos suaves, replicando la presencia humana y activando la respuesta de calma natural."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video del mecanismo (loop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "steps_image",
+      "label": "Imagen con los 3 pasos"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#FFFFFF"
+    },
+    {
+    "type": "range",
+    "id": "padding_top",
+    "label": "Padding superior",
+    "min": 0,
+    "max": 150,
+    "step": 5,
+    "default": 60
+    },
+    {
+    "type": "range",
+    "id": "padding_bottom",
+    "label": "Padding inferior",
+    "min": 0,
+    "max": 150,
+    "step": 5,
+    "default": 60
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Tamaño del título (px)",
+      "min": 20,
+      "max": 50,
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "desc_size",
+      "label": "Tamaño de descripción (px)",
+      "min": 14,
+      "max": 24,
+      "default": 18
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cómo funciona Calmi",
+      "category": "Secciones"
+    }
+  ]
+}
+{% endschema %}

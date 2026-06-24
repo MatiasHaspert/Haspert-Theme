@@ -1,0 +1,176 @@
+{% comment %}
+  Banda Promocional – Scroll Infinito
+  - Blocks ilimitados
+  - Scroll tipo marquee moderno
+  - CSS-only (sin JS)
+  - OS 2.0 compliant
+{% endcomment %}
+
+{% style %}
+
+.promo-{{ section.id }} {
+  background: {{ section.settings.bg_color }};
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Wrapper */
+.promo-{{ section.id }}__track-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Track que se desplaza */
+.promo-{{ section.id }}__track {
+  display: inline-flex;
+  gap: 40px;
+  white-space: nowrap;
+  animation: promo-scroll-{{ section.id }} {{ section.settings.speed }}s linear infinite;
+}
+
+/* Ítems */
+.promo-{{ section.id }}__item {
+  font-size: {{ section.settings.text_size }}px;
+  font-weight: 600;
+  color: {{ section.settings.text_color }};
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Scroll infinito */
+@keyframes promo-scroll-{{ section.id }} {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .promo-{{ section.id }}__track {
+    gap: 24px;
+    animation-duration: {{ section.settings.speed_mobile }};
+  }
+  .promo-{{ section.id }}__item {
+    font-size: {{ section.settings.text_size | minus: 1 }}px;
+  }
+}
+
+{% endstyle %}
+
+<div class="promo-{{ section.id }}">
+  <div class="promo-{{ section.id }}__track-wrapper">
+    <div class="promo-{{ section.id }}__track">
+
+      {% comment %} Primera pasada de ítems {% endcomment %}
+      {% for block in section.blocks %}
+        <div class="promo-{{ section.id }}__item" {{ block.shopify_attributes }}>
+          {{ block.settings.text }}
+        </div>
+      {% endfor %}
+
+      {% comment %} Duplicación para loop perfecto {% endcomment %}
+      {% for block in section.blocks %}
+        <div class="promo-{{ section.id }}__item">
+          {{ block.settings.text }}
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Banda Promocional",
+  "tag": "section",
+  "class": "promo-marquee-section",
+  "max_blocks": 50,
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#FFE5E5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#B81F24"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Tamaño del texto (px)",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Velocidad desktop (segundos por ciclo)",
+      "min": 5,
+      "max": 60,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "speed_mobile",
+      "label": "Velocidad mobile (segundos por ciclo)",
+      "min": 5,
+      "max": 60,
+      "step": 1,
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "default": 10
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promo_item",
+      "name": "Mensaje",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto",
+          "default": "🔥 40% OFF"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banda Promocional Scrolling",
+      "category": "Texto",
+      "blocks": [
+        { "type": "promo_item", "settings": { "text": "🔥 40% OFF" }},
+        { "type": "promo_item", "settings": { "text": "🚚 Envío gratis" }},
+        { "type": "promo_item", "settings": { "text": "⏳ Stock limitado" }},
+        { "type": "promo_item", "settings": { "text": "🔒 Garantía 30 días o reembolso" }}
+      ]
+    }
+  ]
+}
+{% endschema %}

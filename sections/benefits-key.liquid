@@ -1,0 +1,308 @@
+{% comment %}
+  Sección: Beneficios Clave
+  Descripción: Grid de beneficios (icono + título + texto), ideal para reforzar creencias,
+  cerrar objeciones y comunicar el mecanismo único del producto.
+  Incluye animación on-scroll, estilos encapsulados y configuración completa OS 2.0.
+{% endcomment %}
+
+{% style %}
+  .benefits-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  .benefits-{{ section.id }}__inner {
+    max-width: {% if section.settings.container_width == 'boxed' %}1200px{% else %}100%{% endif %};
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+  }
+
+  .benefits-{{ section.id }}__title {
+    font-size: {{ section.settings.title_size }}px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .benefits-{{ section.id }}__subtitle {
+    font-size: {{ section.settings.subtitle_size }}px;
+    color: rgba(0, 0, 0, 0.75);
+    margin-bottom: 40px;
+  }
+
+  .benefits-{{ section.id }}__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .benefits-{{ section.id }}__item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .benefits-{{ section.id }}__item--visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .benefits-{{ section.id }}__item:hover {
+    transform: translateY(-4px);
+  }
+
+  .benefits-{{ section.id }}__icon img {
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .benefits-{{ section.id }}__item:hover .benefits-{{ section.id }}__icon img {
+    transform: scale(1.08);
+  }
+
+  .benefits-{{ section.id }}__item-title {
+    margin-top: 16px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .benefits-{{ section.id }}__item-text {
+    font-size: 16px;
+    margin-top: 8px;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    .benefits-{{ section.id }}__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .benefits-{{ section.id }}__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstyle %}
+
+<div class="benefits-{{ section.id }}" data-benefits-section data-section-id="{{ section.id }}">
+  <div class="benefits-{{ section.id }}__inner">
+
+    {% if section.settings.title != blank %}
+      <h2 class="benefits-{{ section.id }}__title">
+        {{ section.settings.title }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.subtitle != blank %}
+      <p class="benefits-{{ section.id }}__subtitle">
+        {{ section.settings.subtitle }}
+      </p>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="benefits-{{ section.id }}__grid" id="benefits-grid-{{ section.id }}">
+        {% for block in section.blocks %}
+          <div class="benefits-{{ section.id }}__item" id="benefit-{{ block.id }}" {{ block.shopify_attributes }}>
+            {% if block.settings.icon != blank %}
+              <div class="benefits-{{ section.id }}__icon">
+                {{ block.settings.icon
+                  | image_url: width: section.settings.icon_size
+                  | image_tag:
+                    alt: block.settings.title,
+                    loading: 'lazy'
+                }}
+              </div>
+            {% endif %}
+
+            {% if block.settings.title != blank %}
+              <h3 class="benefits-{{ section.id }}__item-title">
+                {{ block.settings.title }}
+              </h3>
+            {% endif %}
+
+            {% if block.settings.text != blank %}
+              <p class="benefits-{{ section.id }}__item-text">
+                {{ block.settings.text }}
+              </p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      {%- comment -%}
+        Mensaje de ayuda cuando no hay bloques configurados
+      {%- endcomment -%}
+      <p>Agrega bloques de "Beneficio" desde el editor del tema para mostrar esta sección.</p>
+    {% endif %}
+
+  </div>
+</div>
+
+{% javascript %}
+  document.addEventListener("DOMContentLoaded", function() {
+
+    const root = document.querySelector('[data-benefits-section]');
+    if (!root) return;
+
+    const sectionId = root.getAttribute('data-section-id');
+    const selector = `.benefits-${sectionId}__item`;
+    const items = document.querySelectorAll(selector);
+
+    if (!("IntersectionObserver" in window) || items.length === 0) {
+      items.forEach(item =>
+        item.classList.add(`benefits-${sectionId}__item--visible`)
+      );
+      return;
+    }
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add(`benefits-${sectionId}__item--visible`);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    items.forEach(item => observer.observe(item));
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Beneficios Clave",
+  "tag": "section",
+  "class": "benefits-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título principal",
+      "default": "Beneficios Clave"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Por qué este producto funciona realmente"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Tamaño de íconos (px)",
+      "min": 40,
+      "max": 120,
+      "step": 5,
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Tamaño de título (px)",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Tamaño de subtítulo (px)",
+      "min": 14,
+      "max": 26,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "container_width",
+      "label": "Ancho del contenedor",
+      "options": [
+        {
+          "value": "boxed",
+          "label": "Centrado (1200px)"
+        },
+        {
+          "value": "full",
+          "label": "Full width"
+        }
+      ],
+      "default": "boxed"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior (px)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior (px)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Beneficio",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Ícono"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Sueño profundo"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Texto",
+          "default": "El mecanismo de respiración calma al instante."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Beneficios Clave",
+      "category": "Secciones",
+      "blocks": [
+        {
+          "type": "benefit"
+        },
+        {
+          "type": "benefit"
+        },
+        {
+          "type": "benefit"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

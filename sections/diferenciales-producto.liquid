@@ -1,0 +1,376 @@
+{% style %}
+
+/* ==========================================
+   🎨 SISTEMA DE COLORES DINÁMICOS POR SECCIÓN
+   ========================================== */
+.calmi-diff-{{ section.id }} {
+  --diff-bg: {{ section.settings.bg_color }};
+  --diff-title: {{ section.settings.title_color }};
+  --diff-subtitle: {{ section.settings.subtitle_color }};
+  --diff-micro: {{ section.settings.microclaim_color }};
+  --diff-text: {{ section.settings.text_color }};
+  --diff-icon: {{ section.settings.icon_color }};
+  --diff-miniclaim-bg: {{ section.settings.miniclaim_bg }};
+  --diff-miniclaim-border: {{ section.settings.miniclaim_border }};
+  --diff-miniclaim-text: {{ section.settings.miniclaim_text }};
+  --diff-shadow: 0 12px 28px rgba(0,0,0,0.08);
+}
+
+/* ==========================================
+   CONTENEDOR GENERAL
+   ========================================== */
+
+.calmi-diff-{{ section.id }} {
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  background: var(--diff-bg);
+}
+
+.calmi-diff-{{ section.id }}__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+/* ==========================================
+   COLUMNA DE TEXTO
+   ========================================== */
+
+.calmi-diff-{{ section.id }}__microclaim {
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 0.9;
+  margin-bottom: 10px;
+  color: var(--diff-micro);
+}
+
+.calmi-diff-{{ section.id }}__title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--diff-title);
+}
+
+.calmi-diff-{{ section.id }}__subtitle {
+  font-size: 1.35rem;
+  color: var(--diff-subtitle);
+  margin-bottom: 24px;
+  max-width: 520px;
+}
+
+/* LISTA */
+.calmi-diff-{{ section.id }}__list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.calmi-diff-{{ section.id }}__item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+/* ICONO */
+.calmi-diff-icon-img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  opacity: 0.9;
+  flex-shrink: 0;
+  margin-top: 2px;
+  filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.06));
+}
+
+/* TÍTULO + TEXTO ITEM */
+.calmi-diff-{{ section.id }}__item-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 2px;
+  color: var(--diff-title);
+}
+
+.calmi-diff-{{ section.id }}__item-text {
+  font-size: 1.1rem;
+  line-height: 1.45;
+  color: var(--diff-text);
+  opacity: 0.9;
+}
+
+/* MINI CLAIM FINAL */
+.calmi-diff-{{ section.id }}__miniclaim {
+  margin-top: 26px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 14px 18px;
+  border-left: 4px solid var(--diff-miniclaim-border);
+  background: var(--diff-miniclaim-bg);
+  color: var(--diff-miniclaim-text);
+  border-radius: 10px;
+}
+
+/* ==========================================
+   COLUMNA DE MEDIA
+   ========================================== */
+
+.calmi-diff-{{ section.id }}__media img,
+.calmi-diff-{{ section.id }}__media video {
+  width: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: var(--diff-shadow);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 749px) {
+  .calmi-diff-{{ section.id }}__inner {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+  .calmi-diff-{{ section.id }}__title {
+    font-size: 2rem;
+  }
+  .calmi-diff-{{ section.id }}__subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+{% endstyle %}
+
+
+<section class="calmi-diff-{{ section.id }}">
+  <div class="calmi-diff-{{ section.id }}__inner">
+
+    <!-- TEXT COLUMN -->
+    <div>
+      {% if section.settings.microclaim != blank %}
+      <p class="calmi-diff-{{ section.id }}__microclaim">
+        {{ section.settings.microclaim }}
+      </p>
+      {% endif %}
+
+      <h2 class="calmi-diff-{{ section.id }}__title">
+        {{ section.settings.title }}
+      </h2>
+
+      <p class="calmi-diff-{{ section.id }}__subtitle">
+        {{ section.settings.subtitle }}
+      </p>
+
+      <div class="calmi-diff-{{ section.id }}__list">
+        {% for block in section.blocks %}
+        <div class="calmi-diff-{{ section.id }}__item" {{ block.shopify_attributes }}>
+
+          <div class="calmi-diff-{{ section.id }}__icon-wrapper">
+            {% if block.settings.icon_image %}
+              {{ block.settings.icon_image
+                | image_url: width: 64
+                | image_tag:
+                  width: 32,
+                  height: 32,
+                  loading: 'lazy',
+                  class: 'calmi-diff-icon-img'
+              }}
+            {% endif %}
+          </div>
+
+
+          <div>
+            <div class="calmi-diff-{{ section.id }}__item-title">{{ block.settings.title }}</div>
+            <div class="calmi-diff-{{ section.id }}__item-text">{{ block.settings.text }}</div>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="calmi-diff-{{ section.id }}__miniclaim">
+        {{ section.settings.miniclaim }}
+      </div>
+    </div>
+
+    <!-- MEDIA COLUMN -->
+    <div class="calmi-diff-{{ section.id }}__media">
+      {% if section.settings.video != blank %}
+      {{ section.settings.video
+        | video_tag:
+          autoplay: true,
+          loop: true,
+          muted: true,
+          playsinline: true,
+          class: "calmi-diff-video"
+      }}
+      {% elsif section.settings.image != blank %}
+      <img
+        src="{{ section.settings.image | image_url: width: 1200 }}"
+        width="1200"
+        height="1200"
+        alt="{{ section.settings.title }}"
+        loading="lazy"
+      >
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Diferenciales producto",
+  "settings": [
+    {
+      "type": "text",
+      "id": "microclaim",
+      "label": "Microclaim superior",
+      "default": "⭐ Más de 10.000 familias confían en Calmi"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Por qué Calmi NO es un peluche común"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Un mecanismo único diseñado para brindar calma real en minutos."
+    },
+    {
+      "type": "textarea",
+      "id": "miniclaim",
+      "label": "Mini claim final",
+      "default": "Calmi no es un juguete: es una herramienta emocional de calma."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Imagen (si no hay video)"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video ilustrativo (opcional)"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "🎨 Colores personalizados"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color del título",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Color del subtítulo",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "microclaim_color",
+      "label": "Color del microclaim",
+      "default": "#444444"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto de los diferenciales",
+      "default": "rgba(0,0,0,0.85)"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Color de íconos (si son SVG en color)",
+      "default": "#2B4E52"
+    },
+    {
+      "type": "color",
+      "id": "miniclaim_bg",
+      "label": "Fondo del mini-claim final",
+      "default": "rgba(0,0,0,0.04)"
+    },
+    {
+      "type": "color",
+      "id": "miniclaim_border",
+      "label": "Borde del mini-claim final",
+      "default": "#2B4E52"
+    },
+    {
+      "type": "color",
+      "id": "miniclaim_text",
+      "label": "Texto del mini-claim final",
+      "default": "#222222"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "diff",
+      "name": "Diferencial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Ícono (PNG/SVG recomendado)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título del diferencial",
+          "default": "Respiración real"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Descripción",
+          "default": "Calmi imita el ritmo natural de la respiración humana para generar calma inmediata."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 7,
+  "presets": [
+    {
+      "name": "Diferenciales del producto",
+      "blocks": [
+        { "type": "diff" },
+        { "type": "diff" },
+        { "type": "diff" }
+      ]
+    }
+  ]
+}
+{% endschema %}

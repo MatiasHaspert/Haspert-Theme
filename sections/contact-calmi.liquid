@@ -1,0 +1,234 @@
+{% comment %}
+  Sección de Contacto – Calmi
+  - Formulario nativo de Shopify (contact form)
+  - Estética premium: card, sombras, espaciados suaves
+  - Compatible con bloques (texto adicional o imagen/mapa opcional)
+{% endcomment %}
+
+{% style %}
+.contact-{{ section.id }} {
+  padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  background: {{ section.settings.bg_color }};
+}
+
+.contact-{{ section.id }}__inner {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.contact-{{ section.id }}__title {
+  text-align: center;
+  margin-bottom: 28px;
+  font-weight: 700;
+}
+
+.contact-{{ section.id }}__card {
+  background: #fff;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: 0 14px 35px rgba(15,23,42,0.10);
+  border: 1px solid rgba(15,23,42,0.08);
+}
+
+.contact-{{ section.id }}__intro {
+  text-align: center;
+  margin-bottom: 24px;
+  opacity: 0.85;
+  font-size: 1.45rem;
+}
+
+.contact-{{ section.id }}__form-group {
+  margin-bottom: 18px;
+}
+
+.contact-{{ section.id }}__form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.contact-{{ section.id }}__form-group input,
+.contact-{{ section.id }}__form-group textarea,
+.contact-{{ section.id }}__form-group select {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.4rem;
+  border: 1px solid rgba(15,23,42,0.20);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.9);
+}
+
+.contact-{{ section.id }}__form-group textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.contact-{{ section.id }}__submit {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.55rem;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 749px) {
+  .contact-{{ section.id }}__card {
+    padding: 20px;
+  }
+
+  .contact-{{ section.id }}__title {
+    font-size: 2rem;
+  }
+}
+{% endstyle %}
+
+<section class="contact-{{ section.id }}">
+  <div class="contact-{{ section.id }}__inner">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="contact-{{ section.id }}__title {{ section.settings.heading_size }}">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.intro != blank %}
+      <p class="contact-{{ section.id }}__intro">
+        {{ section.settings.intro }}
+      </p>
+    {% endif %}
+
+    <div class="contact-{{ section.id }}__card">
+
+      {%- form 'contact', id: "ContactForm-#{ section.id }" -%}
+
+        <div class="contact-{{ section.id }}__form-group">
+          <label for="ContactFormName-{{ section.id }}">Nombre</label>
+          <input
+            type="text"
+            id="ContactFormName-{{ section.id }}"
+            name="contact[name]"
+            required>
+        </div>
+
+        <div class="contact-{{ section.id }}__form-group">
+          <label for="ContactFormEmail-{{ section.id }}">Correo electrónico</label>
+          <input
+            type="email"
+            id="ContactFormEmail-{{ section.id }}"
+            name="contact[email]"
+            required>
+        </div>
+
+        {% if section.settings.enable_phone %}
+        <div class="contact-{{ section.id }}__form-group">
+          <label for="ContactFormPhone-{{ section.id }}">WhatsApp (opcional)</label>
+          <input
+            type="tel"
+            id="ContactFormPhone-{{ section.id }}"
+            name="contact[phone]">
+        </div>
+        {% endif %}
+
+        {% if section.settings.enable_subject %}
+        <div class="contact-{{ section.id }}__form-group">
+          <label for="ContactFormSubject-{{ section.id }}">Asunto</label>
+          <select id="ContactFormSubject-{{ section.id }}" name="contact[subject]">
+            <option value="Ayuda con mi Calmi">Ayuda con mi Calmi</option>
+            <option value="Estado del pedido">Estado del pedido</option>
+            <option value="Devoluciones / Garantía">Devoluciones / Garantía</option>
+            <option value="Otra consulta">Otra consulta</option>
+          </select>
+        </div>
+        {% endif %}
+
+        <div class="contact-{{ section.id }}__form-group">
+          <label for="ContactFormMessage-{{ section.id }}">Mensaje</label>
+          <textarea
+            id="ContactFormMessage-{{ section.id }}"
+            name="contact[body]"
+            required></textarea>
+        </div>
+
+        <button class="button button--primary contact-{{ section.id }}__submit">
+          Enviar mensaje
+        </button>
+
+      {%- endform -%}
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contacto – Calmi",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "¿Necesitás ayuda?"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Tamaño del título",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h1", "label": "H1" },
+        { "value": "h0", "label": "H0" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Texto introductorio",
+      "default": "<p>Estamos acá para ayudarte. Escribinos y te respondemos en menos de 24 horas.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_phone",
+      "label": "Mostrar campo WhatsApp",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_subject",
+      "label": "Mostrar selector de asunto",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#F9F9F9"
+    },
+    {
+    "type": "range",
+    "id": "padding_top",
+    "label": "Padding superior",
+    "min": 0,
+    "max": 100,
+    "step": 4,
+    "default": 48
+    },
+    {
+    "type": "range",
+    "id": "padding_bottom",
+    "label": "Padding inferior",
+    "min": 0,
+    "max": 100,
+    "step": 4,
+    "default": 48
+    }
+  ],
+  "presets": [
+    { "name": "Sección de contacto Calmi" }
+  ]
+}
+{% endschema %}

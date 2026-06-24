@@ -1,0 +1,71 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer_calmi_LKXkVJ": {
+      "type": "footer-calmi",
+      "name": "Footer Profesional Calmi",
+      "settings": {
+        "g_title": "Garantías",
+        "g_1": "30 días de prueba o reembolso",
+        "g_2": "Cambios fáciles y rápidos",
+        "g_3": "Productos certificados y seguros",
+        "s_title": "Soporte",
+        "s_email": "info.laboratorios.prod@gmail.com",
+        "s_whatsapp": "+54 3406 461636",
+        "m_title": "Nuestra Marca",
+        "m_desc": "Diseñamos productos para calmar, relajar y mejorar el descanso de bebés y mascotas.",
+        "reviews_text": "+1200 reseñas verificadas",
+        "instagram": "https://www.instagram.com/calmi_ar/",
+        "tiktok": "https://www.tiktok.com/@calmiarg",
+        "facebook": "https://www.facebook.com/profile.php?id=61584574434647",
+        "icon_visa": "shopify://shop_images/png-transparent-visa-logo-credit-card-visa-debit-card-payment-card-mastercard-visa-blue-text-trademark.png",
+        "icon_mastercard": "shopify://shop_images/png-transparent-card-master-mastercard-shift-ecommerce-icon-thumbnail.png",
+        "icon_amex": "shopify://shop_images/png-transparent-american-express-amex-charge-credit-card-payment-credit-cards-icon-thumbnail.png",
+        "icon_mp": "shopify://shop_images/descarga.png",
+        "bg_color": "#f4f4f5",
+        "text_color": "#333333",
+        "title_color": "#111111",
+        "link_color": "#111111",
+        "icon_color": "#111111",
+        "mini_icon_color": "#111111",
+        "social_color": "#111111",
+        "trust_text_color": "#111111",
+        "bottom_border_color": "#0000001a",
+        "bottom_text_color": "#111111",
+        "card_bg": "rgba(0,0,0,0)"
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-2",
+        "newsletter_enable": false,
+        "newsletter_heading": "Subscribe to our emails",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": false,
+        "show_policy": true,
+        "margin_top": 0,
+        "padding_top": 44,
+        "padding_bottom": 48
+      }
+    }
+  },
+  "order": [
+    "footer_calmi_LKXkVJ",
+    "footer"
+  ]
+}

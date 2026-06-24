@@ -1,0 +1,294 @@
+{% style %}
+
+/* ============================
+   🎨 SISTEMA DE COLORES
+   ============================ */
+
+.calmi-benefits-{{ section.id }} {
+  --benefits-bg: {{ section.settings.bg_color }};
+  --benefits-title: {{ section.settings.title_color }};
+  --benefits-subtitle: {{ section.settings.subtitle_color }};
+  --benefits-micro: {{ section.settings.microclaim_color }};
+  --benefits-icon: {{ section.settings.icon_color }};
+  --benefits-text: {{ section.settings.text_color }};
+  --benefits-card-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+/* ============================
+   CONTENEDOR GENERAL
+   ============================ */
+
+.calmi-benefits-{{ section.id }} {
+  padding: 60px 0;
+  background: var(--benefits-bg);
+}
+
+.calmi-benefits-{{ section.id }}__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+/* ============================
+   MICROCLAIM
+   ============================ */
+
+.calmi-benefits-{{ section.id }}__microclaim {
+  font-size: 1.25rem;
+  color: var(--benefits-micro);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* ============================
+   MEDIA
+   ============================ */
+
+.calmi-benefits-{{ section.id }}__media img,
+.calmi-benefits-{{ section.id }}__media video {
+  width: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: var(--benefits-card-shadow);
+}
+
+/* ============================
+   TITLES
+   ============================ */
+
+.calmi-benefits-{{ section.id }}__content-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--benefits-title);
+}
+
+.calmi-benefits-{{ section.id }}__content-sub {
+  font-size: 1.45rem;
+  color: var(--benefits-subtitle);
+  margin-bottom: 26px;
+  max-width: 520px;
+}
+
+/* ============================
+   LISTA DE BENEFICIOS
+   ============================ */
+
+.calmi-benefits-{{ section.id }}__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ITEM */
+.calmi-benefits-{{ section.id }}__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* ÍCONO */
+.calmi-benefits-{{ section.id }}__item-icon {
+  font-size: 24px;
+  line-height: 1;
+  color: var(--benefits-icon);
+  min-width: 28px;
+  text-align: center;
+}
+
+/* TEXTO DEL BENEFICIO */
+.calmi-benefits-{{ section.id }}__item-text {
+  font-size: 1.25rem;
+  line-height: 1.45;
+  color: var(--benefits-text);
+}
+
+/* ============================
+   MOBILE
+   ============================ */
+
+@media (max-width: 749px) {
+  .calmi-benefits-{{ section.id }}__inner {
+    grid-template-columns: 1fr;
+    text-align: left;
+    gap: 34px;
+  }
+
+  .calmi-benefits-{{ section.id }}__content-title {
+    font-size: 2rem;
+  }
+
+  .calmi-benefits-{{ section.id }}__content-sub {
+    font-size: 1.3rem;
+  }
+}
+
+{% endstyle %}
+
+
+<section class="calmi-benefits-{{ section.id }}">
+  <div class="calmi-benefits-{{ section.id }}__inner">
+
+    <!-- MEDIA -->
+    <div class="calmi-benefits-{{ section.id }}__media">
+      {% if section.settings.video %}
+        {{ section.settings.video | video_tag:
+            autoplay: true,
+            loop: true,
+            muted: true,
+            playsinline: true,
+            controls: false
+        }}
+      {% elsif section.settings.image %}
+        <img 
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          alt="{{ section.settings.title | escape }}"
+          width="1200"
+          height="800"
+          loading="lazy"
+        >
+      {% endif %}
+    </div>
+
+    <!-- TEXT CONTENT -->
+    <div>
+
+      <!-- MICROCLAIM PREMIUM -->
+      {% if section.settings.microclaim != blank %}
+      <div class="calmi-benefits-{{ section.id }}__microclaim">
+        {{ section.settings.microclaim }}
+      </div>
+      {% endif %}
+
+      <h2 class="calmi-benefits-{{ section.id }}__content-title">
+        {{ section.settings.title }}
+      </h2>
+
+      <p class="calmi-benefits-{{ section.id }}__content-sub">
+        {{ section.settings.subtitle }}
+      </p>
+
+      <div class="calmi-benefits-{{ section.id }}__list">
+        {% for block in section.blocks %}
+        <div class="calmi-benefits-{{ section.id }}__item" {{ block.shopify_attributes }}>
+          <div class="calmi-benefits-{{ section.id }}__item-icon">{{ block.settings.icon }}</div>
+          <div class="calmi-benefits-{{ section.id }}__item-text">{{ block.settings.text }}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Beneficios Profundos",
+  "settings": [
+    {
+      "type": "text",
+      "id": "microclaim",
+      "label": "Microclaim superior",
+      "default": "⭐ Resultados reales en miles de hogares"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "El impacto real de Calmi en el día a día"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Su mecanismo natural ayuda a regular el sistema nervioso, bajar ansiedad y mejorar el descanso."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Imagen (fallback si no hay video)"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video (MP4, WebM)"
+    },
+    {
+      "type": "header",
+      "content": "🎨 Colores personalizados"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color del título",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Color del subtítulo",
+      "default": "#444444"
+    },
+    {
+      "type": "color",
+      "id": "microclaim_color",
+      "label": "Color del microclaim",
+      "default": "rgba(0,0,0,0.6)"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Color de íconos",
+      "default": "#7B6CFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto de beneficios",
+      "default": "rgba(0,0,0,0.85)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Beneficio",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Ícono (emoji recomendado)",
+          "default": "🌙"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Texto del beneficio",
+          "default": "Dormí más rápido y por más tiempo gracias al ritmo calmante."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Beneficios Profundos (Foto + texto)",
+      "blocks": [
+        { "type": "benefit" },
+        { "type": "benefit" },
+        { "type": "benefit" }
+      ]
+    }
+  ]
+}
+{% endschema %}
