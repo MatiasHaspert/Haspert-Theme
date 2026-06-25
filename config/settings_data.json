@@ -148,73 +148,85 @@
         "type": "shopify://apps/mercado-pago-antifraud-plus/blocks/embed-block/b19ea721-f94a-4308-bee5-0057c043bac5",
         "disabled": false,
         "settings": {}
+      },
+      "14060646107696862457": {
+        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": false,
+        "settings": {}
+      },
+      "13047258039897440615": {
+        "type": "shopify://apps/judge-me-reviews/blocks/cart_drawer_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": false,
+        "settings": {
+          "widget_type": "review-widget"
+        }
       }
     },
     "color_schemes": {
       "scheme-1": {
         "settings": {
-          "background": "#FBF8F3",
+          "background": "#fbf8f3",
           "background_gradient": "",
-          "text": "#1E1A16",
-          "button": "#1E1A16",
-          "button_label": "#FBF8F3",
-          "secondary_button_label": "#1E1A16",
-          "shadow": "#1E1A16"
+          "text": "#1e1a16",
+          "button": "#1e1a16",
+          "button_label": "#fbf8f3",
+          "secondary_button_label": "#1e1a16",
+          "shadow": "#1e1a16"
         }
       },
       "scheme-2": {
         "settings": {
-          "background": "#EFE7D8",
+          "background": "#efe7d8",
           "background_gradient": "",
-          "text": "#1E1A16",
-          "button": "#1E1A16",
-          "button_label": "#EFE7D8",
-          "secondary_button_label": "#1E1A16",
-          "shadow": "#1E1A16"
+          "text": "#1e1a16",
+          "button": "#1e1a16",
+          "button_label": "#efe7d8",
+          "secondary_button_label": "#1e1a16",
+          "shadow": "#1e1a16"
         }
       },
       "scheme-3": {
         "settings": {
-          "background": "#16120F",
+          "background": "#16120f",
           "background_gradient": "",
-          "text": "#F3ECE1",
-          "button": "#C2A24C",
-          "button_label": "#16120F",
-          "secondary_button_label": "#F3ECE1",
+          "text": "#f3ece1",
+          "button": "#c2a24c",
+          "button_label": "#16120f",
+          "secondary_button_label": "#f3ece1",
           "shadow": "#000000"
         }
       },
       "scheme-4": {
         "settings": {
-          "background": "#1B3A33",
+          "background": "#1b3a33",
           "background_gradient": "",
-          "text": "#F3ECE1",
-          "button": "#C2A24C",
-          "button_label": "#16120F",
-          "secondary_button_label": "#F3ECE1",
+          "text": "#f3ece1",
+          "button": "#c2a24c",
+          "button_label": "#16120f",
+          "secondary_button_label": "#f3ece1",
           "shadow": "#000000"
         }
       },
       "scheme-5": {
         "settings": {
-          "background": "#C2A24C",
+          "background": "#c2a24c",
           "background_gradient": "",
-          "text": "#1E1A16",
-          "button": "#1E1A16",
-          "button_label": "#C2A24C",
-          "secondary_button_label": "#1E1A16",
-          "shadow": "#1E1A16"
+          "text": "#1e1a16",
+          "button": "#1e1a16",
+          "button_label": "#c2a24c",
+          "secondary_button_label": "#1e1a16",
+          "shadow": "#1e1a16"
         }
       },
       "scheme-9fee2964-e698-4ac4-8312-412fc47e733e": {
         "settings": {
-          "background": "#FBF8F3",
+          "background": "#fbf8f3",
           "background_gradient": "",
-          "text": "#1E1A16",
-          "button": "#1E1A16",
-          "button_label": "#FBF8F3",
-          "secondary_button_label": "#1E1A16",
-          "shadow": "#1E1A16"
+          "text": "#1e1a16",
+          "button": "#1e1a16",
+          "button_label": "#fbf8f3",
+          "secondary_button_label": "#1e1a16",
+          "shadow": "#1e1a16"
         }
       }
     }
