@@ -1,0 +1,39 @@
+{%- comment -%}
+  Sticky add-to-cart (mobile). Envía el form principal del producto vía form= attribute,
+  así mantiene el AJAX add-to-cart de product-form.js y la variante seleccionada.
+
+  Accepts:
+  - product: {Object}
+  - product_form_id: {String} id del form de compra
+  - section_id: {String} id de la sección main-product
+{%- endcomment -%}
+<sticky-atc class="sticky-atc no-js-hidden" data-section="{{ section_id }}">
+  <div class="sticky-atc__inner">
+    {%- if product.featured_media -%}
+      <div class="sticky-atc__media">
+        <img
+          src="{{ product.featured_media | image_url: width: 120 }}"
+          alt="{{ product.featured_media.alt | escape }}"
+          width="44"
+          height="44"
+          loading="lazy"
+        >
+      </div>
+    {%- endif -%}
+    <div class="sticky-atc__info">
+      <span class="sticky-atc__title">{{ product.title | escape }}</span>
+      <span class="sticky-atc__price" id="sticky-price-{{ section_id }}">
+        {%- render 'price', product: product, use_variant: true -%}
+      </span>
+    </div>
+    <button
+      type="submit"
+      name="add"
+      form="{{ product_form_id }}"
+      class="sticky-atc__button button button--primary"
+      {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+    >
+      {{ 'products.product.add_to_cart' | t }}
+    </button>
+  </div>
+</sticky-atc>

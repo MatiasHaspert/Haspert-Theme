@@ -1,0 +1,116 @@
+{%- comment -%}
+  Breadcrumbs + BreadcrumbList structured data (SEO).
+  Soporta colección, producto y página. En home/otros no renderiza.
+{%- endcomment -%}
+{%- liquid
+  assign t = template.name
+  assign render_bc = false
+  if t == 'collection' or t == 'product' or t == 'page'
+    assign render_bc = true
+  endif
+  assign home_label = section.settings.home_label | default: 'Inicio'
+-%}
+{%- if render_bc -%}
+  <nav class="breadcrumb page-width" aria-label="breadcrumb" role="navigation">
+    <ol class="breadcrumb__list" role="list">
+      <li class="breadcrumb__item">
+        <a href="{{ routes.root_url }}">{{ home_label }}</a>
+      </li>
+      {%- if t == 'collection' -%}
+        <li class="breadcrumb__item" aria-current="page"><span>{{ collection.title }}</span></li>
+      {%- elsif t == 'product' -%}
+        {%- if collection.url -%}
+          <li class="breadcrumb__item"><a href="{{ collection.url }}">{{ collection.title }}</a></li>
+        {%- elsif product.collections.first -%}
+          <li class="breadcrumb__item"><a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a></li>
+        {%- endif -%}
+        <li class="breadcrumb__item" aria-current="page"><span>{{ product.title }}</span></li>
+      {%- elsif t == 'page' -%}
+        <li class="breadcrumb__item" aria-current="page"><span>{{ page.title }}</span></li>
+      {%- endif -%}
+    </ol>
+  </nav>
+
+  {%- capture bc_json -%}
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": {{ home_label | json }}, "item": {{ shop.url | append: routes.root_url | json }} }
+    {%- if t == 'collection' -%}
+    , { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ shop.url | append: collection.url | json }} }
+    {%- elsif t == 'product' -%}
+      {%- if collection.url -%}
+    , { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ shop.url | append: collection.url | json }} }
+    , { "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
+      {%- elsif product.collections.first -%}
+    , { "@type": "ListItem", "position": 2, "name": {{ product.collections.first.title | json }}, "item": {{ shop.url | append: product.collections.first.url | json }} }
+    , { "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
+      {%- else -%}
+    , { "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
+      {%- endif -%}
+    {%- elsif t == 'page' -%}
+    , { "@type": "ListItem", "position": 2, "name": {{ page.title | json }}, "item": {{ shop.url | append: page.url | json }} }
+    {%- endif -%}
+  ]
+}
+  {%- endcapture -%}
+  <script type="application/ld+json">{{ bc_json }}</script>
+{%- endif -%}
+
+{% stylesheet %}
+.breadcrumb {
+  padding-top: 1.4rem;
+  padding-bottom: 0.4rem;
+}
+.breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 1.3rem;
+}
+.breadcrumb__item {
+  display: flex;
+  align-items: center;
+  opacity: 0.75;
+}
+.breadcrumb__item:not(:last-child)::after {
+  content: '/';
+  margin-left: 0.5rem;
+  opacity: 0.5;
+}
+.breadcrumb__item a {
+  text-decoration: none;
+  color: inherit;
+}
+.breadcrumb__item a:hover {
+  text-decoration: underline;
+}
+.breadcrumb__item[aria-current='page'] {
+  opacity: 1;
+  font-weight: 500;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Breadcrumbs",
+  "tag": "section",
+  "class": "section-breadcrumb",
+  "settings": [
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Etiqueta de inicio",
+      "default": "Inicio"
+    }
+  ],
+  "presets": [
+    { "name": "Breadcrumbs" }
+  ]
+}
+{% endschema %}

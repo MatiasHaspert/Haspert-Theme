@@ -9,6 +9,10 @@
  */
 {
   "sections": {
+    "breadcrumbs": {
+      "type": "breadcrumbs",
+      "settings": {}
+    },
     "main-collection-banner": {
       "type": "main-collection-banner",
       "settings": {
@@ -26,7 +30,7 @@
         "image_ratio": "adapt",
         "image_shape": "default",
         "show_secondary_image": true,
-        "show_vendor": false,
+        "show_vendor": true,
         "show_rating": false,
         "quick_add": "none",
         "enable_filtering": true,
@@ -39,6 +43,7 @@
     }
   },
   "order": [
+    "breadcrumbs",
     "main-collection-banner",
     "main-collection-product-grid"
   ]
