@@ -3,6 +3,17 @@
   Q/A editables por block. El JSON-LD se genera dinámicamente desde los settings (no se duplica el texto).
 {%- endcomment -%}
 
+{%- liquid
+  # Dorado de marca con contraste AA: oscurece sólo sobre fondos claros.
+  assign accent = section.settings.accent_color
+  assign scheme_bg = section.settings.color_scheme.settings.background
+  assign bg_bright = scheme_bg | color_brightness
+  assign accent_ink = accent
+  if scheme_bg == blank or bg_bright > 140
+    assign accent_ink = accent | color_darken: 22
+  endif
+-%}
+
 <div class="faqp color-{{ section.settings.color_scheme }} gradient">
   <div class="page-width section-{{ section.id }}-padding">
     <div class="faqp__head">
@@ -60,7 +71,10 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
-  #shopify-section-{{ section.id }} { --faqp-accent: {{ section.settings.accent_color }}; }
+  #shopify-section-{{ section.id }} {
+    --faqp-accent: {{ section.settings.accent_color }};
+    --faqp-accent-ink: {{ accent_ink }};
+  }
 {%- endstyle -%}
 
 {% stylesheet %}
@@ -74,8 +88,8 @@
   letter-spacing: 0.06rem;
   text-transform: uppercase;
   padding: 0.5rem 1.1rem;
-  border: 0.1rem solid var(--faqp-accent);
-  color: var(--faqp-accent);
+  border: 0.1rem solid var(--faqp-accent-ink);
+  color: var(--faqp-accent-ink);
   border-radius: var(--badge-corner-radius, 0.2rem);
   margin-bottom: 1.4rem;
 }
@@ -100,7 +114,7 @@
 }
 .faqp__summary::-webkit-details-marker { display: none; }
 .faqp__summary:focus-visible {
-  outline: 0.2rem solid var(--faqp-accent);
+  outline: 0.2rem solid var(--faqp-accent-ink);
   outline-offset: 0.2rem;
 }
 .faqp__icon {

@@ -14,6 +14,15 @@
   else
     assign media_position = 'left'
   endif
+
+  # Dorado de marca para texto/ícono/borde con contraste AA: oscurece sólo sobre fondos claros.
+  assign accent = section.settings.accent_color
+  assign scheme_bg = section.settings.color_scheme.settings.background
+  assign bg_bright = scheme_bg | color_brightness
+  assign accent_ink = accent
+  if scheme_bg == blank or bg_bright > 140
+    assign accent_ink = accent | color_darken: 22
+  endif
 -%}
 
 <product-info
@@ -51,6 +60,7 @@
     }
     #MainProduct-{{ section.id }} {
       --perfume-accent: {{ section.settings.accent_color }};
+      --perfume-accent-ink: {{ accent_ink }};
     }
   {%- endstyle -%}
 
@@ -356,6 +366,9 @@
 .sticky-atc--visible {
   transform: translateY(0);
 }
+@media (prefers-reduced-motion: reduce) {
+  .sticky-atc { transition: none; }
+}
 .sticky-atc__inner {
   display: flex;
   align-items: center;
@@ -429,8 +442,8 @@
   line-height: 1.2;
 }
 .perfume-chip--accent {
-  border-color: var(--perfume-accent);
-  color: var(--perfume-accent);
+  border-color: var(--perfume-accent-ink);
+  color: var(--perfume-accent-ink);
 }
 .perfume-section-title {
   font-size: 1.3rem;
@@ -461,11 +474,11 @@
   align-items: flex-start;
   margin-top: 1.8rem;
   padding: 1.4rem 1.6rem;
-  border: 0.1rem solid var(--perfume-accent);
+  border: 0.1rem solid var(--perfume-accent-ink);
   border-radius: var(--media-radius, 0.4rem);
   background: rgba(var(--color-foreground), 0.02);
 }
-.perfume-originality__icon { color: var(--perfume-accent); flex-shrink: 0; }
+.perfume-originality__icon { color: var(--perfume-accent-ink); flex-shrink: 0; }
 .perfume-originality__icon .icon { width: 2.2rem; height: 2.2rem; }
 .perfume-originality__title { font-weight: 600; margin: 0 0 0.3rem; }
 .perfume-originality__text { font-size: 1.4rem; opacity: 0.85; }
@@ -491,8 +504,8 @@
   margin-bottom: 0.6rem;
 }
 .perfume-ladder__row.is-selected {
-  border-color: var(--perfume-accent);
-  box-shadow: inset 0 0 0 0.1rem var(--perfume-accent);
+  border-color: var(--perfume-accent-ink);
+  box-shadow: inset 0 0 0 0.1rem var(--perfume-accent-ink);
 }
 .perfume-ladder__name { font-weight: 500; flex: 1 1 auto; }
 .perfume-ladder__price { font-weight: 600; }

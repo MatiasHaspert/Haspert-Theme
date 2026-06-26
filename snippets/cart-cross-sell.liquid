@@ -1,0 +1,124 @@
+{%- comment -%}
+  Cross-sell en carrito por familia olfativa (AOV).
+  Lee settings globales (Theme settings → Cross-sell en carrito) + el carrito.
+  Recomienda perfumes que comparten familia (metafield lista custom.familia_olfativa) con algún
+  item del carrito, excluyendo los que ya están. Re-renderiza junto con la notificación del carrito.
+  Mini-cards que enlazan a la PDP (liviano, sin JS extra). Precios desde Shopify, nada hardcodeado.
+{%- endcomment -%}
+{%- if settings.cart_xsell_enabled and cart.item_count > 0 and settings.cart_xsell_collection != blank -%}
+  {%- liquid
+    assign coll = settings.cart_xsell_collection
+    assign max = settings.cart_xsell_count | default: 2
+
+    # Familias e IDs presentes en el carrito. Se envuelven en delimitadores (|token| , id ,)
+    # para que `contains` haga match exacto por token y no por subcadena.
+    assign cart_fams = ''
+    assign cart_ids = ','
+    for item in cart.items
+      assign cart_ids = cart_ids | append: item.product.id | append: ','
+      assign item_fams = item.product.metafields.custom.familia_olfativa.value
+      for f in item_fams
+        assign cart_fams = cart_fams | append: '|' | append: f | append: '|'
+      endfor
+    endfor
+  -%}
+  {%- if cart_fams != blank -%}
+    {%- assign shown = 0 -%}
+    {%- capture xsell_items -%}
+      {%- for candidate in coll.products -%}
+        {%- if shown >= max -%}{%- break -%}{%- endif -%}
+        {%- unless candidate.available -%}{%- continue -%}{%- endunless -%}
+        {%- assign cid = ',' | append: candidate.id | append: ',' -%}
+        {%- if cart_ids contains cid -%}{%- continue -%}{%- endif -%}
+        {%- assign cand_fams = candidate.metafields.custom.familia_olfativa.value -%}
+        {%- assign is_match = false -%}
+        {%- for cf in cand_fams -%}
+          {%- assign token = '|' | append: cf | append: '|' -%}
+          {%- if cart_fams contains token -%}{%- assign is_match = true -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+        {%- if is_match -%}
+          <li class="cart-xsell__item">
+            <a class="cart-xsell__link" href="{{ candidate.url }}">
+              {%- if candidate.featured_media -%}
+                <span class="cart-xsell__media global-media-settings">
+                  <img
+                    src="{{ candidate.featured_media | image_url: width: 120 }}"
+                    alt="{{ candidate.featured_media.alt | escape }}"
+                    loading="lazy"
+                    width="60"
+                    height="60"
+                  >
+                </span>
+              {%- endif -%}
+              <span class="cart-xsell__info">
+                <span class="cart-xsell__name">{{ candidate.title | escape }}</span>
+                <span class="cart-xsell__price">
+                  {%- if candidate.price_varies -%}{{ 'sections.cart.xsell_from' | t }} {% endif -%}
+                  {{ candidate.price | money }}
+                </span>
+              </span>
+              <span class="cart-xsell__cta">{{ 'sections.cart.xsell_cta' | t }}</span>
+            </a>
+          </li>
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- if shown > 0 -%}
+      <div class="cart-xsell">
+        {%- if settings.cart_xsell_heading != blank -%}
+          <p class="cart-xsell__heading">{{ settings.cart_xsell_heading }}</p>
+        {%- endif -%}
+        <ul class="cart-xsell__list list-unstyled" role="list">{{ xsell_items }}</ul>
+      </div>
+      {%- style -%}
+        .cart-xsell {
+          margin: 1.6rem 0 0;
+          padding-top: 1.4rem;
+          border-top: 0.1rem solid rgba(var(--color-foreground), 0.12);
+        }
+        .cart-xsell__heading {
+          margin: 0 0 1rem;
+          font-size: 1.3rem;
+          font-weight: 600;
+          letter-spacing: 0.04rem;
+          text-transform: uppercase;
+        }
+        .cart-xsell__list { margin: 0; display: flex; flex-direction: column; gap: 0.8rem; }
+        .cart-xsell__link {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          text-decoration: none;
+          color: inherit;
+        }
+        .cart-xsell__media {
+          flex-shrink: 0;
+          width: 4.8rem;
+          height: 4.8rem;
+          border-radius: var(--media-radius, 0.4rem);
+          overflow: hidden;
+        }
+        .cart-xsell__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .cart-xsell__info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 0.2rem; }
+        .cart-xsell__name {
+          font-size: 1.4rem;
+          line-height: 1.2;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        .cart-xsell__price { font-size: 1.3rem; opacity: 0.8; }
+        .cart-xsell__cta {
+          flex-shrink: 0;
+          font-size: 1.3rem;
+          font-weight: 600;
+          text-decoration: underline;
+          text-underline-offset: 0.3rem;
+        }
+        .cart-xsell__link:hover .cart-xsell__cta { opacity: 0.7; }
+      {%- endstyle -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}

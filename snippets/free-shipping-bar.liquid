@@ -19,33 +19,40 @@
       assign amount_str = remaining | money
       assign message = settings.free_ship_text | replace: '{amount}', amount_str
     endif
+    assign bar_color = settings.free_ship_bar_color | default: '#C2A24C'
   -%}
-  <div class="free-ship{% if reached %} free-ship--reached{% endif %}" style="--free-ship-color: {{ settings.free_ship_bar_color }};">
+  <div class="free-ship{% if reached %} free-ship--reached{% endif %}">
     <p class="free-ship__text">{{ message }}</p>
     <div
       class="free-ship__track"
       role="progressbar"
+      aria-label="{{ 'sections.cart.free_shipping_progress' | t }}"
       aria-valuemin="0"
       aria-valuemax="100"
       aria-valuenow="{{ pct }}"
+      aria-valuetext="{{ message | strip_html | escape }}"
     >
-      <div class="free-ship__fill" style="width: {{ pct }}%;"></div>
+      <div class="free-ship__fill" style="width: {{ pct }}%; background-color: {{ bar_color }};"></div>
     </div>
   </div>
   {%- style -%}
     .free-ship { margin: 0 0 1.6rem; }
     .free-ship__text { margin: 0 0 0.8rem; font-size: 1.4rem; text-align: center; font-weight: 500; }
     .free-ship__track {
-      height: 0.6rem;
+      height: 0.8rem;
       border-radius: 1rem;
       background: rgba(var(--color-foreground), 0.12);
       overflow: hidden;
     }
     .free-ship__fill {
       height: 100%;
-      background: var(--free-ship-color);
+      min-width: 0.8rem;
+      background-color: {{ bar_color }};
       border-radius: 1rem;
       transition: width 0.4s ease;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .free-ship__fill { transition: none; }
     }
   {%- endstyle -%}
 {%- endif -%}

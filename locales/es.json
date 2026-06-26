@@ -297,6 +297,9 @@
     "cart": {
       "title": "Tu carrito",
       "caption": "Artículos en el carrito",
+      "free_shipping_progress": "Progreso hacia el envío gratis",
+      "xsell_cta": "Ver",
+      "xsell_from": "desde",
       "remove_title": "Eliminar {{ title }}",
       "note": "Instrucciones especiales del pedido",
       "checkout": "Pagar pedido",

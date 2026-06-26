@@ -1461,5 +1461,15 @@
       { "type": "text", "id": "free_ship_success", "label": "Texto al llegar", "default": "🎉 ¡Tenés ENVÍO GRATIS!" },
       { "type": "color", "id": "free_ship_bar_color", "label": "Color de la barra", "default": "#C2A24C" }
     ]
+  },
+  {
+    "name": "Cross-sell en carrito",
+    "settings": [
+      { "type": "paragraph", "content": "Sugiere perfumes de la misma familia olfativa en la notificación del carrito. Reacciona a lo que hay en el carrito y excluye lo ya agregado." },
+      { "type": "checkbox", "id": "cart_xsell_enabled", "label": "Activar cross-sell en el carrito", "default": true },
+      { "type": "collection", "id": "cart_xsell_collection", "label": "Colección donde buscar", "info": "Apuntá a un catálogo de perfumes con el metafield \"Familia olfativa\" cargado." },
+      { "type": "text", "id": "cart_xsell_heading", "label": "Título", "default": "Combina con tu compra" },
+      { "type": "range", "id": "cart_xsell_count", "min": 1, "max": 3, "step": 1, "label": "Cantidad de sugerencias", "default": 2 }
+    ]
   }
 ]

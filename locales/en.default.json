@@ -295,6 +295,9 @@
     "cart": {
       "title": "Your cart",
       "caption": "Cart items",
+      "free_shipping_progress": "Progress towards free shipping",
+      "xsell_cta": "View",
+      "xsell_from": "from",
       "remove_title": "Remove {{ title }}",
       "estimated_total": "Estimated total",
       "new_estimated_total": "New estimated total",

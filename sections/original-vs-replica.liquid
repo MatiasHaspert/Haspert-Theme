@@ -4,6 +4,17 @@
   Contenido genérico ("réplica"): nunca nombra marcas/vendedores puntuales.
 {%- endcomment -%}
 
+{%- liquid
+  # Dorado de marca con contraste AA: oscurece sólo sobre fondos claros.
+  assign accent = section.settings.accent_color
+  assign scheme_bg = section.settings.color_scheme.settings.background
+  assign bg_bright = scheme_bg | color_brightness
+  assign accent_ink = accent
+  if scheme_bg == blank or bg_bright > 140
+    assign accent_ink = accent | color_darken: 22
+  endif
+-%}
+
 <div class="ovr color-{{ section.settings.color_scheme }} gradient">
   <div class="page-width section-{{ section.id }}-padding">
     <div class="ovr__head">
@@ -67,7 +78,10 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
-  #shopify-section-{{ section.id }} { --ovr-accent: {{ section.settings.accent_color }}; }
+  #shopify-section-{{ section.id }} {
+    --ovr-accent: {{ section.settings.accent_color }};
+    --ovr-accent-ink: {{ accent_ink }};
+  }
 {%- endstyle -%}
 
 {% stylesheet %}
@@ -82,8 +96,8 @@
   letter-spacing: 0.06rem;
   text-transform: uppercase;
   padding: 0.5rem 1.1rem;
-  border: 0.1rem solid var(--ovr-accent);
-  color: var(--ovr-accent);
+  border: 0.1rem solid var(--ovr-accent-ink);
+  color: var(--ovr-accent-ink);
   border-radius: var(--badge-corner-radius, 0.2rem);
   margin-bottom: 1.4rem;
 }
@@ -116,7 +130,7 @@
 .ovr__row:not(.ovr__row--header) .ovr__cell--replica { opacity: 0.62; }
 .ovr__mark { flex-shrink: 0; line-height: 1; margin-top: 0.1rem; }
 .ovr__mark .icon { width: 1.6rem; height: 1.6rem; }
-.ovr__mark--ok { color: var(--ovr-accent); }
+.ovr__mark--ok { color: var(--ovr-accent-ink); }
 .ovr__mobilelabel { display: none; }
 .ovr__closing {
   text-align: center;

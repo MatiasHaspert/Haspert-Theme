@@ -82,6 +82,28 @@
         "padding_bottom": 48
       }
     },
+    "related_family": {
+      "type": "related-by-family",
+      "settings": {
+        "color_scheme": "",
+        "accent_color": "#C2A24C",
+        "heading": "Te puede gustar",
+        "heading_size": "h1",
+        "show_family_label": true,
+        "products_to_show": 4,
+        "enable_fallback": true,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "standard",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "related": {
       "type": "related-products",
       "settings": {
@@ -105,6 +127,7 @@
     "breadcrumbs",
     "main",
     "kit_decants_nKEUBr",
+    "related_family",
     "related"
   ]
 }
