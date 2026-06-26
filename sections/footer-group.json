@@ -11,40 +11,6 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "footer_shop": {
-      "type": "footer-shop",
-      "name": "Footer",
-      "settings": {
-        "g_title": "Garantías",
-        "g_1": "Originalidad garantizada",
-        "g_2": "Cambios y devoluciones simples",
-        "g_3": "Productos 100% originales e importados",
-        "s_title": "Soporte",
-        "s_email": "info.laboratorios.prod@gmail.com",
-        "s_whatsapp": "+54 3406 461636",
-        "m_title": "Nuestra Marca",
-        "m_desc": "Perfumería importada y árabe original. Frasco sellado, lote verificable y envíos a todo el país.",
-        "reviews_text": "",
-        "instagram": "",
-        "tiktok": "",
-        "facebook": "",
-        "icon_visa": "shopify://shop_images/png-transparent-visa-logo-credit-card-visa-debit-card-payment-card-mastercard-visa-blue-text-trademark.png",
-        "icon_mastercard": "shopify://shop_images/png-transparent-card-master-mastercard-shift-ecommerce-icon-thumbnail.png",
-        "icon_amex": "shopify://shop_images/png-transparent-american-express-amex-charge-credit-card-payment-credit-cards-icon-thumbnail.png",
-        "icon_mp": "shopify://shop_images/descarga.png",
-        "bg_color": "#16120F",
-        "text_color": "#C9C2B8",
-        "title_color": "#FBF8F3",
-        "link_color": "#FBF8F3",
-        "icon_color": "#C2A24C",
-        "mini_icon_color": "#FBF8F3",
-        "social_color": "#FBF8F3",
-        "trust_text_color": "#FBF8F3",
-        "bottom_border_color": "#ffffff1a",
-        "bottom_text_color": "#C9C2B8",
-        "card_bg": "rgba(0,0,0,0)"
-      }
-    },
     "footer": {
       "type": "footer",
       "disabled": true,
@@ -65,7 +31,6 @@
     }
   },
   "order": [
-    "footer_shop",
     "footer"
   ]
 }

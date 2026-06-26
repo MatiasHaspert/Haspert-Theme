@@ -21,7 +21,7 @@
         "judge_me_reviews_review_widget_niahzf": {
           "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
           "settings": {
-            "review_data": "sample_data",
+            "review_data": "real_data",
             "max_width": 1200,
             "show_shop_reviews": false,
             "empty_state": "empty_widget"
@@ -47,8 +47,6 @@
         "picker_type": "button",
         "show_dynamic_checkout": true,
         "show_sticky_atc": true,
-        "show_review_badge": true,
-        "show_reviews_widget": true,
         "show_facts": true,
         "show_pyramid": true,
         "pyramid_heading": "Pirámide olfativa",
@@ -63,6 +61,25 @@
         "inspired_prefix": "Inspirado en el perfil olfativo de",
         "padding_top": 36,
         "padding_bottom": 36
+      }
+    },
+    "kit_decants_nKEUBr": {
+      "type": "kit-decants",
+      "name": "Kit de decants",
+      "settings": {
+        "color_scheme": "",
+        "accent_color": "#C2A24C",
+        "microbadge": "🧪 Armá tu kit",
+        "heading": "Armá tu kit de decants",
+        "subheading": "Elegí varios aromas para probar y ahorrá llevándolos juntos.",
+        "collection": "perfumes-amaderados",
+        "kit_size": 3,
+        "decant_size": "Decant 5ml",
+        "discount_text": "Elegí 3 y llevate 10% OFF en tu kit",
+        "button_label": "Agregar kit al carrito",
+        "onboarding_text": "Elegí una colección de decants en la configuración de la sección.",
+        "padding_top": 48,
+        "padding_bottom": 48
       }
     },
     "related": {
@@ -87,6 +104,7 @@
   "order": [
     "breadcrumbs",
     "main",
+    "kit_decants_nKEUBr",
     "related"
   ]
 }
