@@ -1,0 +1,6 @@
+# Temporales de guardado atómico / editores — evita que `shopify theme dev` los suba y rebote
+*.tmp
+*.tmp.*
+*~
+.DS_Store
+Thumbs.db

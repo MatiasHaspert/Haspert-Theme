@@ -20,6 +20,22 @@
     font-size: 1.55rem;
   }
 
+  .footer-premium-{{ section.id }}__legal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 18px 0 14px;
+  }
+  .footer-premium-{{ section.id }}__legal-link {
+    color: var(--footer-bottom-text);
+    text-decoration: underline;
+    font-size: 1.4rem;
+  }
+  .footer-premium-{{ section.id }}__datafiscal { display: inline-flex; }
+  .footer-premium-{{ section.id }}__datafiscal img { display: block; border-radius: 4px; }
+
   /* GRID */
   .footer-premium-{{ section.id }}__inner {
     max-width: 1200px;
@@ -261,6 +277,23 @@
       {% endif %}
     </div>
 
+    {%- assign arr_url = section.settings.arrepentimiento_link -%}
+    {%- if arr_url == blank -%}{%- assign arr_url = '/pages/boton-de-arrepentimiento' -%}{%- endif -%}
+    <div class="footer-premium-{{ section.id }}__legal">
+      <a class="footer-premium-{{ section.id }}__legal-link" href="{{ arr_url }}">
+        {{ section.settings.arrepentimiento_text }}
+      </a>
+      {% if section.settings.data_fiscal_qr != blank %}
+        <a
+          class="footer-premium-{{ section.id }}__datafiscal"
+          {% if section.settings.data_fiscal_url != blank %}href="{{ section.settings.data_fiscal_url }}" target="_blank" rel="noopener"{% endif %}
+          aria-label="Data Fiscal"
+        >
+          {{ section.settings.data_fiscal_qr | image_url: width: 120 | image_tag: width: 48, height: 48, alt: 'Data Fiscal', loading: 'lazy' }}
+        </a>
+      {% endif %}
+    </div>
+
     © {{ 'now' | date: "%Y" }} {{ shop.name }} · Todos los derechos reservados
   </div>
 
@@ -287,6 +320,12 @@
     { "type": "url", "id": "instagram", "label": "Instagram" },
     { "type": "url", "id": "tiktok", "label": "TikTok" },
     { "type": "url", "id": "facebook", "label": "Facebook" },
+
+    { "type": "header", "content": "Legal / Compliance (Argentina)" },
+    { "type": "text", "id": "arrepentimiento_text", "label": "Texto botón de arrepentimiento", "default": "Botón de Arrepentimiento" },
+    { "type": "url", "id": "arrepentimiento_link", "label": "Link botón de arrepentimiento", "info": "Apuntá a la página /pages/boton-de-arrepentimiento. Si se deja vacío, usa esa ruta por defecto." },
+    { "type": "image_picker", "id": "data_fiscal_qr", "label": "QR Data Fiscal (ARCA/AFIP)" },
+    { "type": "url", "id": "data_fiscal_url", "label": "Link del QR Data Fiscal", "info": "URL de verificación de AFIP/ARCA (opcional)." },
     {
       "type": "header",
       "content": "Íconos de métodos de pago"

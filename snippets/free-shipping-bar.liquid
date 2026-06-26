@@ -1,0 +1,51 @@
+{%- comment -%}
+  Barra de progreso de envío gratis (AOV).
+  Lee settings globales (Theme settings → Envío gratis) + el carrito.
+  Se actualiza solo porque se renderiza dentro de zonas del carrito que re-renderizan
+  (cart notification y .js-contents del carrito). Precio/umbral desde Shopify, nada hardcodeado.
+{%- endcomment -%}
+{%- if settings.free_ship_enabled and settings.free_ship_threshold > 0 and cart.item_count > 0 -%}
+  {%- liquid
+    assign threshold = settings.free_ship_threshold | times: 100
+    assign current = cart.total_price
+    if current >= threshold
+      assign reached = true
+      assign pct = 100
+      assign message = settings.free_ship_success
+    else
+      assign reached = false
+      assign remaining = threshold | minus: current
+      assign pct = current | times: 100 | divided_by: threshold
+      assign amount_str = remaining | money
+      assign message = settings.free_ship_text | replace: '{amount}', amount_str
+    endif
+  -%}
+  <div class="free-ship{% if reached %} free-ship--reached{% endif %}" style="--free-ship-color: {{ settings.free_ship_bar_color }};">
+    <p class="free-ship__text">{{ message }}</p>
+    <div
+      class="free-ship__track"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="{{ pct }}"
+    >
+      <div class="free-ship__fill" style="width: {{ pct }}%;"></div>
+    </div>
+  </div>
+  {%- style -%}
+    .free-ship { margin: 0 0 1.6rem; }
+    .free-ship__text { margin: 0 0 0.8rem; font-size: 1.4rem; text-align: center; font-weight: 500; }
+    .free-ship__track {
+      height: 0.6rem;
+      border-radius: 1rem;
+      background: rgba(var(--color-foreground), 0.12);
+      overflow: hidden;
+    }
+    .free-ship__fill {
+      height: 100%;
+      background: var(--free-ship-color);
+      border-radius: 1rem;
+      transition: width 0.4s ease;
+    }
+  {%- endstyle -%}
+{%- endif -%}

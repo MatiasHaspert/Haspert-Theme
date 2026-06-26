@@ -1,0 +1,160 @@
+{%- comment -%}
+  FAQ de perfume — acordeón accesible (<details>/<summary>, sin JS) + FAQPage JSON-LD.
+  Q/A editables por block. El JSON-LD se genera dinámicamente desde los settings (no se duplica el texto).
+{%- endcomment -%}
+
+<div class="faqp color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    <div class="faqp__head">
+      {%- if section.settings.microbadge != blank -%}
+        <span class="faqp__badge">{{ section.settings.microbadge }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="faqp__title">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    <div class="faqp__list">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'qa' and block.settings.question != blank -%}
+          <details class="faqp__item" {{ block.shopify_attributes }}>
+            <summary class="faqp__summary">
+              <span class="faqp__q">{{ block.settings.question }}</span>
+              <span class="faqp__icon svg-wrapper" aria-hidden="true">{{ 'icon-caret.svg' | inline_asset_content }}</span>
+            </summary>
+            <div class="faqp__a rte">{{ block.settings.answer }}</div>
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- if section.blocks.size > 0 -%}
+  {%- capture faq_schema -%}
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- assign sep = "" -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == "qa" and block.settings.question != blank -%}
+        {{ sep }}{ "@type": "Question", "name": {{ block.settings.question | json }}, "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | strip_newlines | json }} } }
+        {%- assign sep = "," -%}
+      {%- endif -%}
+    {%- endfor -%}
+  ]
+}
+  {%- endcapture -%}
+  <script type="application/ld+json">{{ faq_schema }}</script>
+{%- endif -%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} { --faqp-accent: {{ section.settings.accent_color }}; }
+{%- endstyle -%}
+
+{% stylesheet %}
+.faqp__head {
+  text-align: center;
+  margin: 0 auto 2.6rem;
+}
+.faqp__badge {
+  display: inline-block;
+  font-size: 1.2rem;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+  padding: 0.5rem 1.1rem;
+  border: 0.1rem solid var(--faqp-accent);
+  color: var(--faqp-accent);
+  border-radius: var(--badge-corner-radius, 0.2rem);
+  margin-bottom: 1.4rem;
+}
+.faqp__title { margin: 0; }
+.faqp__list {
+  max-width: 76rem;
+  margin: 0 auto;
+}
+.faqp__item {
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.12);
+}
+.faqp__item:first-child { border-top: 0.1rem solid rgba(var(--color-foreground), 0.12); }
+.faqp__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding: 1.7rem 0.4rem;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+}
+.faqp__summary::-webkit-details-marker { display: none; }
+.faqp__summary:focus-visible {
+  outline: 0.2rem solid var(--faqp-accent);
+  outline-offset: 0.2rem;
+}
+.faqp__icon {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.faqp__icon .icon { width: 1.4rem; height: 1.4rem; }
+.faqp__item[open] .faqp__icon { transform: rotate(180deg); }
+.faqp__a {
+  padding: 0 0.4rem 1.8rem;
+  opacity: 0.85;
+}
+.faqp__a > :first-child { margin-top: 0; }
+.faqp__a > :last-child { margin-bottom: 0; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQ perfume",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "default": "scheme-1" },
+    { "type": "color", "id": "accent_color", "label": "Color de acento", "default": "#C2A24C" },
+    { "type": "text", "id": "microbadge", "label": "Microbadge", "default": "📘 Preguntas frecuentes" },
+    { "type": "text", "id": "heading", "label": "Título", "default": "Todo lo que querés saber antes de comprar" },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding superior", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding inferior", "default": 48 }
+  ],
+  "blocks": [
+    {
+      "type": "qa",
+      "name": "Pregunta",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Pregunta", "default": "Pregunta" },
+        { "type": "richtext", "id": "answer", "label": "Respuesta", "default": "<p>Respuesta</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ perfume",
+      "blocks": [
+        { "type": "qa", "settings": { "question": "¿Los perfumes son 100% originales?", "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>" } },
+        { "type": "qa", "settings": { "question": "¿Cómo sé que no es una réplica?", "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. Si querés, te mandamos el unboxing por WhatsApp antes de comprar. Y si algo no cierra: garantía de originalidad, te devolvemos el 100%.</p>" } },
+        { "type": "qa", "settings": { "question": "¿Qué es un \"decant\"? ¿Es el mismo perfume?", "answer": "<p>Sí, es el mismo jugo fraccionado del frasco original en un atomizador. Ideal para probar el aroma antes de comprar el frasco completo, o para llevar en la cartera.</p>" } },
+        { "type": "qa", "settings": { "question": "¿Y el \"tester\"? ¿En qué se diferencia del original?", "answer": "<p>Es exactamente el mismo perfume, en packaging de prueba (caja blanca o sin tapa premium). Por eso es más económico — pero el jugo es idéntico.</p>" } },
+        { "type": "qa", "settings": { "question": "¿Hacen envíos a todo el país?", "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 4–7 días hábiles. Envío gratis en compras desde $200.000.</p>" } },
+        { "type": "qa", "settings": { "question": "¿Puedo pagar en cuotas?", "answer": "<p>Sí, con Mercado Pago: hasta <strong>6 cuotas sin interés</strong> y hasta <strong>12 con interés</strong>. Además, <strong>20% de descuento</strong> pagando contado o por transferencia.</p>" } },
+        { "type": "qa", "settings": { "question": "¿Qué pasa si me arrepiento o no me gusta?", "answer": "<p>Tenés 10 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido y de naturaleza no devolvible — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>" } },
+        { "type": "qa", "settings": { "question": "¿Cómo conservo el perfume para que dure?", "answer": "<p>Lejos del calor, la luz directa y la humedad. Guardalo en su caja, idealmente entre 15–20°C.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

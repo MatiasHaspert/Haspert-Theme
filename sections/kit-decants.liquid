@@ -1,0 +1,214 @@
+{%- comment -%}
+  Armá tu kit de decants (AOV). El cliente elige N decants de una colección y los agrega
+  al carrito de una. El descuento (ej. 3 decants = X% off) se configura como descuento
+  AUTOMÁTICO en el admin de Shopify (no en el theme). Precios desde Shopify; todo editable.
+{%- endcomment -%}
+
+{%- liquid
+  assign coll = section.settings.collection
+  assign kit_size = section.settings.kit_size
+  assign size_dc = section.settings.decant_size | downcase
+-%}
+
+<div class="kit color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    <div class="kit__head">
+      {%- if section.settings.microbadge != blank -%}
+        <span class="kit__badge">{{ section.settings.microbadge }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="kit__title">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="kit__subtitle">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if coll != blank and coll.products.size > 0 -%}
+      <kit-decants class="kit__builder" data-kit-size="{{ kit_size }}" data-currency="{{ cart.currency.iso_code }}">
+        <ul class="kit__grid list-unstyled">
+          {%- for product in coll.products -%}
+            {%- assign decant_variant = nil -%}
+            {%- for v in product.variants -%}
+              {%- assign vt = v.title | downcase -%}
+              {%- if v.available and vt contains size_dc -%}
+                {%- assign decant_variant = v -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if decant_variant -%}
+              <li class="kit__item">
+                <button
+                  type="button"
+                  class="kit__select"
+                  data-variant-id="{{ decant_variant.id }}"
+                  data-price="{{ decant_variant.price }}"
+                  aria-pressed="false"
+                >
+                  <span class="kit__media global-media-settings">
+                    {%- if product.featured_media -%}
+                      <img
+                        src="{{ product.featured_media | image_url: width: 320 }}"
+                        alt="{{ product.featured_media.alt | escape }}"
+                        loading="lazy"
+                        width="160"
+                        height="160"
+                      >
+                    {%- endif -%}
+                    <span class="kit__check" aria-hidden="true">{{ 'icon-checkmark.svg' | inline_asset_content }}</span>
+                  </span>
+                  <span class="kit__name">{{ product.title | escape }}</span>
+                  <span class="kit__price">{{ decant_variant.price | money }}</span>
+                </button>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        <div class="kit__bar">
+          <div class="kit__summary">
+            <span class="kit__count" data-kit-count>0 / {{ kit_size }}</span>
+            <span class="kit__total" data-kit-total></span>
+          </div>
+          {%- if section.settings.discount_text != blank -%}
+            <p class="kit__hint">{{ section.settings.discount_text }}</p>
+          {%- endif -%}
+          <button type="button" class="kit__add button button--primary" data-kit-add disabled>
+            {{ section.settings.button_label }}
+          </button>
+        </div>
+      </kit-decants>
+      <script src="{{ 'kit-decants.js' | asset_url }}" defer="defer"></script>
+    {%- else -%}
+      <p class="kit__onboarding">{{ section.settings.onboarding_text }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} { --kit-accent: {{ section.settings.accent_color }}; }
+{%- endstyle -%}
+
+{% stylesheet %}
+.kit__head { text-align: center; max-width: 60rem; margin: 0 auto 2.8rem; }
+.kit__badge {
+  display: inline-block;
+  font-size: 1.2rem;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+  padding: 0.5rem 1.1rem;
+  border: 0.1rem solid var(--kit-accent);
+  color: var(--kit-accent);
+  border-radius: var(--badge-corner-radius, 0.2rem);
+  margin-bottom: 1.4rem;
+}
+.kit__title { margin: 0 0 0.8rem; }
+.kit__subtitle { margin: 0; opacity: 0.8; }
+.kit__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem;
+  margin: 0 0 2rem;
+}
+@media screen and (min-width: 750px) {
+  .kit__grid { grid-template-columns: repeat(4, 1fr); gap: 1.6rem; }
+}
+.kit__select {
+  width: 100%;
+  cursor: pointer;
+  background: rgb(var(--color-background));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.12);
+  border-radius: var(--media-radius, 0.4rem);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  color: inherit;
+  font: inherit;
+}
+.kit__select[aria-pressed='true'] {
+  border-color: var(--kit-accent);
+  box-shadow: inset 0 0 0 0.1rem var(--kit-accent);
+}
+.kit__select--disabled { opacity: 0.45; cursor: not-allowed; }
+.kit__media { position: relative; display: block; border-radius: var(--media-radius, 0.4rem); overflow: hidden; }
+.kit__media img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; }
+.kit__check {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--kit-accent);
+  color: rgb(var(--color-background));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.kit__check .icon { width: 1.2rem; height: 1.2rem; }
+.kit__select[aria-pressed='true'] .kit__check { opacity: 1; transform: scale(1); }
+.kit__name { font-size: 1.4rem; font-weight: 500; }
+.kit__price { font-size: 1.3rem; opacity: 0.75; }
+.kit__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem 1.6rem;
+  padding: 1.6rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.12);
+  border-radius: var(--media-radius, 0.4rem);
+}
+.kit__summary { display: flex; align-items: baseline; gap: 1rem; font-weight: 600; }
+.kit__count { font-size: 1.6rem; }
+.kit__total { font-size: 1.6rem; color: var(--kit-accent); }
+.kit__hint { margin: 0; font-size: 1.3rem; opacity: 0.8; }
+.kit__add { margin: 0; }
+.kit__add[aria-busy='true'] { opacity: 0.7; }
+.kit__onboarding { text-align: center; opacity: 0.7; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Kit de decants",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "default": "scheme-1" },
+    { "type": "color", "id": "accent_color", "label": "Color de acento", "default": "#C2A24C" },
+    { "type": "text", "id": "microbadge", "label": "Microbadge", "default": "🧪 Armá tu kit" },
+    { "type": "text", "id": "heading", "label": "Título", "default": "Armá tu kit de decants" },
+    { "type": "text", "id": "subheading", "label": "Subtítulo", "default": "Elegí varios aromas para probar y ahorrá llevándolos juntos." },
+    { "type": "header", "content": "Productos del kit" },
+    { "type": "collection", "id": "collection", "label": "Colección de decants" },
+    { "type": "range", "id": "kit_size", "min": 2, "max": 8, "step": 1, "label": "Cantidad de decants del kit", "default": 3 },
+    { "type": "text", "id": "decant_size", "label": "Variante de decant a usar", "info": "Se toma la variante cuyo nombre contenga este texto (ej. \"Decant 5ml\").", "default": "Decant 5ml" },
+    { "type": "header", "content": "Textos" },
+    { "type": "text", "id": "discount_text", "label": "Texto de incentivo", "default": "Elegí 3 y llevate 10% OFF en tu kit" },
+    { "type": "text", "id": "button_label", "label": "Texto del botón", "default": "Agregar kit al carrito" },
+    { "type": "text", "id": "onboarding_text", "label": "Texto sin colección", "default": "Elegí una colección de decants en la configuración de la sección." },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding superior", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding inferior", "default": 48 }
+  ],
+  "presets": [
+    { "name": "Kit de decants" }
+  ]
+}
+{% endschema %}

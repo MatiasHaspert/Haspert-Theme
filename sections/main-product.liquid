@@ -102,17 +102,6 @@
 
             <h1 class="product__title perfume-title">{{ product.title | escape }}</h1>
 
-            {%- comment -%} Judge.me — badge de rating (estrellas + cantidad). SSR vía metafield + hidratado por su JS. {%- endcomment -%}
-            {%- if section.settings.show_review_badge -%}
-              <div
-                class="jdgm-widget jdgm-preview-badge perfume-review-badge"
-                data-id="{{ product.id }}"
-                data-template="product"
-              >
-                {{- product.metafields.judgeme.badge -}}
-              </div>
-            {%- endif -%}
-
             <div id="price-{{ section.id }}" role="status">
               {%- render 'price',
                 product: product,
@@ -323,25 +312,19 @@
               </p>
             {%- endif -%}
 
-            {%- comment -%} App blocks (ej. widget de la app de reviews) {%- endcomment -%}
-            {%- for block in section.blocks -%}
-              {%- if block.type == '@app' -%}
-                {% render block %}
-              {%- endif -%}
-            {%- endfor -%}
           </section>
         </div>
       </div>
       {% render 'product-media-modal', product: product, variant_images: variant_images %}
 
-      {%- comment -%} Judge.me — listado completo de reseñas (full width) {%- endcomment -%}
-      {%- if section.settings.show_reviews_widget -%}
-        <div
-          class="jdgm-widget jdgm-review-widget perfume-reviews"
-          data-id="{{ product.id }}"
-          data-product-title="{{ product.title | escape }}"
-        >
-          {{- product.metafields.judgeme.widget -}}
+      {%- comment -%} App blocks full-width debajo del producto (ej. Judge.me Review Widget) {%- endcomment -%}
+      {%- if section.blocks.size > 0 -%}
+        <div class="product-app-blocks">
+          {%- for block in section.blocks -%}
+            {%- if block.type == '@app' -%}
+              {% render block %}
+            {%- endif -%}
+          {%- endfor -%}
         </div>
       {%- endif -%}
     </div>
@@ -428,8 +411,7 @@
 }
 .perfume-vendor:hover { opacity: 1; }
 .perfume-title { margin: 0 0 1rem; }
-.perfume-review-badge { margin: 0 0 1rem; }
-.perfume-reviews { margin-top: 3.2rem; }
+.product-app-blocks { margin-top: 3.6rem; }
 .perfume-chips {
   display: flex;
   flex-wrap: wrap;
@@ -664,22 +646,6 @@
       "type": "checkbox",
       "id": "show_sticky_atc",
       "label": "Barra de compra fija en mobile (sticky add-to-cart)",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Reseñas (Judge.me)"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_review_badge",
-      "label": "Mostrar estrellas bajo el título",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_reviews_widget",
-      "label": "Mostrar listado de reseñas (debajo del producto)",
       "default": true
     },
     {

@@ -1,0 +1,208 @@
+{%- comment -%}
+  Original vs Réplica — tabla comparativa de confianza (objeción #1: autenticidad).
+  100% editable por theme editor (texto vía settings/blocks). Mobile: tarjetas apiladas, sin scroll horizontal.
+  Contenido genérico ("réplica"): nunca nombra marcas/vendedores puntuales.
+{%- endcomment -%}
+
+<div class="ovr color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    <div class="ovr__head">
+      {%- if section.settings.microbadge != blank -%}
+        <span class="ovr__badge">{{ section.settings.microbadge }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ovr__title">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="ovr__subtitle">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="ovr__table" role="table" aria-label="{{ section.settings.heading | escape }}">
+      <div class="ovr__row ovr__row--header" role="row">
+        <div class="ovr__cell ovr__cell--feature" role="columnheader">{{ section.settings.col_feature_label }}</div>
+        <div class="ovr__cell ovr__cell--ours" role="columnheader">{{ section.settings.col_ours_label }}</div>
+        <div class="ovr__cell ovr__cell--replica" role="columnheader">{{ section.settings.col_replica_label }}</div>
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'row' -%}
+          <div class="ovr__row" role="row" {{ block.shopify_attributes }}>
+            <div class="ovr__cell ovr__cell--feature" role="cell">{{ block.settings.feature }}</div>
+            <div class="ovr__cell ovr__cell--ours" role="cell">
+              <span class="ovr__mobilelabel">{{ section.settings.col_ours_label }}</span>
+              <span class="ovr__mark ovr__mark--ok" aria-hidden="true">{{ 'icon-checkmark.svg' | inline_asset_content }}</span>
+              <span class="ovr__text">{{ block.settings.ours }}</span>
+            </div>
+            <div class="ovr__cell ovr__cell--replica" role="cell">
+              <span class="ovr__mobilelabel">{{ section.settings.col_replica_label }}</span>
+              <span class="ovr__mark ovr__mark--no" aria-hidden="true">{{ 'icon-close-small.svg' | inline_asset_content }}</span>
+              <span class="ovr__text">{{ block.settings.replica }}</span>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.closing != blank -%}
+      <p class="ovr__closing">{{ section.settings.closing }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.show_button and section.settings.button_link != blank and section.settings.button_label != blank -%}
+      <div class="ovr__cta">
+        <a class="button button--primary" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} { --ovr-accent: {{ section.settings.accent_color }}; }
+{%- endstyle -%}
+
+{% stylesheet %}
+.ovr__head {
+  text-align: center;
+  max-width: 64rem;
+  margin: 0 auto 3rem;
+}
+.ovr__badge {
+  display: inline-block;
+  font-size: 1.2rem;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+  padding: 0.5rem 1.1rem;
+  border: 0.1rem solid var(--ovr-accent);
+  color: var(--ovr-accent);
+  border-radius: var(--badge-corner-radius, 0.2rem);
+  margin-bottom: 1.4rem;
+}
+.ovr__title { margin: 0 0 0.8rem; }
+.ovr__subtitle { margin: 0; opacity: 0.8; }
+.ovr__table {
+  border: 0.1rem solid rgba(var(--color-foreground), 0.12);
+  border-radius: var(--media-radius, 0.4rem);
+  overflow: hidden;
+}
+.ovr__row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.5fr 1.5fr;
+}
+.ovr__row + .ovr__row { border-top: 0.1rem solid rgba(var(--color-foreground), 0.1); }
+.ovr__row--header {
+  font-size: 1.3rem;
+  letter-spacing: 0.04rem;
+  text-transform: uppercase;
+  background: rgba(var(--color-foreground), 0.04);
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.12);
+}
+.ovr__cell {
+  padding: 1.4rem 1.6rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+.ovr__cell--feature { font-weight: 600; }
+.ovr__row:not(.ovr__row--header) .ovr__cell--replica { opacity: 0.62; }
+.ovr__mark { flex-shrink: 0; line-height: 1; margin-top: 0.1rem; }
+.ovr__mark .icon { width: 1.6rem; height: 1.6rem; }
+.ovr__mark--ok { color: var(--ovr-accent); }
+.ovr__mobilelabel { display: none; }
+.ovr__closing {
+  text-align: center;
+  font-weight: 500;
+  margin: 2.4rem auto 0;
+  max-width: 60rem;
+}
+.ovr__cta { text-align: center; margin-top: 2rem; }
+
+@media screen and (max-width: 749px) {
+  .ovr__table { border: none; border-radius: 0; overflow: visible; }
+  .ovr__row--header { display: none; }
+  .ovr__row {
+    grid-template-columns: 1fr;
+    border: 0.1rem solid rgba(var(--color-foreground), 0.12);
+    border-radius: var(--media-radius, 0.4rem);
+    margin-bottom: 1.2rem;
+    overflow: hidden;
+  }
+  .ovr__row + .ovr__row { border-top: 0.1rem solid rgba(var(--color-foreground), 0.12); }
+  .ovr__cell { padding: 1.1rem 1.4rem; }
+  .ovr__cell--feature {
+    font-size: 1.6rem;
+    background: rgba(var(--color-foreground), 0.04);
+    border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  }
+  .ovr__mobilelabel {
+    display: block;
+    flex-basis: 100%;
+    font-size: 1.1rem;
+    letter-spacing: 0.04rem;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 0.2rem;
+  }
+  .ovr__cell--ours, .ovr__cell--replica { flex-wrap: wrap; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Original vs Réplica",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "default": "scheme-1" },
+    { "type": "color", "id": "accent_color", "label": "Color de acento", "default": "#C2A24C" },
+    { "type": "text", "id": "microbadge", "label": "Microbadge", "default": "✔ Cómo reconocer un perfume original" },
+    { "type": "text", "id": "heading", "label": "Título", "default": "No todos los importados son iguales" },
+    { "type": "text", "id": "subheading", "label": "Subtítulo", "default": "Trabajamos sólo con originales. Mirá la diferencia con una réplica." },
+    { "type": "header", "content": "Encabezados de columna" },
+    { "type": "text", "id": "col_feature_label", "label": "Columna 1 (característica)", "default": "Característica" },
+    { "type": "text", "id": "col_ours_label", "label": "Columna 2 (nuestros)", "default": "Nuestros perfumes" },
+    { "type": "text", "id": "col_replica_label", "label": "Columna 3 (réplica)", "default": "Réplica" },
+    { "type": "header", "content": "Cierre y CTA" },
+    { "type": "text", "id": "closing", "label": "Texto de cierre", "default": "Por eso cada compra incluye garantía de originalidad y devolución sin vueltas." },
+    { "type": "checkbox", "id": "show_button", "label": "Mostrar botón", "default": true },
+    { "type": "text", "id": "button_label", "label": "Texto del botón", "default": "Ver catálogo" },
+    { "type": "url", "id": "button_link", "label": "Link del botón" },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding superior", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding inferior", "default": 48 }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Fila",
+      "settings": [
+        { "type": "text", "id": "feature", "label": "Característica", "default": "Característica" },
+        { "type": "textarea", "id": "ours", "label": "Nuestros perfumes", "default": "Sí" },
+        { "type": "textarea", "id": "replica", "label": "Réplica", "default": "No" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Original vs Réplica",
+      "blocks": [
+        { "type": "row", "settings": { "feature": "Procedencia", "ours": "Importado, marca auténtica con lote/serial verificable", "replica": "Origen dudoso, sin respaldo" } },
+        { "type": "row", "settings": { "feature": "Concentración", "ours": "Declarada (EDP/EDT), rinde y dura como el oficial", "replica": "Diluido, se va en pocas horas" } },
+        { "type": "row", "settings": { "feature": "Frasco y lote", "ours": "Sellado de fábrica, lote/serial verificable", "replica": "Serial falso o ausente" } },
+        { "type": "row", "settings": { "feature": "Aroma", "ours": "Fiel al lanzamiento oficial", "replica": "Aroma alterado o desviado" } },
+        { "type": "row", "settings": { "feature": "Garantía", "ours": "Garantía de originalidad: si no es original, te devolvemos el 100% + el envío (hasta 30 días)", "replica": "Sin garantía" } },
+        { "type": "row", "settings": { "feature": "Postventa", "ours": "WhatsApp +54 9 3406 460624 + cambios/devolución", "replica": "Nula" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
