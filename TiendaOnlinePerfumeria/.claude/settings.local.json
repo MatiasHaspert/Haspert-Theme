@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(python -m pip install --disable-pip-version-check openpyxl requests beautifulsoup4 lxml 2>&1 | Select-Object -Last 15)"
+    ]
+  }
+}

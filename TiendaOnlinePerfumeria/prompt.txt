@@ -1,0 +1,88 @@
+CONTEXTO
+Estamos armando una tienda online de perfumes en Argentina que se abastece del
+proveedor Star Company (Ciudad del Este, Paraguay). Tengo un modelo de márgenes
+en Excel (te lo adjunto: modelo-margenes-perfumes.xlsx) donde por cada producto
+cargo el COSTO en USD (precio de lista del proveedor) y el modelo calcula costo
+en ARS, PVP y margen. Quiero que (1) extraigas el catálogo COMPLETO de perfumes
+del proveedor y (2) lo integres a ese mismo modelo manteniendo las fórmulas.
+
+FUENTE
+- Sitio: https://www.starcompany-py.com  (espejo con precios visibles:
+  https://www.base.fluxoigm.com)
+- Tienda PrestaShop. Solo interesa la categoría PERFUMES (id_category=121).
+  Ignorá cosméticos, celulares, electrónica, vapers, etc.
+- Páginas de marca: https://www.starcompany-py.com/brand/{idMarca}-{nombre}
+  (ej. /brand/235-lattafa). Índice de marcas: https://www.starcompany-py.com/brands
+- Páginas de producto: /perfumes/{idProducto}-{slug}.html
+
+GOTCHA IMPORTANTE (ya lo verifiqué)
+El precio NO aparece en el HTML estático de las páginas de marca ni en la ficha
+del producto: se carga por JS, o solo está visible en el listado general y en los
+carruseles de "productos relacionados". Resolvelo: renderizá con navegador
+headless (Playwright/Puppeteer), detectá el endpoint/API de PrestaShop que
+devuelve el precio, o usá mi sesión logueada si hace falta. El precio está en
+dólares (formato "U$ 34,00").
+
+TAREA DE EXTRACCIÓN
+1. Recorré todas las marcas de Perfumes y, dentro de cada una, todas sus páginas
+   (paginadas: ?page=2, etc.).
+2. Por cada producto sacá: marca, nombre completo, ml (parsealo del nombre, ej.
+   "100ML" → 100) y costo en USD.
+3. Clasificá cada producto en una categoría:
+   - "Árabe": Lattafa, Maison Alhambra, Al Haramain, Armaf, Rasasi, Afnan,
+     Al Wataniah, Ard Al Zaafaran, Orientica, Rayhaan, Bharara, Arabian Oud,
+     Zimaya, French Avenue, Maison Asrar, etc.
+   - "Diseñador": casas occidentales (Dior, YSL, Carolina Herrera, Hermès,
+     Versace, Armani, Paco Rabanne, etc.)
+   - "Nicho": Xerjoff, Parfums de Marly, MFK, Mancera, Montale, Initio, Kajal,
+     Sospiro, Nishane, etc.
+   - "Tester": si el nombre contiene "TESTER".
+
+INTEGRACIÓN AL MODELO (modelo-margenes-perfumes.xlsx)
+Editá ESE archivo con openpyxl, sin tocar las celdas de supuestos ni la hoja
+"Notas". Estructura de la hoja "Modelo":
+- Celdas de supuestos (NO modificar): B5 = cotización USD→ARS, B6 = costo de
+  traída %, B7 = markup objetivo.
+- Encabezado de tabla en la fila 9; los datos empiezan en la fila 10. Columnas:
+  A Marca | B Producto | C ml | D Categoría | E Costo USD | F Costo ARS |
+  G PVP sugerido | H Margen $ | I Margen % | J Precio mercado AR | K Comentario
+- Las columnas E, J y K son VALORES (E = costo USD del proveedor, azul). Las
+  columnas F a I son FÓRMULAS y deben replicarse por fila con este patrón exacto
+  (sustituyendo {r} por el número de fila):
+    F{r} =E{r}*$B$5*(1+$B$6)
+    G{r} =F{r}*$B$7
+    H{r} =G{r}-F{r}
+    I{r} =H{r}/G{r}
+  Formatos: E = "US$ "#,##0.00 ; F,G,H,J = $#,##0;($#,##0);"-" ; I = 0.0%
+- Debajo de la tabla hay un bloque "RESUMEN" con fórmulas AVERAGE/SUM que
+  referencian el rango de datos (ej. =AVERAGE(I10:I41)). Al agregar filas, esas
+  fórmulas deben extenderse para cubrir TODA la tabla nueva.
+
+Instrucciones de integración:
+1. Tomá las ~32 filas que ya existen en el modelo y combinálas con el catálogo
+   extraído. Deduplicá por marca + nombre + ml. NO dupliques productos ya
+   cargados, y CONSERVÁ los valores ya cargados en J (Precio mercado AR) y K
+   (Comentario) de esas filas existentes.
+2. Reescribí la tabla completa desde la fila 10 con el set combinado, aplicando
+   el patrón de fórmulas F:I a cada fila y respetando los formatos.
+3. Reubicá/actualizá el bloque RESUMEN debajo de la última fila de datos y
+   extendé sus rangos a toda la tabla.
+4. Agregá (o actualizá) una hoja nueva "Resumen por marca" con columnas:
+   Marca | # productos | Costo USD mín | Costo USD máx | Costo USD promedio |
+   Margen % promedio — todo con fórmulas (COUNTIF/AVERAGEIF/MINIFS/MAXIFS sobre
+   la hoja "Modelo"), no valores hardcodeados.
+5. Recalculá el archivo con LibreOffice y entregalo con CERO errores de fórmula
+   (#REF!, #DIV/0!, #VALUE!, #N/A, #NAME?).
+
+SALIDA
+- modelo-margenes-perfumes.xlsx actualizado (con todo el catálogo integrado,
+  fórmulas intactas y la hoja "Resumen por marca").
+- catalogo-proveedor.csv (UTF-8) como respaldo, columnas: Marca | Producto | ml |
+  Categoría | Costo USD | Comentario.
+
+REQUISITOS
+- No inventes precios: si un producto no expone precio, dejá vacío el Costo USD y
+  poné "sin precio" en Comentario.
+- Ritmo razonable de requests (no scraping agresivo).
+- Al final indicá cuántas marcas y productos procesaste, cuántos quedaron sin
+  precio, y cuántas filas nuevas se sumaron al modelo.

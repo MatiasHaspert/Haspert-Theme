@@ -1,0 +1,19 @@
+Título:
+Vendor:
+Variantes: Decant 5ml — $ ; Decant 10ml — $ ; Original Xml sellado — $ ; (Tester — $)
+
+familia_olfativa:
+notas_salida:
+notas_corazon:
+notas_fondo:
+genero:
+concentracion:
+longevidad:
+estela:
+ocasion:
+estacion:
+pais_origen:
+anio_lanzamiento:
+tamano_frasco_ml:
+inspirado_en:
+original_garantizado:

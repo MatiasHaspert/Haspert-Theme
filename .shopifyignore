@@ -4,3 +4,7 @@
 *~
 .DS_Store
 Thumbs.db
+
+# Tooling fuera del theme (carga de catálogo vía Admin API) — no es parte del theme
+catalog-tools/
+TiendaOnlinePerfumeria/

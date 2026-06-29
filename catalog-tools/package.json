@@ -1,0 +1,21 @@
+{
+  "name": "catalog-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Carga dinámica del catálogo de perfumes en Shopify (Admin GraphQL API).",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "setup": "node setup-metafields.mjs",
+    "dry": "node load-catalog.mjs --dry-run",
+    "load": "node load-catalog.mjs",
+    "collections": "node create-collections.mjs",
+    "stock": "node set-stock.mjs",
+    "pull": "node pull-stock.mjs"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  }
+}
