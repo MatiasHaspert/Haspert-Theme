@@ -31,7 +31,7 @@
         "item_cuotas": {
           "type": "item",
           "settings": {
-            "text": "💳 Hasta 3 cuotas sin interés",
+            "text": "💳 Hasta 6 cuotas sin interés",
             "link": ""
           }
         }
@@ -42,8 +42,8 @@
         "item_cuotas"
       ],
       "settings": {
-        "bg_color": "#16120F",
-        "text_color": "#FBF8F3",
+        "bg_color": "#8F4329",
+        "text_color": "#FFFFFF",
         "font_size": 16,
         "speed": 10,
         "speed_mobile": 10,

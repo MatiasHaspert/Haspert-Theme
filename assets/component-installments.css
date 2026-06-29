@@ -1,0 +1,24 @@
+.installments {
+  display: block;
+  font-family: var(--font-body-family);
+  font-weight: 500;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  color: var(--accent-ink);
+  margin-top: 0.4rem;
+}
+
+.installments__amount {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.installments--pdp {
+  font-size: 1.4rem;
+}
+
+.installments--pdp .installments__amount {
+  font-size: 1.9rem;
+}

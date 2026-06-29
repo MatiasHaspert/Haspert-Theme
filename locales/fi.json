@@ -116,6 +116,7 @@
   "products": {
     "product": {
       "add_to_cart": "Lisää ostoskoriin",
+      "add_short": "Lisää ostoskoriin",
       "description": "Kuvaus",
       "on_sale": "Alennusmyynti",
       "quantity": {

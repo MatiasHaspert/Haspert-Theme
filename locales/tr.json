@@ -116,6 +116,7 @@
   "products": {
     "product": {
       "add_to_cart": "Sepete ekle",
+      "add_short": "Sepete ekle",
       "description": "Açıklama",
       "on_sale": "İndirim",
       "quantity": {

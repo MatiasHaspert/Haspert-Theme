@@ -1459,7 +1459,7 @@
       { "type": "number", "id": "free_ship_threshold", "label": "Umbral de envío gratis (en pesos)", "default": 200000 },
       { "type": "text", "id": "free_ship_text", "label": "Texto en progreso", "default": "Te faltan {amount} para el ENVÍO GRATIS 🚚", "info": "Usá {amount} donde va el monto restante." },
       { "type": "text", "id": "free_ship_success", "label": "Texto al llegar", "default": "🎉 ¡Tenés ENVÍO GRATIS!" },
-      { "type": "color", "id": "free_ship_bar_color", "label": "Color de la barra", "default": "#C2A24C" }
+      { "type": "color", "id": "free_ship_bar_color", "label": "Color de la barra", "default": "#B25A3C" }
     ]
   },
   {
@@ -1470,6 +1470,24 @@
       { "type": "collection", "id": "cart_xsell_collection", "label": "Colección donde buscar", "info": "Apuntá a un catálogo de perfumes con el metafield \"Familia olfativa\" cargado." },
       { "type": "text", "id": "cart_xsell_heading", "label": "Título", "default": "Combina con tu compra" },
       { "type": "range", "id": "cart_xsell_count", "min": 1, "max": 3, "step": 1, "label": "Cantidad de sugerencias", "default": 2 }
+    ]
+  },
+  {
+    "name": "Acento de marca",
+    "settings": [
+      { "type": "paragraph", "content": "Color de acento (terracota) para íconos, badges, barras y detalles. No es un esquema de color: se inyecta global en :root como --accent / --accent-ink / --accent-soft." },
+      { "type": "color", "id": "accent", "label": "Acento", "default": "#B25A3C" },
+      { "type": "color", "id": "accent_ink", "label": "Acento tinta (texto sobre claro · AA)", "default": "#8F4329" },
+      { "type": "color", "id": "accent_soft", "label": "Acento suave (sobre tinta)", "default": "#F3E2DA" }
+    ]
+  },
+  {
+    "name": "Cuotas / Pagos",
+    "settings": [
+      { "type": "paragraph", "content": "Muestra una línea de cuotas en las tarjetas de producto (y PDP). El monto se calcula desde el precio de Shopify. \"Sin interés\" solo si realmente lo es en tu config de Mercado Pago (Defensa del Consumidor)." },
+      { "type": "checkbox", "id": "installments_enabled", "label": "Mostrar cuotas", "default": true },
+      { "type": "range", "id": "installments_count", "min": 2, "max": 12, "step": 1, "label": "Cantidad de cuotas", "default": 6 },
+      { "type": "checkbox", "id": "installments_no_interest", "label": "Sin interés", "default": true }
     ]
   }
 ]

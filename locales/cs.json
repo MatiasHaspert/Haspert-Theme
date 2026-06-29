@@ -118,6 +118,7 @@
   "products": {
     "product": {
       "add_to_cart": "Přidat do košíku",
+      "add_short": "Přidat do košíku",
       "description": "Popis",
       "on_sale": "Sleva",
       "share": "Sdílet tento produkt",

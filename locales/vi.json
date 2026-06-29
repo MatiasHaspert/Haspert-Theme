@@ -116,6 +116,7 @@
   "products": {
     "product": {
       "add_to_cart": "Thêm vào giỏ hàng",
+      "add_short": "Thêm vào giỏ hàng",
       "description": "Mô tả",
       "on_sale": "Giảm giá",
       "product_variants": "Mẫu mã sản phẩm",

@@ -116,6 +116,7 @@
   "products": {
     "product": {
       "add_to_cart": "カートに追加する",
+      "add_short": "カートに追加する",
       "description": "商品説明",
       "on_sale": "セール",
       "product_variants": "商品バリエーション",

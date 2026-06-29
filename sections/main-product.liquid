@@ -38,6 +38,7 @@
 >
   {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
+  {{ 'component-installments.css' | asset_url | stylesheet_tag }}
   {{ 'component-slider.css' | asset_url | stylesheet_tag }}
   {{ 'component-rating.css' | asset_url | stylesheet_tag }}
   {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
@@ -119,6 +120,7 @@
                 show_badges: true,
                 price_class: 'price--large'
               -%}
+              {%- render 'installments', price: product.selected_or_first_available_variant.price, layout: 'pdp' -%}
             </div>
 
             {%- if shop.shipping_policy.body != blank -%}
@@ -517,10 +519,22 @@
 }
 .perfume-description { margin-top: 2.2rem; }
 .perfume-inspired {
+  font-family: var(--font-accent);
   font-style: italic;
-  font-size: 1.3rem;
-  opacity: 0.7;
+  font-size: 1.6rem;
+  opacity: 0.75;
   margin-top: 1.6rem;
+}
+/* Precio grande en Bebas (token --fs-price-pdp). El tachado (compare-at) queda chico. */
+.product__info-container .price .price-item {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.product__info-container .price--large .price__regular .price-item,
+.product__info-container .price--large .price__sale .price-item--sale {
+  font-size: clamp(4rem, 8vw, 5.4rem);
+  line-height: 1;
 }
 {% endstylesheet %}
 
@@ -540,8 +554,8 @@
     {
       "type": "color",
       "id": "accent_color",
-      "label": "Color de acento (oro/marca)",
-      "default": "#C2A24C"
+      "label": "Color de acento (terracota/marca)",
+      "default": "#B25A3C"
     },
     {
       "type": "header",

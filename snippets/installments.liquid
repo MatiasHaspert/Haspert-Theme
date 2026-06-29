@@ -1,0 +1,24 @@
+{%- comment -%}
+  Línea de cuotas (Mercado Pago). Reutilizable: tarjeta de producto y PDP.
+  El monto se calcula desde el precio que da Shopify (nunca hardcodeado).
+
+  Acepta:
+  - price: {Number} precio en centavos (ej. card_product.price o variant.price). Requerido.
+  - layout: {String} 'card' (default) | 'pdp'. Solo cambia el tamaño.
+
+  Settings globales: installments_enabled, installments_count, installments_no_interest.
+  ⚠️ "sin interés" solo si realmente lo es en tu config de Mercado Pago (Defensa del Consumidor).
+{%- endcomment -%}
+{%- if settings.installments_enabled and price and price > 0 and settings.installments_count > 1 -%}
+  {%- assign cuota = price | divided_by: settings.installments_count -%}
+  <span class="installments installments--{{ layout | default: 'card' }}">
+    {{- settings.installments_count }} cuotas{% if settings.installments_no_interest %} sin interés{% endif %} de
+    {%- comment -%}
+      El $ se antepone sólo en la card (layout != 'pdp') porque el formato de
+      moneda de la tienda hoy no incluye símbolo. En la PDP se mantiene sin $
+      para no desentonar con el precio principal. Fix definitivo: agregar el $
+      al formato de moneda en Admin → Configuración → Moneda y quitar este prefijo.
+    {%- endcomment -%}
+    <span class="installments__amount">{% unless layout == 'pdp' %}${% endunless %}{{ cuota | money }}</span>
+  </span>
+{%- endif -%}

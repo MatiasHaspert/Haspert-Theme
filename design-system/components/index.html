@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NUMEN · Biblioteca de componentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@1,9..144,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#F4F2ED;color:#1C1814;font-family:'Montserrat',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:48px 32px}
+  a{text-decoration:none;color:inherit}
+  :focus-visible{outline:2px solid #B25A3C;outline-offset:2px}
+  .card{transition:border-color .16s ease, box-shadow .16s ease, transform .12s ease}
+  .card:hover{border-color:#B25A3C;box-shadow:0 4px 16px rgba(27,21,16,.08);transform:translateY(-2px)}
+</style>
+</head>
+<body>
+  <main style="max-width:980px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <span style="height:1px;width:46px;background:#B25A3C"></span>
+      <span style="font-family:'Montserrat';font-weight:600;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#8F4329">Biblioteca de componentes</span>
+    </div>
+    <h1 style="font-family:'Bebas Neue';font-weight:400;font-size:clamp(40px,6vw,72px);line-height:.95;letter-spacing:.01em;margin:0 0 6px">NUMEN · UI kit</h1>
+    <p style="font-family:'Montserrat';font-size:15px;line-height:1.6;color:#57514A;max-width:62ch;margin:0 0 34px">Componentes extraídos de <em style="font-family:'Fraunces';font-style:italic">Sistema y Home</em>. Cada uno es una página HTML standalone y previsualizable. Abrí cualquiera para verlo en aislamiento.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">
+      <a class="card" href="botones.html" style="display:block;background:#fff;border:1px solid #E0DBD0;border-radius:12px;padding:18px 18px"><span style="font-family:'Montserrat';font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8F4329">01</span><div style="font-family:'Montserrat';font-weight:600;font-size:15px;color:#1C1814;margin-top:6px">Botones</div><div style="font-family:'Montserrat';font-size:12px;color:#6B6157;margin-top:2px">Jerarquía de acción</div></a>
+      <a class="card" href="chips-ficha.html" style="display:block;background:#fff;border:1px solid #E0DBD0;border-radius:12px;padding:18px 18px"><span style="font-family:'Montserrat';font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8F4329">02</span><div style="font-family:'Montserrat';font-weight:600;font-size:15px;color:#1C1814;margin-top:6px">Chips de ficha</div><div style="font-family:'Montserrat';font-size:12px;color:#6B6157;margin-top:2px">Ficha olfativa escaneable</div></a>
+      <a class="card" href="badges.html" style="display:block;background:#fff;border:1px solid #E0DBD0;border-radius:12px;padding:18px 18px"><span style="font-family:'Montserrat';font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8F4329">03</span><div style="font-family:'Montserrat';font-weight:600;font-size:15px;color:#1C1814;margin-top:6px">Badges</div><div style="font-family:'Montserrat';font-size:12px;color:#6B6157;margin-top:2px">Más vendido, OFF, decant…</div></a>
+      <a class="card" href="rating.html" style="display:block;background:#fff;border:1px solid #E0DBD0;border-radius:12px;padding:18px 18px"><span style="font-family:'Montserrat';font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8F4329">04</span><div style="font-family:'Montserrat';font-weight:600;font-size:15px;color:#1C1814;margin-top:6px">Rating</div><div style="font-family:'Montserrat';font-size:12px;color:#6B6157;margin-top:2px">Prueba social + estado vacío</div></a>
+      <a class="card" href="selector-presentacion.html" style="display:block;background:#fff;border:1px solid #E0DBD0;border-radius:12px;padding:18px 18px"><span style="font-family:'Montserrat';font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8F4329">05</span><div style="font-family:'Montserrat';font-weight:600;font-size:15px;color:#1C1814;margin-top:6px">Selector de presentación</div><div style="font-family:'Montserrat';font-size:12px;color:#6B6157;margin-top:2px">Decant/frasco + ladder $/ml</div></a>
+      <a class="card" href="acordeon-faq.html" style="display:block;background:#fff;border:1px solid #E0DBD0;border-radius:12px;padding:18px 18px"><span style="font-family:'Montserrat';font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8F4329">06</span><div style="font-family:'Montserrat';font-weight:600;font-size:15px;color:#1C1814;margin-top:6px">Acordeón FAQ</div><div style="font-family:'Montserrat';font-size:12px;color:#6B6157;margin-top:2px">&lt;details&gt; nativo, sin JS</div></a>
+      <a class="card" href="barra-envio-gratis.html" style="display:block;background:#fff;border:1px solid #E0DBD0;border-radius:12px;padding:18px 18px"><span style="font-family:'Montserrat';font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8F4329">07</span><div style="font-family:'Montserrat';font-weight:600;font-size:15px;color:#1C1814;margin-top:6px">Barra de envío gratis</div><div style="font-family:'Montserrat';font-size:12px;color:#6B6157;margin-top:2px">Palanca de AOV</div></a>
+      <a class="card" href="inspirado-en.html" style="display:block;background:#fff;border:1px solid #E0DBD0;border-radius:12px;padding:18px 18px"><span style="font-family:'Montserrat';font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8F4329">08</span><div style="font-family:'Montserrat';font-weight:600;font-size:15px;color:#1C1814;margin-top:6px">Inspirado en</div><div style="font-family:'Montserrat';font-size:12px;color:#6B6157;margin-top:2px">Perfil olfativo (legal sensible)</div></a>
+      <a class="card" href="card-producto.html" style="display:block;background:#fff;border:1px solid #E0DBD0;border-radius:12px;padding:18px 18px"><span style="font-family:'Montserrat';font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8F4329">09</span><div style="font-family:'Montserrat';font-weight:600;font-size:15px;color:#1C1814;margin-top:6px">Card de producto</div><div style="font-family:'Montserrat';font-size:12px;color:#6B6157;margin-top:2px">4 estados (normal/oferta/vacío/skeleton)</div></a>
+    </div>
+
+    <p style="font-family:'Montserrat';font-size:11.5px;line-height:1.6;color:#6B6157;max-width:70ch;margin:30px 0 0">Fuente: <code style="font-family:ui-monospace,monospace;background:#ECE8DF;padding:2px 6px;border-radius:4px">Sistema y Home.dc (3).html</code>. Estilos inline fieles al mockup; los <code style="font-family:ui-monospace,monospace;background:#ECE8DF;padding:2px 6px;border-radius:4px">style-hover</code> del canvas se reescribieron como CSS <code style="font-family:ui-monospace,monospace;background:#ECE8DF;padding:2px 6px;border-radius:4px">:hover</code> real. La card usa <code style="font-family:ui-monospace,monospace;background:#ECE8DF;padding:2px 6px;border-radius:4px">assets/yara.jpg</code> y <code style="font-family:ui-monospace,monospace;background:#ECE8DF;padding:2px 6px;border-radius:4px">assets/azzaro.webp</code> (aún no cargadas en el repo).</p>
+  </main>
+</body>
+</html>

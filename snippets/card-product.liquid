@@ -25,6 +25,8 @@
   {{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
 
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
+  {{ 'component-installments.css' | asset_url | stylesheet_tag }}
+  {{ 'component-card-perfume.css' | asset_url | stylesheet_tag }}
   {{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
   {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 {%- endunless -%}
@@ -38,6 +40,24 @@
     endif
     if ratio == 0 or ratio == null
       assign ratio = 1
+    endif
+
+    comment
+      Presentación SELLADA: la variante "Frasco" (opción "Tamaño"). NO la más
+      barata (decant). Fallback a la variante por defecto si el producto no
+      sigue el modelo de presentaciones. Precio/compare_at vienen de Shopify.
+    endcomment
+    assign sealed_variant = card_product.selected_or_first_available_variant
+    for card_variant in card_product.variants
+      if card_variant.title contains 'Frasco'
+        assign sealed_variant = card_variant
+        break
+      endif
+    endfor
+    assign sale_pct = 0
+    if sealed_variant.compare_at_price > sealed_variant.price
+      assign sale_diff = sealed_variant.compare_at_price | minus: sealed_variant.price | times: 100.0
+      assign sale_pct = sale_diff | divided_by: sealed_variant.compare_at_price | round
     endif
   -%}
   <div class="card-wrapper product-card-wrapper underline-links-hover">
@@ -104,6 +124,15 @@
                 >
               {%- endif -%}
             </div>
+            <div class="card-perfume__badges">
+              {%- if card_product.available == false -%}
+                <span class="card-perfume__badge card-perfume__badge--out">
+                  {{- 'products.product.sold_out' | t -}}
+                </span>
+              {%- elsif sale_pct > 0 -%}
+                <span class="card-perfume__badge card-perfume__badge--sale">−{{ sale_pct }}%</span>
+              {%- endif -%}
+            </div>
           </div>
         {%- endif -%}
         <div class="card__content">
@@ -145,6 +174,10 @@
       </div>
       <div class="card__content">
         <div class="card__information">
+          {%- if show_vendor and card_product.vendor != blank -%}
+            <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+            <span class="card-perfume__brand">{{ card_product.vendor }}</span>
+          {%- endif -%}
           <h3
             class="card__heading{% if card_product.featured_media or settings.card_style == 'standard' %} h5{% endif %}"
             {% if card_product.featured_media or settings.card_style == 'card' %}
@@ -161,11 +194,6 @@
             </a>
           </h3>
           <div class="card-information">
-            {%- if show_vendor -%}
-              <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
-              <div class="caption-with-letter-spacing light">{{ card_product.vendor }}</div>
-            {%- endif -%}
-
             {%- assign card_family = card_product.metafields.custom.familia_olfativa.value -%}
             {%- if card_family != blank -%}
               <div class="caption light card-product__facts">
@@ -173,8 +201,6 @@
                 {%- if card_product.metafields.custom.concentracion.value != blank %} · {{ card_product.metafields.custom.concentracion.value }}{% endif -%}
               </div>
             {%- endif -%}
-
-            <span class="caption-large light">{{ block.settings.description | escape }}</span>
 
             {%- if show_rating and card_product.metafields.reviews.rating.value != blank -%}
               {% liquid
@@ -212,7 +238,23 @@
               </p>
             {%- endif -%}
 
-            {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
+            {%- comment -%}
+              Precio de la presentación SELLADA (variante "Frasco", resuelta
+              arriba). El símbolo $ se antepone acá porque el formato de moneda
+              de la tienda hoy no lo incluye; ver nota en component-card-perfume.css.
+            {%- endcomment -%}
+            <div class="card-perfume__pricing">
+              <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+              <div class="card-perfume__price">
+                <span class="card-perfume__price-now">${{ sealed_variant.price | money }}</span>
+                {%- if sealed_variant.compare_at_price > sealed_variant.price -%}
+                  <s class="card-perfume__price-was">
+                    ${{- sealed_variant.compare_at_price | money -}}
+                  </s>
+                {%- endif -%}
+              </div>
+              {% render 'installments', price: sealed_variant.price %}
+            </div>
             {%- if card_product.quantity_price_breaks_configured? -%}
               {% if card_product.variants_count == 1 and quick_add == 'bulk' %}
                 {% liquid
@@ -299,53 +341,14 @@
         {% assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id %}
         {% if quick_add == 'standard' %}
           <div class="quick-add no-js-hidden">
-            {%- liquid
-              assign qty_rules = false
-              if card_product.selected_or_first_available_variant.quantity_rule.min > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1
-                assign qty_rules = true
-              endif
-            -%}
-            {%- if card_product.variants_count > 1 or qty_rules -%}
-              <modal-opener data-modal="#QuickAdd-{{ card_product.id }}">
-                <button
-                  id="{{ product_form_id }}-submit"
-                  type="submit"
-                  name="add"
-                  class="quick-add__submit button button--full-width button--secondary{% if horizontal_quick_add %} card--horizontal__quick-add animate-arrow{% endif %}"
-                  aria-haspopup="dialog"
-                  aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
-                  data-product-url="{{ card_product.url }}"
-                >
-                  {{ 'products.product.choose_options' | t }}
-                  {%- if horizontal_quick_add -%}
-                    <span class="icon-wrap">
-                      {{- 'icon-arrow.svg' | inline_asset_content -}}
-                    </span>
-                  {%- endif -%}
-                  {%- render 'loading-spinner' -%}
-                </button>
-              </modal-opener>
-              <quick-add-modal id="QuickAdd-{{ card_product.id }}" class="quick-add-modal">
-                <div
-                  role="dialog"
-                  aria-label="{{ 'products.product.choose_product_options' | t: product_name: card_product.title | escape }}"
-                  aria-modal="true"
-                  class="quick-add-modal__content global-settings-popup"
-                  tabindex="-1"
-                >
-                  <button
-                    id="ModalClose-{{ card_product.id }}"
-                    type="button"
-                    class="quick-add-modal__toggle"
-                    aria-label="{{ 'accessibility.close' | t }}"
-                  >
-                    {{- 'icon-close.svg' | inline_asset_content -}}
-                  </button>
-                  <div id="QuickAddInfo-{{ card_product.id }}" class="quick-add-modal__content-info"></div>
-                </div>
-              </quick-add-modal>
-            {%- else -%}
-              <product-form data-section-id="{{ section.id }}">
+            {%- if card_product.available == false -%}
+              {%- comment -%} Producto sin ninguna presentación disponible. {%- endcomment -%}
+              <button type="button" class="quick-add__submit card-perfume__add" disabled>
+                <span>{{ 'products.product.sold_out' | t }}</span>
+              </button>
+            {%- elsif sealed_variant.available -%}
+              {%- comment -%} Agrega directo la presentación SELLADA (Frasco) vía AJAX → cart-notification. {%- endcomment -%}
+              <product-form data-section-id="{{ section_id }}">
                 {%- form 'product',
                   card_product,
                   id: product_form_id,
@@ -356,44 +359,37 @@
                   <input
                     type="hidden"
                     name="id"
-                    value="{{ card_product.selected_or_first_available_variant.id }}"
+                    value="{{ sealed_variant.id }}"
                     class="product-variant-id"
-                    {% if card_product.selected_or_first_available_variant.available == false %}
-                      disabled
-                    {% endif %}
                   >
                   <button
                     id="{{ product_form_id }}-submit"
                     type="submit"
                     name="add"
-                    class="quick-add__submit button button--full-width button--secondary{% if horizontal_quick_add %} card--horizontal__quick-add{% endif %}"
-                    aria-haspopup="dialog"
+                    class="quick-add__submit card-perfume__add"
                     aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
                     aria-live="polite"
                     data-sold-out-message="true"
-                    {% if card_product.selected_or_first_available_variant.available == false %}
-                      disabled
-                    {% endif %}
                   >
-                    <span>
-                      {%- if card_product.selected_or_first_available_variant.available -%}
-                        {{ 'products.product.add_to_cart' | t }}
-                      {%- else -%}
-                        {{ 'products.product.sold_out' | t }}
-                      {%- endif -%}
+                    <span class="card-perfume__add-label">
+                      {{- 'icon-cart.svg' | inline_asset_content -}}
+                      {{ 'products.product.add_short' | t }}
                     </span>
                     <span class="sold-out-message hidden">
                       {{ 'products.product.sold_out' | t }}
                     </span>
-                    {%- if horizontal_quick_add -%}
-                      <span class="icon-wrap">
-                        {{- 'icon-plus.svg' | inline_asset_content -}}
-                      </span>
-                    {%- endif -%}
                     {%- render 'loading-spinner' -%}
                   </button>
                 {%- endform -%}
               </product-form>
+            {%- else -%}
+              {%- comment -%} Frasco agotado pero hay otras presentaciones (decants): elegir en la PDP. {%- endcomment -%}
+              <a
+                href="{{ card_product.url }}"
+                class="quick-add__submit card-perfume__add card-perfume__add--link"
+              >
+                <span>{{ 'products.product.choose_options' | t }}</span>
+              </a>
             {%- endif -%}
           </div>
         {% elsif quick_add == 'bulk' %}
@@ -427,10 +423,6 @@
             <div class="quick-add no-js-hidden">
               {%- liquid
                 assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id
-                assign qty_rules = false
-                if card_product.selected_or_first_available_variant.quantity_rule.min > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1
-                  assign qty_rules = true
-                endif
               -%}
               <modal-opener
                 id="QuickBulk-{{ card_product.id }}-{{ section_id }}"

@@ -118,6 +118,7 @@
   "products": {
     "product": {
       "add_to_cart": "Įdėti į krepšelį",
+      "add_short": "Įdėti į krepšelį",
       "description": "Aprašymas",
       "on_sale": "Išpardavimas",
       "product_variants": "Gaminio variantai",

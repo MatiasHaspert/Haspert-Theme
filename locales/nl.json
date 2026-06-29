@@ -116,6 +116,7 @@
   "products": {
     "product": {
       "add_to_cart": "Aan winkelwagen toevoegen",
+      "add_short": "Aan winkelwagen toevoegen",
       "description": "Beschrijving",
       "on_sale": "Aanbieding",
       "quantity": {

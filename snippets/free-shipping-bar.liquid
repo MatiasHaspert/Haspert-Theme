@@ -19,7 +19,7 @@
       assign amount_str = remaining | money
       assign message = settings.free_ship_text | replace: '{amount}', amount_str
     endif
-    assign bar_color = settings.free_ship_bar_color | default: '#C2A24C'
+    assign bar_color = settings.free_ship_bar_color | default: '#B25A3C'
   -%}
   <div class="free-ship{% if reached %} free-ship--reached{% endif %}">
     <p class="free-ship__text">{{ message }}</p>

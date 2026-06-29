@@ -116,6 +116,7 @@
   "products": {
     "product": {
       "add_to_cart": "Legg i handlekurv",
+      "add_short": "Legg i handlekurv",
       "description": "Beskrivelse",
       "on_sale": "Salg",
       "quantity": {

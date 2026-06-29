@@ -10,48 +10,102 @@
 {
   "sections": {
     "hero": {
-      "type": "rich-text",
+      "type": "hero-home",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "100% originales · garantía",
+        "heading": "Importados originales, sin pagar de más",
+        "subheading": "Diseñador, nicho y árabes — sellados y verificables.",
+        "cta1_label": "Ver catálogo",
+        "cta1_link": "shopify://collections/all",
+        "cta2_label": "Probá con un decant",
+        "cta2_link": "shopify://collections/all",
+        "microcopy": "Garantía de originalidad · Devolución sin vueltas",
+        "padding_top": 64,
+        "padding_bottom": 56
+      }
+    },
+    "trust": {
+      "type": "multicolumn",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "c1": {
+          "type": "column",
           "settings": {
-            "heading": "Perfumería importada & árabe",
-            "heading_size": "h1"
+            "title": "Originalidad garantizada",
+            "text": "<p>Marca auténtica, sellada de fábrica y con lote verificable.</p>"
           }
         },
-        "text": {
-          "type": "text",
+        "c2": {
+          "type": "column",
           "settings": {
-            "text": "<p>Originalidad garantizada · Envíos a todo el país · Hasta 3 cuotas sin interés</p>"
+            "title": "Probá con un decant",
+            "text": "<p>Conocé el aroma desde un 5ml antes de ir por el frasco.</p>"
           }
         },
-        "button": {
-          "type": "button",
+        "c3": {
+          "type": "column",
           "settings": {
-            "button_label": "Ver catálogo",
-            "button_link": "shopify://collections/all"
+            "title": "Envíos a todo el país",
+            "text": "<p>Correo Argentino. En Rosario, envío en el día.</p>"
+          }
+        },
+        "c4": {
+          "type": "column",
+          "settings": {
+            "title": "Hasta 6 cuotas sin interés",
+            "text": "<p>Con Mercado Pago. 20% off pagando en efectivo o transferencia.</p>"
           }
         }
       },
-      "block_order": ["heading", "text", "button"],
+      "block_order": ["c1", "c2", "c3", "c4"],
       "settings": {
-        "color_scheme": "scheme-3",
-        "content_alignment": "center",
-        "full_width": true,
-        "padding_top": 64,
-        "padding_bottom": 64
+        "title": "",
+        "heading_size": "h2",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "columns_desktop": 4,
+        "column_alignment": "center",
+        "background_style": "none",
+        "button_label": "",
+        "color_scheme": "scheme-1",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 40,
+        "padding_bottom": 28
+      }
+    },
+    "familias": {
+      "type": "collection-list",
+      "blocks": {
+        "f1": { "type": "featured_collection", "settings": {} },
+        "f2": { "type": "featured_collection", "settings": {} },
+        "f3": { "type": "featured_collection", "settings": {} },
+        "f4": { "type": "featured_collection", "settings": {} }
+      },
+      "block_order": ["f1", "f2", "f3", "f4"],
+      "settings": {
+        "title": "Elegí por familia olfativa",
+        "heading_size": "h2",
+        "image_ratio": "square",
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "show_view_all": true,
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "featured": {
       "type": "featured-collection",
       "settings": {
-        "title": "Más buscados",
+        "title": "Más vendidos",
         "heading_size": "h2",
         "collection": "all",
         "products_to_show": 8,
         "columns_desktop": 4,
         "color_scheme": "scheme-1",
-        "image_ratio": "portrait",
+        "image_ratio": "square",
         "show_secondary_image": false,
         "show_vendor": true,
         "show_rating": false,
@@ -59,36 +113,204 @@
         "view_all_style": "outline",
         "columns_mobile": "2",
         "swipe_on_mobile": true,
+        "quick_add": "standard",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "kit": {
+      "type": "kit-decants",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "accent_color": "#B25A3C",
+        "microbadge": "Armá tu kit",
+        "heading": "¿No sabés cuál elegir?",
+        "subheading": "Elegí varios decants para probar y ahorrá llevándolos juntos.",
+        "kit_size": 3,
+        "decant_size": "Decant 5ml",
+        "discount_text": "Elegí 3 y llevate 10% OFF en tu kit",
+        "button_label": "Agregar kit al carrito",
+        "onboarding_text": "Elegí una colección de decants en la configuración de la sección.",
         "padding_top": 48,
         "padding_bottom": 48
       }
     },
-    "about": {
-      "type": "rich-text",
+    "autenticidad": {
+      "type": "original-vs-replica",
+      "blocks": {
+        "r1": {
+          "type": "row",
+          "settings": {
+            "feature": "Procedencia",
+            "ours": "Importado, marca auténtica con lote/serial verificable",
+            "replica": "Origen dudoso, sin respaldo"
+          }
+        },
+        "r2": {
+          "type": "row",
+          "settings": {
+            "feature": "Concentración",
+            "ours": "Declarada (EDP/EDT), rinde y dura como el oficial",
+            "replica": "Diluido, se va en pocas horas"
+          }
+        },
+        "r3": {
+          "type": "row",
+          "settings": {
+            "feature": "Frasco y lote",
+            "ours": "Sellado de fábrica, lote/serial verificable",
+            "replica": "Serial falso o ausente"
+          }
+        },
+        "r4": {
+          "type": "row",
+          "settings": {
+            "feature": "Aroma",
+            "ours": "Fiel al lanzamiento oficial",
+            "replica": "Aroma alterado o desviado"
+          }
+        },
+        "r5": {
+          "type": "row",
+          "settings": {
+            "feature": "Garantía",
+            "ours": "Si no es original, te devolvemos el 100% + el envío (hasta 30 días)",
+            "replica": "Sin garantía"
+          }
+        }
+      },
+      "block_order": ["r1", "r2", "r3", "r4", "r5"],
+      "settings": {
+        "color_scheme": "scheme-3",
+        "accent_color": "#F3E2DA",
+        "microbadge": "Cómo reconocer un original",
+        "heading": "No todos los importados son iguales",
+        "subheading": "Trabajamos solo con originales. Mirá la diferencia con una réplica.",
+        "col_feature_label": "Característica",
+        "col_ours_label": "En Numen",
+        "col_replica_label": "Réplica",
+        "closing": "Por eso cada compra incluye garantía de originalidad y devolución sin vueltas.",
+        "show_button": true,
+        "button_label": "Ver catálogo",
+        "button_link": "shopify://collections/all",
+        "padding_top": 56,
+        "padding_bottom": 56
+      }
+    },
+    "resenas": {
+      "type": "custom-testimonialsv2",
+      "blocks": {
+        "t1": { "type": "testimonial_chat", "settings": { "align": "left" } },
+        "t2": { "type": "testimonial_chat", "settings": { "align": "right" } },
+        "t3": { "type": "testimonial_chat", "settings": { "align": "left" } }
+      },
+      "block_order": ["t1", "t2", "t3"],
+      "settings": {
+        "title": "Lo que dicen nuestros clientes"
+      }
+    },
+    "faq": {
+      "type": "faq-perfume",
+      "blocks": {
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Los perfumes son 100% originales?",
+            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>"
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Cómo sé que no es una réplica?",
+            "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible. Si querés, te mandamos el unboxing por WhatsApp antes de comprar. Y si algo no cierra: garantía de originalidad, te devolvemos el 100%.</p>"
+          }
+        },
+        "q3": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Qué es un \"decant\"? ¿Es el mismo perfume?",
+            "answer": "<p>Sí, es el mismo jugo fraccionado del frasco original en un atomizador. Ideal para probar el aroma antes de comprar el frasco completo, o para llevar en la cartera.</p>"
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Y el \"tester\"? ¿En qué se diferencia del original?",
+            "answer": "<p>Es exactamente el mismo perfume, en packaging de prueba (caja blanca o sin tapa premium). Por eso es más económico — pero el jugo es idéntico.</p>"
+          }
+        },
+        "q5": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Hacen envíos a todo el país?",
+            "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 4–7 días hábiles. Envío gratis en compras desde $200.000.</p>"
+          }
+        },
+        "q6": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Puedo pagar en cuotas?",
+            "answer": "<p>Sí, con Mercado Pago: hasta <strong>6 cuotas sin interés</strong> y hasta <strong>12 con interés</strong>. Además, <strong>20% de descuento</strong> pagando contado o por transferencia.</p>"
+          }
+        },
+        "q7": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Qué pasa si me arrepiento o no me gusta?",
+            "answer": "<p>Tenés 10 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>"
+          }
+        }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6", "q7"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "accent_color": "#B25A3C",
+        "microbadge": "Preguntas frecuentes",
+        "heading": "Todo lo que querés saber antes de comprar",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
       "blocks": {
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Originalidad garantizada",
+            "heading": "Sumate y enterate de los lanzamientos",
             "heading_size": "h2"
           }
         },
-        "text": {
-          "type": "text",
+        "paragraph": {
+          "type": "paragraph",
           "settings": {
-            "text": "<p>Seleccionamos perfumería importada y árabe original. Frasco sellado, lote verificable y devolución clara. ¿No querés arriesgar con el frasco completo? Probá primero con nuestros decants.</p>"
+            "text": "<p>Novedades, reposiciones y ofertas reales. Sin spam.</p>"
           }
+        },
+        "email": {
+          "type": "email_form",
+          "settings": {}
         }
       },
-      "block_order": ["heading", "text"],
+      "block_order": ["heading", "paragraph", "email"],
       "settings": {
         "color_scheme": "scheme-2",
-        "content_alignment": "center",
-        "full_width": false,
-        "padding_top": 40,
-        "padding_bottom": 40
+        "full_width": true,
+        "padding_top": 44,
+        "padding_bottom": 52
       }
     }
   },
-  "order": ["hero", "featured", "about"]
+  "order": [
+    "hero",
+    "trust",
+    "familias",
+    "featured",
+    "kit",
+    "autenticidad",
+    "resenas",
+    "faq",
+    "newsletter"
+  ]
 }

@@ -15,6 +15,9 @@
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     {%- endunless -%}
 
+    {%- comment -%} Numen: preload de la fuente display self-host (LCP de títulos y precio) {%- endcomment -%}
+    {{ 'bebas-neue-400.woff2' | asset_url | preload_tag: as: 'font' }}
+
     <title>
       {{ page_title }}
       {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
@@ -53,6 +56,22 @@
       {{ body_font_italic | font_face: font_display: 'swap' }}
       {{ body_font_bold_italic | font_face: font_display: 'swap' }}
       {{ settings.type_header_font | font_face: font_display: 'swap' }}
+
+      {%- comment -%} Numen: fuentes self-host (no están en la librería de Shopify) {%- endcomment -%}
+      @font-face {
+        font-family: 'Bebas Neue';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url({{ 'bebas-neue-400.woff2' | asset_url }}) format('woff2');
+      }
+      @font-face {
+        font-family: 'Fraunces';
+        font-style: italic;
+        font-weight: 400;
+        font-display: swap;
+        src: url({{ 'fraunces-italic.woff2' | asset_url }}) format('woff2');
+      }
 
       {% for scheme in settings.color_schemes -%}
         {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
@@ -220,6 +239,16 @@
         --variant-pills-shadow-horizontal-offset: {{ settings.variant_pills_shadow_horizontal_offset }}px;
         --variant-pills-shadow-vertical-offset: {{ settings.variant_pills_shadow_vertical_offset }}px;
         --variant-pills-shadow-blur-radius: {{ settings.variant_pills_shadow_blur }}px;
+
+        {%- comment -%} Numen: display/accent + acento de marca. Override del picker (Bebas no está en la librería). {%- endcomment -%}
+        --font-display: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif;
+        --font-accent: 'Fraunces', Georgia, 'Times New Roman', serif;
+        --font-heading-family: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif;
+        --font-heading-style: normal;
+        --font-heading-weight: 400;
+        --accent: {{ settings.accent | default: '#B25A3C' }};
+        --accent-ink: {{ settings.accent_ink | default: '#8F4329' }};
+        --accent-soft: {{ settings.accent_soft | default: '#F3E2DA' }};
       }
 
       *,

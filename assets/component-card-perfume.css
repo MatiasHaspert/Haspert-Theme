@@ -1,0 +1,195 @@
+/* ============================================================================
+   CARD DE PRODUCTO — PERFUMERÍA (NUMEN)
+   ----------------------------------------------------------------------------
+   Adapta la card de Sense (.product-card-wrapper) al sistema de perfumería:
+   packshot sobre blanco (sin recortar), jerarquía marca → título → ficha →
+   precio → cuotas. El precio mostrado es el de la presentación SELLADA
+   (variante "Frasco"), resuelto en card-product.liquid. Todo dinámico (precio
+   y compare_at desde Shopify; ficha desde metafields).
+
+   Scope: .product-card-wrapper (sólo tarjetas de producto; no toca blog /
+   collection cards). Usa las variables de esquema de color de Sense
+   (--color-foreground/-background) para respetar la paleta del editor.
+   ========================================================================== */
+
+/* La ficha de perfume se lee mejor alineada a la izquierda (nombres largos,
+   precio ancla, cuotas) que centrada. */
+.product-card-wrapper {
+  --text-alignment: left;
+}
+
+.product-card-wrapper .card,
+.product-card-wrapper .card__content,
+.product-card-wrapper .card-information {
+  text-align: left;
+}
+
+/* — Packshot: el frasco se ve entero sobre blanco, nunca recortado — */
+.product-card-wrapper .card__media .media img {
+  object-fit: contain;
+  padding: 1.2rem;
+}
+
+/* Línea divisoria entre la imagen y los datos (estilo "card") */
+.product-card-wrapper .card--card > .card__inner {
+  border-bottom: var(--border-width, 0.1rem) solid rgba(var(--color-foreground), 0.1);
+}
+
+/* — Overline de marca — */
+.product-card-wrapper .card-perfume__brand {
+  display: block;
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.6);
+  margin-bottom: 0.4rem;
+}
+
+/* — Título: Montserrat (legible para nombres largos), no Bebas — */
+.product-card-wrapper .card__heading,
+.product-card-wrapper .card__heading a {
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.45rem;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* — Ficha: familia olfativa · concentración — */
+.product-card-wrapper .card-product__facts {
+  font-family: var(--font-body-family);
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: rgba(var(--color-foreground), 0.6);
+  margin-top: 0.4rem;
+}
+
+/* — Precio de la presentación sellada (Frasco) — */
+.product-card-wrapper .card-perfume__pricing {
+  margin-top: 0.6rem;
+}
+
+.product-card-wrapper .card-perfume__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.product-card-wrapper .card-perfume__price-now {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: rgb(var(--color-foreground));
+}
+
+.product-card-wrapper .card-perfume__price-was {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(var(--color-foreground), 0.5);
+  text-decoration: line-through;
+}
+
+/* — Badges sobre el packshot (−% OFF / Agotado) — */
+/* Reemplazan al badge nativo de Sense, que ocultamos. */
+.product-card-wrapper .card__badge {
+  display: none;
+}
+
+.product-card-wrapper .card-perfume__badges {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.product-card-wrapper .card-perfume__badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  line-height: 1;
+}
+
+/* −% OFF: sólo aparece si hay compare_at real (precio anterior). Acento sólido. */
+.product-card-wrapper .card-perfume__badge--sale {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: var(--accent);
+}
+
+/* Agotado: neutro, sólo cuando NINGUNA presentación está disponible. */
+.product-card-wrapper .card-perfume__badge--out {
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.7);
+  background: rgb(var(--color-background));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.15);
+}
+
+/* — CTA "Agregar al carrito" (agrega la presentación sellada) — */
+.product-card-wrapper .card-perfume__add {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 5rem;
+  padding: 0 1.6rem;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  letter-spacing: 0.06em;
+  color: rgb(var(--color-background));
+  background: rgb(var(--color-foreground));
+  border: 0.15rem solid rgb(var(--color-foreground));
+  border-radius: var(--border-radius, 0.8rem);
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity var(--duration-short, 0.16s) ease;
+}
+
+.product-card-wrapper .card-perfume__add:hover:not([disabled]) {
+  opacity: 0.9;
+}
+
+.product-card-wrapper .card-perfume__add[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Variante "Seleccionar opciones" (frasco agotado, hay decants): contorno. */
+.product-card-wrapper .card-perfume__add--link {
+  color: rgb(var(--color-foreground));
+  background: transparent;
+}
+
+.product-card-wrapper .card-perfume__add-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.product-card-wrapper .card-perfume__add svg {
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-shrink: 0;
+}

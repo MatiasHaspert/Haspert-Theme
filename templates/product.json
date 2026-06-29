@@ -33,7 +33,7 @@
       ],
       "settings": {
         "color_scheme": "",
-        "accent_color": "#c2a24c",
+        "accent_color": "#B25A3C",
         "media_position": "left",
         "gallery_layout": "thumbnail_slider",
         "media_size": "large",
@@ -68,7 +68,7 @@
       "name": "Kit de decants",
       "settings": {
         "color_scheme": "",
-        "accent_color": "#C2A24C",
+        "accent_color": "#B25A3C",
         "microbadge": "🧪 Armá tu kit",
         "heading": "Armá tu kit de decants",
         "subheading": "Elegí varios aromas para probar y ahorrá llevándolos juntos.",
@@ -86,7 +86,7 @@
       "type": "related-by-family",
       "settings": {
         "color_scheme": "",
-        "accent_color": "#C2A24C",
+        "accent_color": "#B25A3C",
         "heading": "Te puede gustar",
         "heading_size": "h1",
         "show_family_label": true,

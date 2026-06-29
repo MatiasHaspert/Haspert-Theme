@@ -117,6 +117,7 @@
   "products": {
     "product": {
       "add_to_cart": "Aggiungi al carrello",
+      "add_short": "Aggiungi al carrello",
       "description": "Descrizione",
       "on_sale": "In offerta",
       "quantity": {
