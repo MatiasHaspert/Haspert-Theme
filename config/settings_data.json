@@ -9,9 +9,9 @@
  */
 {
   "current": {
-    "logo": "shopify://shop_images/ChatGPT_Image_23_nov_2025_11_07_05.png",
-    "logo_width": 80,
-    "favicon": "shopify://shop_images/ChatGPT_Image_23_nov_2025_11_07_05.png",
+    "logo": "shopify://shop_images/numen-logo-header.svg",
+    "logo_width": 110,
+    "favicon": "shopify://shop_images/numen-favicon-ink.svg",
     "type_header_font": "montserrat_n7",
     "heading_scale": 120,
     "type_body_font": "montserrat_n4",
@@ -132,8 +132,8 @@
     "accent_ink": "#8F4329",
     "accent_soft": "#F3E2DA",
     "installments_enabled": true,
-    "installments_count": 6,
     "installments_no_interest": true,
+    "installments_count": 6,
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
