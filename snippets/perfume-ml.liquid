@@ -1,0 +1,21 @@
+{%- comment -%}
+  Devuelve los ml de una variante (entero, sin unidad), para calcular $/ml en la PDP.
+  Prioridad: metafield custom.ml (variante) → derivado del título → tamano_frasco_ml (no-decant).
+  Si no puede resolverlo, devuelve 0 (el caller oculta el $/ml).
+
+  Acepta: variant (requerido), product (requerido).
+  Uso:
+    {%- capture v_ml -%}{% render 'perfume-ml', variant: v, product: product %}{%- endcapture -%}
+    {%- assign v_ml = v_ml | plus: 0 -%}
+{%- endcomment -%}
+{%- liquid
+  assign ml = variant.metafields.custom.ml.value | plus: 0
+  if ml == 0
+    # Derivar del título: tomar el número pegado a "ml" (ej. "Decant 5 ml" → 5, "Frasco 100ml" → 100).
+    assign ml = variant.title | downcase | replace: 'ml', '' | strip | split: ' ' | last | plus: 0
+  endif
+  if ml == 0 and variant.metafields.custom.tipo_presentacion.value != 'Decant'
+    assign ml = product.metafields.custom.tamano_frasco_ml.value | plus: 0
+  endif
+  echo ml
+-%}

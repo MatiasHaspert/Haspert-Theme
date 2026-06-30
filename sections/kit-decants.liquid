@@ -17,8 +17,25 @@
   if scheme_bg == blank or bg_bright > 140
     assign accent_ink = accent | color_darken: 22
   endif
+
+  # Condicional PDP (§4.11): en página de producto, mostrar el kit sólo si el producto
+  # actual tiene al menos una variante Decant. En el editor siempre se muestra.
+  assign hide_kit = false
+  if product != blank and request.design_mode == false
+    assign has_decant = false
+    for v in product.variants
+      if v.metafields.custom.tipo_presentacion.value == 'Decant'
+        assign has_decant = true
+        break
+      endif
+    endfor
+    unless has_decant
+      assign hide_kit = true
+    endunless
+  endif
 -%}
 
+{%- unless hide_kit -%}
 <div class="kit color-{{ section.settings.color_scheme }} gradient">
   <div class="page-width section-{{ section.id }}-padding">
     <div class="kit__head">
@@ -93,6 +110,7 @@
     {%- endif -%}
   </div>
 </div>
+{%- endunless -%}
 
 {%- style -%}
   .section-{{ section.id }}-padding {

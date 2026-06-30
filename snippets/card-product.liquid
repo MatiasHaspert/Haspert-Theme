@@ -239,17 +239,16 @@
             {%- endif -%}
 
             {%- comment -%}
-              Precio de la presentación SELLADA (variante "Frasco", resuelta
-              arriba). El símbolo $ se antepone acá porque el formato de moneda
-              de la tienda hoy no lo incluye; ver nota en component-card-perfume.css.
+              Precio de la presentación SELLADA (variante "Frasco", resuelta arriba).
+              El símbolo $ lo aporta el formato de moneda de la tienda (no se hardcodea).
             {%- endcomment -%}
             <div class="card-perfume__pricing">
               <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
               <div class="card-perfume__price">
-                <span class="card-perfume__price-now">${{ sealed_variant.price | money }}</span>
+                <span class="card-perfume__price-now">{{ sealed_variant.price | money }}</span>
                 {%- if sealed_variant.compare_at_price > sealed_variant.price -%}
                   <s class="card-perfume__price-was">
-                    ${{- sealed_variant.compare_at_price | money -}}
+                    {{- sealed_variant.compare_at_price | money -}}
                   </s>
                 {%- endif -%}
               </div>

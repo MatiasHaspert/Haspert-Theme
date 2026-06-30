@@ -3597,330 +3597,95 @@ details-disclosure > details {
 }
 
 /* -----------------------------------------------
-   SISTEMA DE DISEÑO CALMI — 2025
-   Colores, tipografías, botones, cards y layout
+   NUMEN - overrides globales (tipografia + botones)
+   Heredado del theme base (ex "Calmi"); recoloreado a terracota de marca.
    ----------------------------------------------- */
-
-/* PALETA OFICIAL */
 :root {
-  --calmi-primary: #8B006D;
-  --calmi-primary-light: #A80086;
-  --calmi-primary-dark: #5A0048;
-
-  --calmi-accent: #FFD464;
-  --calmi-bg: #F7F7F7;
-  --calmi-bg-light: #FAFAFA;
-
-  --calmi-text: #222222;
-  --calmi-muted: #666666;
-
-  --calmi-radius: 14px;
+  --brand-button: #8F4329;       /* terracota AA: texto blanco encima, borde/relleno sobre claro */
+  --brand-button-hover: #B25A3C;
+  --brand-radius: 14px;
 }
 
-/* TIPOGRAFÍA GLOBAL */
-h1, .h1 {
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
+/* Tipografia global */
+h1, .h1 { font-weight: 700; letter-spacing: -0.5px; }
+h2, .h2 { font-weight: 700; letter-spacing: -0.4px; }
+h3, .h3 { font-weight: 600; }
+p, li, .rte p { line-height: 1.55; font-size: 1rem; }
+.small { font-size: 0.88rem; opacity: 0.75; }
 
-h2, .h2 {
-  font-weight: 700;
-  letter-spacing: -0.4px;
-}
-
-h3, .h3 {
-  font-weight: 600;
-}
-
-p, li, .rte p {
-  line-height: 1.55;
-  font-size: 1rem;
-}
-
-.small {
-  font-size: 0.88rem;
-  opacity: 0.75;
-}
-
-/* BOTONES UNIFICADOS */
-.button, 
+/* Botones unificados (terracota de marca) */
+.button,
 button[type="submit"] {
-  border-radius: var(--calmi-radius) !important;
+  border-radius: var(--brand-radius) !important;
   padding: 14px 18px !important;
   font-weight: 600 !important;
   font-size: 1rem !important;
   text-align: center;
   transition: 0.3s ease;
 }
-
 .button--primary {
-  background-color: var(--calmi-primary) !important;
-  color: white !important;
+  background-color: var(--brand-button) !important;
+  color: #fff !important;
 }
-
 .button--primary:hover {
-  background-color: var(--calmi-primary-light) !important;
+  background-color: var(--brand-button-hover) !important;
 }
-
 .button--secondary {
-  border: 2px solid var(--calmi-primary);
-  color: var(--calmi-primary);
-  background: white !important;
+  border: 2px solid var(--brand-button);
+  color: var(--brand-button);
+  background: #fff !important;
 }
-
 .button--secondary:hover {
-  background-color: #fef2fc !important;
+  background-color: #f7ece6 !important;
+}
+/* Sin el anillo gris del pseudo-borde de Sense (.button:after) en los botones de marca */
+.button--primary::after,
+.button--secondary::after {
+  display: none !important;
 }
 
-/* BADGES */
-.badge-pill {
-  padding: 6px 12px;
-  background: rgba(0,0,0,0.06);
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-/* -----------------------------------------------
-   HERO
-   ----------------------------------------------- */
-
-/* BADGES EN FILA SCROLLABLE (MOBILE) */
-.hero-badges {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  white-space: nowrap;
-  padding-bottom: 4px;
-}
-
-.hero-badges::-webkit-scrollbar {
-  display: none;
-}
-
-/* -----------------------------------------------
-   CARDS DE PRODUCTOS
-   ----------------------------------------------- */
-
-.multicolumn-card,
-.final-cta-card {
-  border-radius: var(--calmi-radius);
-  border: 1px solid rgba(0,0,0,0.06);
+/* Cards de multicolumn (homepage) */
+.multicolumn-card {
+  border-radius: var(--brand-radius);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   transition: 0.3s ease;
 }
-
-.multicolumn-card:hover,
-.final-cta-card:hover {
+.multicolumn-card:hover {
   transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
 }
-
-/* Solo afecta a la sección CTA final — NO toca multicolumn */
-.final-cta-card__image img {
-  height: 260px !important;
-  object-fit: cover !important;
-  width: 100%;
-}
-
-/* restaurar comportamiento natural de multicolumn */
 .multicolumn-card__image {
   height: auto !important;
   width: 100%;
   object-fit: cover;
 }
-
-
-/* PRECIO UNIFICADO */
-.price-text,
-.final-cta-card__price {
-  margin-top: 10px;
+.multicolumn-card h3 {
+  margin-top: 0 !important;
 }
 
-.final-cta-card__price strong {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--calmi-primary);
-}
-
-.final-cta-card__price s {
-  opacity: 0.55;
-  margin-right: 6px;
-}
-
-/* -----------------------------------------------
-   TESTIMONIOS
-   ----------------------------------------------- */
-
-.testimonial-card {
-  border-radius: var(--calmi-radius);
-  padding: 22px;
-  background: #fff;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Avatar más consistente */
-.testimonial-avatar img {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* -----------------------------------------------
-   BENEFICIOS CLAVE
-   ----------------------------------------------- */
-
-.benefit-card {
-  max-width: 300px;
-  margin: auto;
-  text-align: center;
-}
-
-.benefit-card img {
-  border-radius: var(--calmi-radius);
-}
-
-/* -----------------------------------------------
-   VIDEOS / REELS
-   ----------------------------------------------- */
-
-.reel-card {
-  border-radius: var(--calmi-radius);
-  overflow: hidden;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
-}
-
-.reel-card video,
-.reel-card img {
-  object-fit: cover;
-  width: 100%;
-}
-
-/* -----------------------------------------------
-   FAQ
-   ----------------------------------------------- */
-
-.faq-item {
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-}
-
-.faq-item .icon {
-  margin-top: 2px;
-}
-
-/* -----------------------------------------------
-   FORMULARIO DE CONTACTO
-   ----------------------------------------------- */
-
+/* Formulario de contacto (page.contact) */
 .section-contact form {
   padding: 24px;
-  border-radius: var(--calmi-radius);
-  background: white;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+  border-radius: var(--brand-radius);
+  background: #fff;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
 }
-
 .section-contact input,
 .section-contact textarea,
 .section-contact select {
-  border-radius: var(--calmi-radius);
-  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: var(--brand-radius);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 12px 14px;
   font-size: 1rem;
 }
 
-/* -----------------------------------------------
-   FOOTER PREMIUM
-   ----------------------------------------------- */
-
-.footer-premium {
-  background: var(--calmi-bg);
-  padding-top: 40px;
-  padding-bottom: 20px;
-}
-
-.footer-premium h3 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-.footer-premium ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.footer-premium li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.footer-premium li img {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-}
-
-.footer-premium-logos img {
-  width: 42px;
-  opacity: 0.9;
-  transition: 0.2s;
-}
-
-.footer-premium-logos img:hover {
-  opacity: 1;
-}
-
-/* Barra inferior */
-.footer-premium-bottom {
-  border-top: 1px solid rgba(0,0,0,0.08);
-  margin-top: 32px;
-  padding-top: 16px;
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--calmi-muted);
-}
-
-/* -----------------------------------------------
-   MOBILE OPTIMIZATION
-   ----------------------------------------------- */
-
+/* Mobile */
 @media (max-width: 749px) {
-
   h1 { font-size: 1.9rem; }
   h2 { font-size: 1.6rem; }
-
-  .button, button[type="submit"] {
+  .button,
+  button[type="submit"] {
     font-size: 1.05rem !important;
     padding: 14px !important;
   }
-
-  .final-cta-card__image img {
-    height: 200px !important;
-  }
-
-  .testimonial-card {
-    padding: 16px;
-  }
-
 }
-
-/* Versión ultra-compacta */
-.multicolumn-card__image,
-.final-cta-card__image {
-  margin-bottom: 6px !important;
-}
-
-.multicolumn-card h3,
-.final-cta-card__title {
-  margin-top: 0 !important;
-}
-
-
-
-

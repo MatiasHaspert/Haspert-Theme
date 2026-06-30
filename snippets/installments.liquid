@@ -4,21 +4,32 @@
 
   Acepta:
   - price: {Number} precio en centavos (ej. card_product.price o variant.price). Requerido.
-  - layout: {String} 'card' (default) | 'pdp'. Solo cambia el tamaño.
+  - layout: {String} 'card' (default) | 'pdp'. Cambia el tamaño y si muestra "hasta N cuotas".
 
-  Settings globales: installments_enabled, installments_count, installments_no_interest.
-  ⚠️ "sin interés" solo si realmente lo es en tu config de Mercado Pago (Defensa del Consumidor).
+  Settings globales:
+  - installments_enabled
+  - installments_free_count : cuotas SIN interés (default 6). Fallback: installments_count (legacy).
+  - installments_max_count  : cuotas máximas CON interés (default 12). Fallback: free_count.
+  - installments_no_interest: si la promesa "sin interés" es válida en tu config de Mercado Pago.
+
+  ⚠️ "sin interés" SOLO sobre las cuotas free. Las "hasta N" van sin esa frase: si el costo
+     financiero está en el precio, decir "sin interés" es sancionable (Defensa del Consumidor).
 {%- endcomment -%}
-{%- if settings.installments_enabled and price and price > 0 and settings.installments_count > 1 -%}
-  {%- assign cuota = price | divided_by: settings.installments_count -%}
+{%- liquid
+  assign free_count = settings.installments_free_count | default: settings.installments_count
+  assign max_count = settings.installments_max_count | default: free_count
+  assign is_pdp = false
+  if layout == 'pdp'
+    assign is_pdp = true
+  endif
+-%}
+{%- if settings.installments_enabled and price and price > 0 and free_count > 1 -%}
+  {%- assign cuota = price | divided_by: free_count -%}
   <span class="installments installments--{{ layout | default: 'card' }}">
-    {{- settings.installments_count }} cuotas{% if settings.installments_no_interest %} sin interés{% endif %} de
-    {%- comment -%}
-      El $ se antepone sólo en la card (layout != 'pdp') porque el formato de
-      moneda de la tienda hoy no incluye símbolo. En la PDP se mantiene sin $
-      para no desentonar con el precio principal. Fix definitivo: agregar el $
-      al formato de moneda en Admin → Configuración → Moneda y quitar este prefijo.
-    {%- endcomment -%}
-    <span class="installments__amount">{% unless layout == 'pdp' %}${% endunless %}{{ cuota | money }}</span>
+    {{- free_count }} cuotas{% if settings.installments_no_interest %} sin interés{% endif %} de
+    <span class="installments__amount">{{ cuota | money }}</span>
+    {%- if is_pdp and max_count > free_count -%}
+      <span class="installments__more">· hasta {{ max_count }} cuotas</span>
+    {%- endif -%}
   </span>
 {%- endif -%}

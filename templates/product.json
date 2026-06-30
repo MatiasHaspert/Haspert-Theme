@@ -53,34 +53,98 @@
         "label_top": "Salida",
         "label_heart": "Corazón",
         "label_base": "Fondo",
-        "show_originality": true,
-        "originality_heading": "Garantía de originalidad",
-        "originality_text": "<p>100% original e importado. Frasco sellado, lote verificable y política de devolución clara.</p>",
-        "show_ladder": true,
-        "ladder_heading": "Comparar presentaciones",
         "inspired_prefix": "Inspirado en el perfil olfativo de",
         "padding_top": 36,
         "padding_bottom": 36
       }
     },
-    "kit_decants_nKEUBr": {
-      "type": "kit-decants",
-      "name": "Kit de decants",
-      "settings": {
-        "color_scheme": "",
-        "accent_color": "#B25A3C",
-        "microbadge": "🧪 Armá tu kit",
-        "heading": "Armá tu kit de decants",
-        "subheading": "Elegí varios aromas para probar y ahorrá llevándolos juntos.",
-        "collection": "perfumes-amaderados",
-        "kit_size": 3,
-        "decant_size": "Decant 5ml",
-        "discount_text": "Elegí 3 y llevate 10% OFF en tu kit",
-        "button_label": "Agregar kit al carrito",
-        "onboarding_text": "Elegí una colección de decants en la configuración de la sección.",
-        "padding_top": 48,
-        "padding_bottom": 48
-      }
+    "autenticidad": {
+      "type": "autenticidad-perfume",
+      "blocks": {
+        "paso-1": {
+          "type": "paso",
+          "settings": {
+            "text": "<p>Cada frasco sellado tiene un <strong>código de lote (batch code)</strong> impreso. Te mostramos el real en las fotos del producto.</p>"
+          }
+        },
+        "paso-2": {
+          "type": "paso",
+          "settings": {
+            "text": "<p>Podés cruzar ese código en verificadores públicos de batch para confirmar fabricante y fecha.</p>"
+          }
+        },
+        "paso-3": {
+          "type": "paso",
+          "settings": {
+            "text": "<p>¿Querés verlo en vivo? Te enviamos <strong>foto y video del lote por WhatsApp</strong> antes de comprar.</p>"
+          }
+        }
+      },
+      "block_order": ["paso-1", "paso-2", "paso-3"],
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq-perfume",
+      "blocks": {
+        "qa-1": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Los perfumes son 100% originales?",
+            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>"
+          }
+        },
+        "qa-2": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Cómo sé que no es una réplica?",
+            "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. Si querés, te mandamos el unboxing por WhatsApp antes de comprar. Y si algo no cierra: garantía de originalidad, te devolvemos el 100%.</p>"
+          }
+        },
+        "qa-3": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Qué es un \"decant\"? ¿Es el mismo perfume?",
+            "answer": "<p>Sí, es el mismo jugo fraccionado del frasco original en un atomizador. Ideal para probar el aroma antes de comprar el frasco completo, o para llevar en la cartera.</p>"
+          }
+        },
+        "qa-4": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Y el \"tester\"? ¿En qué se diferencia del original?",
+            "answer": "<p>Es exactamente el mismo perfume, en packaging de prueba (caja blanca o sin tapa premium). Por eso es más económico — pero el jugo es idéntico.</p>"
+          }
+        },
+        "qa-5": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Hacen envíos a todo el país?",
+            "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 4–7 días hábiles. Envío gratis en compras desde $200.000.</p>"
+          }
+        },
+        "qa-6": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Puedo pagar en cuotas?",
+            "answer": "<p>Sí, con Mercado Pago: hasta <strong>6 cuotas sin interés</strong> y hasta <strong>12 con interés</strong>. Además, <strong>20% de descuento</strong> pagando contado o por transferencia.</p>"
+          }
+        },
+        "qa-7": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Qué pasa si me arrepiento o no me gusta?",
+            "answer": "<p>Tenés 10 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido y de naturaleza no devolvible — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>"
+          }
+        },
+        "qa-8": {
+          "type": "qa",
+          "settings": {
+            "question": "¿Cómo conservo el perfume para que dure?",
+            "answer": "<p>Lejos del calor, la luz directa y la humedad. Guardalo en su caja, idealmente entre 15–20°C.</p>"
+          }
+        }
+      },
+      "block_order": ["qa-1", "qa-2", "qa-3", "qa-4", "qa-5", "qa-6", "qa-7", "qa-8"],
+      "settings": {}
     },
     "related_family": {
       "type": "related-by-family",
@@ -104,30 +168,32 @@
         "padding_bottom": 36
       }
     },
-    "related": {
-      "type": "related-products",
+    "kit_decants_nKEUBr": {
+      "type": "kit-decants",
+      "name": "Kit de decants",
       "settings": {
-        "heading": "También te puede interesar",
-        "heading_size": "h1",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "columns_mobile": "2",
         "color_scheme": "",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "accent_color": "#B25A3C",
+        "microbadge": "🧪 Armá tu kit",
+        "heading": "Armá tu kit de decants",
+        "subheading": "Elegí varios aromas para probar y ahorrá llevándolos juntos.",
+        "collection": "perfumes-amaderados",
+        "kit_size": 3,
+        "decant_size": "Decant 5ml",
+        "discount_text": "Elegí 3 y llevate 10% OFF en tu kit",
+        "button_label": "Agregar kit al carrito",
+        "onboarding_text": "Elegí una colección de decants en la configuración de la sección.",
+        "padding_top": 48,
+        "padding_bottom": 48
       }
     }
   },
   "order": [
     "breadcrumbs",
     "main",
-    "kit_decants_nKEUBr",
+    "autenticidad",
+    "faq",
     "related_family",
-    "related"
+    "kit_decants_nKEUBr"
   ]
 }

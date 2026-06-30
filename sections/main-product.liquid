@@ -61,12 +61,20 @@
     }
     #MainProduct-{{ section.id }} {
       --perfume-accent: {{ section.settings.accent_color }};
+      --perfume-accent-rgb: {{ accent.red }}, {{ accent.green }}, {{ accent.blue }};
       --perfume-accent-ink: {{ accent_ink }};
+      --perfume-ok: #1c4a32;
+      --perfume-ok-bg: #e7f2ea;
+      --perfume-ok-line: #b6d8c2;
+      --perfume-alert: #b5471f;
+      --perfume-alert-bg: #fae9df;
+      --perfume-alert-line: #e7c3ac;
     }
   {%- endstyle -%}
 
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'perfume-variant-ui.js' | asset_url }}" defer="defer"></script>
   {%- if section.settings.show_sticky_atc -%}
     <script src="{{ 'sticky-atc.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
@@ -114,13 +122,39 @@
             <h1 class="product__title perfume-title">{{ product.title | escape }}</h1>
 
             <div id="price-{{ section.id }}" role="status">
-              {%- render 'price',
-                product: product,
-                use_variant: true,
-                show_badges: true,
-                price_class: 'price--large'
-              -%}
-              {%- render 'installments', price: product.selected_or_first_available_variant.price, layout: 'pdp' -%}
+              {%- assign sel_variant = product.selected_or_first_available_variant -%}
+              <div class="perfume-price-row">
+                {%- render 'price',
+                  product: product,
+                  use_variant: true,
+                  show_badges: true,
+                  price_class: 'price--large'
+                -%}
+                {%- capture sel_ml -%}{% render 'perfume-ml', variant: sel_variant, product: product %}{%- endcapture -%}
+                {%- assign sel_ml = sel_ml | plus: 0 -%}
+                {%- if sel_ml > 0 -%}
+                  <span class="perfume-perml">{{ sel_variant.price | divided_by: sel_ml | money }}/ml</span>
+                {%- endif -%}
+              </div>
+
+              {%- comment -%} Transferencia: descuento informativo (Camino A), nunca tachando el precio de lista. {%- endcomment -%}
+              {%- if section.settings.transfer_discount_enabled and section.settings.transfer_discount_pct > 0 -%}
+                {%- assign transfer_factor = 100 | minus: section.settings.transfer_discount_pct -%}
+                {%- assign transfer_price = sel_variant.price | times: transfer_factor | divided_by: 100 -%}
+                <div class="perfume-transfer">
+                  <span class="perfume-transfer__chip">
+                    <b>{{ transfer_price | money }}</b>
+                    <span>{{ section.settings.transfer_label }} · {{ section.settings.transfer_discount_pct }}% OFF</span>
+                  </span>
+                </div>
+                {%- if section.settings.transfer_microcopy != blank -%}
+                  <p class="perfume-transfer__microcopy">{{ section.settings.transfer_microcopy }}</p>
+                {%- endif -%}
+              {%- endif -%}
+
+              <p class="perfume-cuotas">
+                {%- render 'installments', price: sel_variant.price, layout: 'pdp' -%}
+              </p>
             </div>
 
             {%- if shop.shipping_policy.body != blank -%}
@@ -129,37 +163,109 @@
               </div>
             {%- endif -%}
 
-            {%- comment -%} ---------- Variant picker (Presentación, pills) ---------- {%- endcomment -%}
+            {%- comment -%} ---------- Selector de presentación fusionado (radio-cards + $/ml) ---------- {%- endcomment -%}
             {%- unless product.has_only_default_variant -%}
               {%- assign picker_type = section.settings.picker_type -%}
               <variant-selects id="variant-selects-{{ section.id }}" data-section="{{ section.id }}">
-                {%- for option in product.options_with_values -%}
-                  {%- if picker_type == 'dropdown' -%}
-                    <div class="product-form__input product-form__input--dropdown">
-                      <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
-                        {{ option.name }}
-                      </label>
-                      <div class="select">
-                        <select
-                          id="Option-{{ section.id }}-{{ forloop.index0 }}"
-                          class="select__select"
-                          name="options[{{ option.name | escape }}]"
-                          form="{{ product_form_id }}"
-                        >
-                          {% render 'product-variant-options', product: product, option: option, picker_type: 'dropdown' %}
-                        </select>
-                        <span class="svg-wrapper">
-                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                {%- if product.options_with_values.size == 1 and picker_type == 'button' -%}
+                  {%- assign sel_option = product.options_with_values.first -%}
+                  {%- comment -%} Menor $/ml para el badge calculado "Mejor $/ml". {%- endcomment -%}
+                  {%- assign best_perml = 0 -%}
+                  {%- assign best_vid = 0 -%}
+                  {%- for v in product.variants -%}
+                    {%- capture v_ml -%}{% render 'perfume-ml', variant: v, product: product %}{%- endcapture -%}
+                    {%- assign v_ml = v_ml | plus: 0 -%}
+                    {%- if v_ml > 0 and v.price > 0 -%}
+                      {%- assign v_perml = v.price | divided_by: v_ml -%}
+                      {%- if best_perml == 0 or v_perml < best_perml -%}
+                        {%- assign best_perml = v_perml -%}
+                        {%- assign best_vid = v.id -%}
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+
+                  <fieldset class="js perfume-selector">
+                    <legend class="form__label perfume-selector__legend">
+                      {{ section.settings.selector_heading | default: sel_option.name }}
+                    </legend>
+                    {%- for value in sel_option.values -%}
+                      {%- capture vname -%}{{ value }}{%- endcapture -%}
+                      {%- assign card_variant = product.variants | where: 'option1', vname | first -%}
+                      {%- if card_variant == blank -%}{%- continue -%}{%- endif -%}
+                      {%- assign card_tipo = card_variant.metafields.custom.tipo_presentacion.value -%}
+                      {%- capture c_ml -%}{% render 'perfume-ml', variant: card_variant, product: product %}{%- endcapture -%}
+                      {%- assign c_ml = c_ml | plus: 0 -%}
+                      {%- assign input_id = section.id | append: '-presentacion-' | append: forloop.index0 -%}
+                      <input
+                        type="radio"
+                        id="{{ input_id }}"
+                        class="perfume-card__input visually-hidden{% unless value.available %} disabled{% endunless %}"
+                        name="{{ sel_option.name }}-{{ sel_option.position }}"
+                        value="{{ value | escape }}"
+                        form="{{ product_form_id }}"
+                        data-option-value-id="{{ value.id }}"
+                        data-product-url="{{ value.product_url }}"
+                        {% if value.selected %}checked{% endif %}
+                      >
+                      <label class="perfume-card" for="{{ input_id }}">
+                        <span class="perfume-card__radio" aria-hidden="true"><i></i></span>
+                        <span class="perfume-card__body">
+                          <span class="perfume-card__name">
+                            {{ card_variant.title }}
+                            {%- if card_variant.metafields.custom.badge_variante.value != blank -%}
+                              <span class="perfume-badge perfume-badge--top">{{ card_variant.metafields.custom.badge_variante.value }}</span>
+                            {%- elsif card_variant.id == best_vid and best_vid != 0 -%}
+                              <span class="perfume-badge perfume-badge--ml">{{ section.settings.best_perml_label }}</span>
+                            {%- endif -%}
+                          </span>
+                          {%- if card_variant.metafields.custom.nota_variante.value != blank -%}
+                            <span class="perfume-card__sub">{{ card_variant.metafields.custom.nota_variante.value }}</span>
+                          {%- endif -%}
+                          {%- unless value.available -%}
+                            <span class="perfume-card__sub perfume-card__sub--out">{{ 'products.product.sold_out' | t }}</span>
+                          {%- endunless -%}
                         </span>
-                      </div>
-                    </div>
-                  {%- else -%}
-                    <fieldset class="js product-form__input product-form__input--pill">
-                      <legend class="form__label">{{ option.name }}</legend>
-                      {% render 'product-variant-options', product: product, option: option, picker_type: 'button' %}
-                    </fieldset>
+                        <span class="perfume-card__price">
+                          <b>{{ card_variant.price | money }}</b>
+                          {%- if c_ml > 0 -%}
+                            <span class="perfume-card__perml{% if card_tipo == 'Decant' %} is-muted{% elsif card_variant.id == best_vid %} is-best{% endif %}">{{ card_variant.price | divided_by: c_ml | money }}/ml</span>
+                          {%- endif -%}
+                        </span>
+                      </label>
+                    {%- endfor -%}
+                  </fieldset>
+
+                  {%- comment -%} Nota legal decant: sólo si la variante seleccionada es Decant. {%- endcomment -%}
+                  {%- assign sel_tipo = product.selected_or_first_available_variant.metafields.custom.tipo_presentacion.value -%}
+                  {%- if sel_tipo == 'Decant' and section.settings.decant_legal_text != blank -%}
+                    <div class="perfume-decant-note rte">{{ section.settings.decant_legal_text }}</div>
                   {%- endif -%}
-                {%- endfor -%}
+                {%- else -%}
+                  {%- comment -%} Fallback legacy (multi-opción o picker dropdown): pills/select de Dawn. {%- endcomment -%}
+                  {%- for option in product.options_with_values -%}
+                    {%- if picker_type == 'dropdown' -%}
+                      <div class="product-form__input product-form__input--dropdown">
+                        <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
+                        <div class="select">
+                          <select
+                            id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                            class="select__select"
+                            name="options[{{ option.name | escape }}]"
+                            form="{{ product_form_id }}"
+                          >
+                            {% render 'product-variant-options', product: product, option: option, picker_type: 'dropdown' %}
+                          </select>
+                          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+                        </div>
+                      </div>
+                    {%- else -%}
+                      <fieldset class="js product-form__input product-form__input--pill">
+                        <legend class="form__label">{{ option.name }}</legend>
+                        {% render 'product-variant-options', product: product, option: option, picker_type: 'button' %}
+                      </fieldset>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
 
                 <script type="application/json" data-selected-variant>
                   {{ product.selected_or_first_available_variant | json }}
@@ -216,112 +322,214 @@
               {%- endform -%}
             </product-form>
 
-            {%- comment -%} ---------- Garantía de originalidad (objeción #1) ---------- {%- endcomment -%}
-            {%- if section.settings.show_originality and product.metafields.custom.original_garantizado.value -%}
-              <div class="perfume-originality">
-                <span class="perfume-originality__icon svg-wrapper">
-                  {{- 'icon-padlock.svg' | inline_asset_content -}}
+            {%- comment -%} ---------- Línea de reaseguro de pago (Mercado Pago) ---------- {%- endcomment -%}
+            {%- if section.settings.pay_reassurance_text != blank -%}
+              <p class="perfume-pay">{{ section.settings.pay_reassurance_text }}</p>
+            {%- endif -%}
+
+            {%- comment -%} ---------- Tira de confianza (variante-aware §4.4) ---------- {%- endcomment -%}
+            {%- if section.settings.show_trust -%}
+              {%- assign trust_tipo = product.selected_or_first_available_variant.metafields.custom.tipo_presentacion.value -%}
+              {%- liquid
+                case trust_tipo
+                  when 'Decant'
+                    assign trust_title = section.settings.trust_decant_title
+                    assign trust_text = section.settings.trust_decant_text
+                  when 'Tester'
+                    assign trust_title = section.settings.trust_tester_title
+                    assign trust_text = section.settings.trust_tester_text
+                  else
+                    assign trust_title = section.settings.trust_sealed_title
+                    assign trust_text = section.settings.trust_sealed_text
+                endcase
+              -%}
+              <div class="perfume-trust" id="PerfumeTrust-{{ section.id }}" data-tipo="{{ trust_tipo | escape }}">
+                <span class="perfume-trust__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 9-4-.8-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </span>
-                <div class="perfume-originality__body">
-                  <p class="perfume-originality__title">{{ section.settings.originality_heading }}</p>
-                  {%- if section.settings.originality_text != blank -%}
-                    <div class="perfume-originality__text rte">{{ section.settings.originality_text }}</div>
-                  {%- endif -%}
-                  {%- if product.metafields.custom.pais_origen.value != blank -%}
-                    <p class="perfume-originality__origin">
-                      <span class="svg-wrapper">{{- 'icon-map-pin.svg' | inline_asset_content -}}</span>
-                      {{ product.metafields.custom.pais_origen.value }}
-                    </p>
-                  {%- endif -%}
+                <div class="perfume-trust__body">
+                  {%- if trust_title != blank -%}<p class="perfume-trust__title">{{ trust_title }}</p>{%- endif -%}
+                  {%- if trust_text != blank -%}<p class="perfume-trust__text">{{ trust_text }}</p>{%- endif -%}
                 </div>
               </div>
             {%- endif -%}
 
-            {%- comment -%} ---------- Ficha olfativa (chips) ---------- {%- endcomment -%}
+            {%- comment -%} ---------- Envío (§4.5): umbral global + barra viva + Rosario/nacional ---------- {%- endcomment -%}
+            {%- if section.settings.show_shipping -%}
+              <div class="perfume-ship">
+                <div class="perfume-ship__row">
+                  <span class="perfume-ship__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.6" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="17" r="1.6" stroke="currentColor" stroke-width="1.5"/></svg>
+                  </span>
+                  <div class="perfume-ship__body">
+                    {%- if settings.free_ship_threshold > 0 and section.settings.free_ship_label != blank -%}
+                      <p class="perfume-ship__title">{{ section.settings.free_ship_label }} {{ settings.free_ship_threshold | times: 100 | money }}</p>
+                    {%- endif -%}
+                    {% render 'free-shipping-bar' %}
+                  </div>
+                </div>
+                {%- if section.settings.envio_rosario_hoy and section.settings.envio_rosario_text != blank -%}
+                  <div class="perfume-ship__row">
+                    <span class="perfume-ship__icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M12 21s7-5.5 7-11a7 7 0 10-14 0c0 5.5 7 11 7 11z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </span>
+                    <div class="perfume-ship__body"><p class="perfume-ship__text">{{ section.settings.envio_rosario_text }}</p></div>
+                  </div>
+                {%- endif -%}
+                {%- if section.settings.envio_nacional_text != blank -%}
+                  <div class="perfume-ship__row">
+                    <span class="perfume-ship__icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M3 8l9-5 9 5v8l-9 5-9-5V8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M3 8l9 5 9-5M12 13v8" stroke="currentColor" stroke-width="1.4"/></svg>
+                    </span>
+                    <div class="perfume-ship__body"><p class="perfume-ship__text">{{ section.settings.envio_nacional_text }}</p></div>
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} ---------- Ficha olfativa: chips + medidores (§4.6) ---------- {%- endcomment -%}
             {%- if section.settings.show_facts -%}
               {%- assign m_familia = product.metafields.custom.familia_olfativa.value -%}
               {%- assign m_genero = product.metafields.custom.genero.value -%}
               {%- assign m_conc = product.metafields.custom.concentracion.value -%}
               {%- assign m_longev = product.metafields.custom.longevidad.value -%}
               {%- assign m_estela = product.metafields.custom.estela.value -%}
-              {%- if m_familia != blank or m_genero != blank or m_conc != blank or m_longev != blank or m_estela != blank -%}
-                <ul class="perfume-chips list-unstyled">
-                  {%- if m_familia != blank -%}
-                    {%- for f in m_familia -%}<li class="perfume-chip">{{ f }}</li>{%- endfor -%}
-                  {%- endif -%}
-                  {%- if m_genero != blank -%}<li class="perfume-chip">{{ m_genero }}</li>{%- endif -%}
-                  {%- if m_conc != blank -%}<li class="perfume-chip">{{ m_conc }}</li>{%- endif -%}
-                  {%- if m_longev != blank -%}<li class="perfume-chip perfume-chip--accent">{{ m_longev }}</li>{%- endif -%}
-                  {%- if m_estela != blank -%}<li class="perfume-chip perfume-chip--accent">{{ m_estela }}</li>{%- endif -%}
-                </ul>
-              {%- endif -%}
-            {%- endif -%}
-
-            {%- comment -%} ---------- Pirámide olfativa ---------- {%- endcomment -%}
-            {%- if section.settings.show_pyramid -%}
+              {%- assign m_ocasion = product.metafields.custom.ocasion.value -%}
+              {%- assign m_estacion = product.metafields.custom.estacion.value -%}
               {%- assign n_salida = product.metafields.custom.notas_salida.value -%}
               {%- assign n_corazon = product.metafields.custom.notas_corazon.value -%}
               {%- assign n_fondo = product.metafields.custom.notas_fondo.value -%}
-              {%- if n_salida != blank or n_corazon != blank or n_fondo != blank -%}
-                <div class="perfume-pyramid">
-                  {%- if section.settings.pyramid_heading != blank -%}
-                    <p class="perfume-section-title">{{ section.settings.pyramid_heading }}</p>
+              {%- if m_familia != blank or m_genero != blank or m_conc != blank or m_longev != blank or m_estela != blank or m_ocasion != blank or m_estacion != blank or n_salida != blank or n_corazon != blank or n_fondo != blank -%}
+                <div class="perfume-ficha">
+                  {%- if section.settings.facts_heading != blank -%}
+                    <p class="perfume-section-title">{{ section.settings.facts_heading }}</p>
                   {%- endif -%}
-                  {%- if n_salida != blank -%}
-                    <div class="perfume-pyramid__tier">
-                      <span class="perfume-pyramid__label">{{ section.settings.label_top }}</span>
-                      <span class="perfume-pyramid__notes">{{ n_salida | join: ' · ' }}</span>
+
+                  {%- if m_familia != blank or m_conc != blank or m_genero != blank -%}
+                    <ul class="perfume-chips list-unstyled">
+                      {%- if m_familia != blank -%}{%- for f in m_familia -%}<li class="perfume-chip perfume-chip--accent">{{ f }}</li>{%- endfor -%}{%- endif -%}
+                      {%- if m_conc != blank -%}<li class="perfume-chip">{{ m_conc }}</li>{%- endif -%}
+                      {%- if m_genero != blank -%}<li class="perfume-chip">{{ m_genero }}</li>{%- endif -%}
+                    </ul>
+                  {%- endif -%}
+
+                  {%- assign all_notas = '' | split: '' -%}
+                  {%- if n_salida != blank -%}{%- assign all_notas = all_notas | concat: n_salida -%}{%- endif -%}
+                  {%- if n_corazon != blank -%}{%- assign all_notas = all_notas | concat: n_corazon -%}{%- endif -%}
+                  {%- if n_fondo != blank -%}{%- assign all_notas = all_notas | concat: n_fondo -%}{%- endif -%}
+                  {%- if all_notas.size > 0 -%}
+                    <div class="perfume-ficha__group">
+                      {%- if section.settings.notes_label != blank -%}<p class="perfume-ficha__label">{{ section.settings.notes_label }}</p>{%- endif -%}
+                      <ul class="perfume-chips list-unstyled">
+                        {%- for nota in all_notas -%}<li class="perfume-note">{{ nota }}</li>{%- endfor -%}
+                      </ul>
                     </div>
                   {%- endif -%}
-                  {%- if n_corazon != blank -%}
-                    <div class="perfume-pyramid__tier">
-                      <span class="perfume-pyramid__label">{{ section.settings.label_heart }}</span>
-                      <span class="perfume-pyramid__notes">{{ n_corazon | join: ' · ' }}</span>
-                    </div>
-                  {%- endif -%}
-                  {%- if n_fondo != blank -%}
-                    <div class="perfume-pyramid__tier">
-                      <span class="perfume-pyramid__label">{{ section.settings.label_base }}</span>
-                      <span class="perfume-pyramid__notes">{{ n_fondo | join: ' · ' }}</span>
+
+                  {%- if m_longev != blank or m_estela != blank or m_ocasion != blank or m_estacion != blank -%}
+                    <div class="perfume-meters">
+                      {%- if m_longev != blank -%}
+                        {%- assign lvl = 3 -%}
+                        {%- case m_longev -%}
+                          {%- when 'Baja (2–4h)' -%}{%- assign lvl = 1 -%}
+                          {%- when 'Moderada (4–6h)' -%}{%- assign lvl = 2 -%}
+                          {%- when 'Larga (6–8h)' -%}{%- assign lvl = 3 -%}
+                          {%- when 'Muy larga (8–12h)' -%}{%- assign lvl = 4 -%}
+                          {%- when 'Eterna (12h+)' -%}{%- assign lvl = 5 -%}
+                        {%- endcase -%}
+                        <div class="perfume-meter">
+                          {%- if section.settings.longevity_label != blank -%}<p class="perfume-ficha__label">{{ section.settings.longevity_label }}</p>{%- endif -%}
+                          <div class="perfume-meter__bar">
+                            <span class="perfume-bars" aria-hidden="true">{%- for i in (1..5) -%}<i class="{% if i <= lvl %}on{% endif %}"></i>{%- endfor -%}</span>
+                            <span class="perfume-meter__v">{{ m_longev }}</span>
+                          </div>
+                        </div>
+                      {%- endif -%}
+                      {%- if m_estela != blank -%}
+                        {%- assign lvl = 3 -%}
+                        {%- case m_estela -%}
+                          {%- when 'Íntima' -%}{%- assign lvl = 2 -%}
+                          {%- when 'Moderada' -%}{%- assign lvl = 3 -%}
+                          {%- when 'Notable' -%}{%- assign lvl = 4 -%}
+                          {%- when 'Enorme' -%}{%- assign lvl = 5 -%}
+                        {%- endcase -%}
+                        <div class="perfume-meter">
+                          {%- if section.settings.sillage_label != blank -%}<p class="perfume-ficha__label">{{ section.settings.sillage_label }}</p>{%- endif -%}
+                          <div class="perfume-meter__bar">
+                            <span class="perfume-bars" aria-hidden="true">{%- for i in (1..5) -%}<i class="{% if i <= lvl %}on{% endif %}"></i>{%- endfor -%}</span>
+                            <span class="perfume-meter__v">{{ m_estela }}</span>
+                          </div>
+                        </div>
+                      {%- endif -%}
+                      {%- if m_ocasion != blank or m_estacion != blank -%}
+                        <div class="perfume-meter">
+                          {%- if section.settings.occasion_label != blank -%}<p class="perfume-ficha__label">{{ section.settings.occasion_label }}</p>{%- endif -%}
+                          <div class="perfume-occ">
+                            {%- if m_ocasion != blank -%}{%- for o in m_ocasion -%}<span>{{ o }}</span>{%- endfor -%}{%- endif -%}
+                            {%- if m_estacion != blank -%}{%- for e in m_estacion -%}<span>{{ e }}</span>{%- endfor -%}{%- endif -%}
+                          </div>
+                        </div>
+                      {%- endif -%}
                     </div>
                   {%- endif -%}
                 </div>
               {%- endif -%}
             {%- endif -%}
 
-            {%- comment -%} ---------- Ladder de presentaciones ($/ml) ---------- {%- endcomment -%}
-            {%- if section.settings.show_ladder and product.has_only_default_variant == false -%}
-              <div class="perfume-ladder">
-                {%- if section.settings.ladder_heading != blank -%}
-                  <p class="perfume-section-title">{{ section.settings.ladder_heading }}</p>
-                {%- endif -%}
-                <ul class="perfume-ladder__list list-unstyled">
-                  {%- for variant in product.variants -%}
-                    {%- if variant.price > 0 -%}
-                      {%- assign vtitle = variant.title | downcase -%}
-                      {%- assign ml = vtitle | split: 'ml' | first | split: ' ' | last | times: 1 -%}
-                      <li class="perfume-ladder__row{% if variant.id == product.selected_or_first_available_variant.id %} is-selected{% endif %}">
-                        <span class="perfume-ladder__name">{{ variant.title }}</span>
-                        <span class="perfume-ladder__price">{{ variant.price | money }}</span>
-                        {%- if ml > 0 -%}
-                          <span class="perfume-ladder__perml">{{ variant.price | divided_by: ml | money }}/ml</span>
-                        {%- endif -%}
-                      </li>
-                    {%- endif -%}
-                  {%- endfor -%}
-                </ul>
-              </div>
+            {%- comment -%} ---------- Pirámide olfativa ---------- {%- endcomment -%}
+            {%- if section.settings.show_pyramid -%}
+              {%- assign p_salida = product.metafields.custom.notas_salida.value -%}
+              {%- assign p_corazon = product.metafields.custom.notas_corazon.value -%}
+              {%- assign p_fondo = product.metafields.custom.notas_fondo.value -%}
+              {%- if p_salida != blank or p_corazon != blank or p_fondo != blank -%}
+                <div class="perfume-pyramid">
+                  {%- if section.settings.pyramid_heading != blank -%}
+                    <p class="perfume-section-title">{{ section.settings.pyramid_heading }}</p>
+                  {%- endif -%}
+                  {%- if p_salida != blank -%}
+                    <div class="perfume-pyramid__tier">
+                      <span class="perfume-pyramid__label">{{ section.settings.label_top }}</span>
+                      <span class="perfume-pyramid__notes">{{ p_salida | join: ' · ' }}</span>
+                    </div>
+                  {%- endif -%}
+                  {%- if p_corazon != blank -%}
+                    <div class="perfume-pyramid__tier">
+                      <span class="perfume-pyramid__label">{{ section.settings.label_heart }}</span>
+                      <span class="perfume-pyramid__notes">{{ p_corazon | join: ' · ' }}</span>
+                    </div>
+                  {%- endif -%}
+                  {%- if p_fondo != blank -%}
+                    <div class="perfume-pyramid__tier">
+                      <span class="perfume-pyramid__label">{{ section.settings.label_base }}</span>
+                      <span class="perfume-pyramid__notes">{{ p_fondo | join: ' · ' }}</span>
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
             {%- endif -%}
 
             {%- if product.description != blank -%}
               <div class="perfume-description rte">{{ product.description }}</div>
             {%- endif -%}
 
-            {%- comment -%} ---------- Equivalencia "inspirado en" (LEGAL: opcional, copy prudente) ---------- {%- endcomment -%}
+            {%- comment -%} ---------- "Inspirado en" (gate árabe doble: metafield + colección/tag) ---------- {%- endcomment -%}
             {%- if product.metafields.custom.inspirado_en.value != blank -%}
-              <p class="perfume-inspired">
-                {{ section.settings.inspired_prefix }} {{ product.metafields.custom.inspirado_en.value }}.
-              </p>
+              {%- assign arabic_handle = section.settings.arabic_collection_handle -%}
+              {%- assign is_arabic = false -%}
+              {%- if arabic_handle != blank -%}
+                {%- if product.tags contains arabic_handle -%}{%- assign is_arabic = true -%}{%- endif -%}
+                {%- for c in product.collections -%}
+                  {%- if c.handle == arabic_handle -%}{%- assign is_arabic = true -%}{%- break -%}{%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {%- if is_arabic -%}
+                <div class="perfume-inspired">
+                  <p class="perfume-inspired__text">{{ section.settings.inspired_prefix }} {{ product.metafields.custom.inspirado_en.value }}.</p>
+                  {%- if section.settings.inspired_legal != blank -%}
+                    <span class="perfume-inspired__legal">{{ section.settings.inspired_legal }}</span>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
             {%- endif -%}
 
           </section>
@@ -470,60 +678,167 @@
   align-self: center;
 }
 .perfume-pyramid__notes { font-weight: 500; }
-.perfume-originality {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-  margin-top: 1.8rem;
-  padding: 1.4rem 1.6rem;
-  border: 0.1rem solid var(--perfume-accent-ink);
-  border-radius: var(--media-radius, 0.4rem);
-  background: rgba(var(--color-foreground), 0.02);
+/* ---- price block ---- */
+.perfume-price-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 1rem; }
+.perfume-price-row .price { margin: 0; }
+.perfume-perml {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  color: var(--perfume-accent-ink);
+  font-variant-numeric: tabular-nums;
 }
-.perfume-originality__icon { color: var(--perfume-accent-ink); flex-shrink: 0; }
-.perfume-originality__icon .icon { width: 2.2rem; height: 2.2rem; }
-.perfume-originality__title { font-weight: 600; margin: 0 0 0.3rem; }
-.perfume-originality__text { font-size: 1.4rem; opacity: 0.85; }
-.perfume-originality__text > * { margin: 0; }
-.perfume-originality__origin {
-  display: flex;
+.perfume-transfer { margin-top: 1rem; }
+.perfume-transfer__chip {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.3rem;
-  opacity: 0.7;
-  margin: 0.6rem 0 0;
+  gap: 0.8rem;
+  background: var(--perfume-ok-bg);
+  border: 0.1rem solid var(--perfume-ok-line);
+  border-radius: 999px;
+  padding: 0.7rem 1.3rem;
 }
-.perfume-originality__origin .icon { width: 1.4rem; height: 1.4rem; }
-.perfume-ladder { margin-top: 2.2rem; }
-.perfume-ladder__row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.9rem 1.1rem;
+.perfume-transfer__chip b {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+  color: var(--perfume-ok);
+  font-variant-numeric: tabular-nums;
+}
+.perfume-transfer__chip span { font-size: 1.2rem; font-weight: 600; color: var(--perfume-ok); }
+.perfume-transfer__microcopy { margin: 0.6rem 0 0; font-size: 1.2rem; opacity: 0.7; }
+.perfume-cuotas { margin: 1rem 0 0; font-size: 1.35rem; opacity: 0.85; }
+.perfume-cuotas .installments__more { opacity: 0.65; }
+
+/* ---- selector radio-cards ---- */
+.perfume-selector { border: 0; padding: 0; margin: 2.2rem 0 0; min-width: 0; }
+.perfume-selector__legend {
+  font-size: 1.3rem; letter-spacing: 0.08rem; text-transform: uppercase;
+  opacity: 0.7; margin: 0 0 1.1rem; padding: 0;
+}
+.perfume-card {
+  display: flex; align-items: center; gap: 1.3rem;
+  border: 0.15rem solid rgba(var(--color-foreground), 0.14);
+  border-radius: 1rem; padding: 1.2rem 1.4rem; margin-bottom: 0.9rem;
+  background: rgb(var(--color-background));
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.perfume-card__input:checked + .perfume-card {
+  border-color: var(--perfume-accent);
+  box-shadow: inset 0 0 0 0.1rem var(--perfume-accent);
+  background: rgba(var(--perfume-accent-rgb), 0.04);
+}
+.perfume-card__input:focus-visible + .perfume-card {
+  outline: 0.2rem solid var(--perfume-accent-ink); outline-offset: 0.2rem;
+}
+.perfume-card__input.disabled + .perfume-card { opacity: 0.55; }
+.perfume-card__radio {
+  width: 2rem; height: 2rem; border-radius: 50%;
+  border: 0.2rem solid rgba(var(--color-foreground), 0.3);
+  flex: none; display: grid; place-items: center;
+  transition: border-color 0.2s ease;
+}
+.perfume-card__input:checked + .perfume-card .perfume-card__radio { border-color: var(--perfume-accent); }
+.perfume-card__radio i {
+  width: 1rem; height: 1rem; border-radius: 50%;
+  background: var(--perfume-accent); transform: scale(0); transition: transform 0.2s ease;
+}
+.perfume-card__input:checked + .perfume-card .perfume-card__radio i { transform: scale(1); }
+.perfume-card__body { flex: 1 1 auto; min-width: 0; }
+.perfume-card__name { font-weight: 600; font-size: 1.45rem; display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+.perfume-card__sub { display: block; font-size: 1.2rem; opacity: 0.6; margin-top: 0.2rem; }
+.perfume-card__sub--out { color: var(--perfume-alert); opacity: 1; font-weight: 600; }
+.perfume-card__price { text-align: right; flex: none; }
+.perfume-card__price b {
+  display: block; font-family: var(--font-display); font-size: 2.2rem;
+  line-height: 1; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; font-weight: 400;
+}
+.perfume-card__perml { font-family: var(--font-display); font-size: 1.3rem; letter-spacing: 0.04em; color: var(--perfume-accent-ink); }
+.perfume-card__perml.is-muted { color: rgba(var(--color-foreground), 0.45); }
+.perfume-card__perml.is-best { color: var(--perfume-ok); }
+.perfume-badge {
+  font-size: 1rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  border-radius: 0.3rem; padding: 0.2rem 0.6rem; white-space: nowrap;
+}
+.perfume-badge--top { color: var(--perfume-accent-ink); background: rgba(var(--perfume-accent-rgb), 0.12); border: 0.1rem solid rgba(var(--perfume-accent-rgb), 0.4); }
+.perfume-badge--ml { color: var(--perfume-ok); background: var(--perfume-ok-bg); border: 0.1rem solid var(--perfume-ok-line); }
+.perfume-decant-note {
+  font-size: 1.2rem; color: var(--perfume-alert);
+  background: var(--perfume-alert-bg); border: 0.1rem solid var(--perfume-alert-line);
+  border-radius: 0.6rem; padding: 0.9rem 1.2rem; margin-top: 0.4rem; line-height: 1.45;
+}
+.perfume-decant-note > :first-child { margin-top: 0; }
+.perfume-decant-note > :last-child { margin-bottom: 0; }
+
+/* ---- pay reassurance ---- */
+.perfume-pay { margin: 1.2rem 0 0; font-size: 1.2rem; opacity: 0.6; text-align: center; }
+
+/* ---- trust strip ---- */
+.perfume-trust {
+  display: flex; gap: 1.1rem; align-items: flex-start;
+  margin-top: 1.8rem; padding: 1.3rem 1.4rem;
   border: 0.1rem solid rgba(var(--color-foreground), 0.12);
-  border-radius: var(--media-radius, 0.4rem);
-  margin-bottom: 0.6rem;
+  border-radius: 0.8rem; background: rgb(var(--color-background));
 }
-.perfume-ladder__row.is-selected {
-  border-color: var(--perfume-accent-ink);
-  box-shadow: inset 0 0 0 0.1rem var(--perfume-accent-ink);
+.perfume-trust__icon {
+  flex: none; width: 3.4rem; height: 3.4rem; border-radius: 0.8rem;
+  background: rgba(var(--perfume-accent-rgb), 0.12); color: var(--perfume-accent-ink);
+  display: grid; place-items: center;
 }
-.perfume-ladder__name { font-weight: 500; flex: 1 1 auto; }
-.perfume-ladder__price { font-weight: 600; }
-.perfume-ladder__perml {
-  font-size: 1.2rem;
-  opacity: 0.6;
-  flex-basis: 100%;
-  text-align: right;
+.perfume-trust__title { font-size: 1.3rem; font-weight: 600; margin: 0; }
+.perfume-trust__text { font-size: 1.2rem; opacity: 0.7; margin: 0.2rem 0 0; line-height: 1.45; }
+
+/* ---- shipping ---- */
+.perfume-ship {
+  margin-top: 1.8rem; border: 0.1rem solid rgba(var(--color-foreground), 0.12);
+  border-radius: 0.8rem; overflow: hidden;
 }
+.perfume-ship__row { display: flex; gap: 1.1rem; align-items: flex-start; padding: 1.2rem 1.4rem; }
+.perfume-ship__row + .perfume-ship__row { border-top: 0.1rem solid rgba(var(--color-foreground), 0.1); }
+.perfume-ship__icon { flex: none; color: var(--perfume-accent-ink); }
+.perfume-ship__body { flex: 1 1 auto; min-width: 0; }
+.perfume-ship__title { font-weight: 600; font-size: 1.3rem; margin: 0; }
+.perfume-ship__text { font-size: 1.25rem; opacity: 0.8; margin: 0; line-height: 1.4; }
+.perfume-ship__body .free-ship { margin: 0.6rem 0 0; }
+.perfume-ship__body .free-ship__text { text-align: left; margin-bottom: 0.5rem; font-size: 1.2rem; }
+
+/* ---- ficha: notes + meters ---- */
+.perfume-ficha { margin-top: 2.4rem; }
+.perfume-note {
+  font-size: 1.2rem; color: rgba(var(--color-foreground), 0.8);
+  background: rgb(var(--color-background));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.14);
+  border-radius: 0.4rem; padding: 0.5rem 1rem; line-height: 1.2;
+}
+.perfume-ficha__group { margin-top: 1.6rem; }
+.perfume-ficha__label { font-size: 1.1rem; opacity: 0.55; margin: 0 0 0.7rem; }
+.perfume-meters {
+  display: flex; flex-wrap: wrap; gap: 2rem 2.4rem;
+  margin-top: 1.6rem; padding-top: 1.6rem;
+  border-top: 0.1rem solid rgba(var(--color-foreground), 0.1);
+}
+.perfume-meter__bar { display: flex; align-items: center; gap: 0.9rem; }
+.perfume-bars { display: inline-flex; gap: 0.4rem; }
+.perfume-bars i { width: 2rem; height: 0.6rem; border-radius: 0.3rem; background: rgba(var(--color-foreground), 0.15); }
+.perfume-bars i.on { background: var(--perfume-accent); }
+.perfume-meter__v { font-weight: 600; font-size: 1.2rem; opacity: 0.85; }
+.perfume-occ { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+.perfume-occ span {
+  display: inline-flex; align-items: center; font-size: 1.2rem;
+  color: rgba(var(--color-foreground), 0.8); background: rgb(var(--color-background));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.14); border-radius: 0.4rem; padding: 0.5rem 1rem;
+}
+
+/* ---- description + inspired ---- */
 .perfume-description { margin-top: 2.2rem; }
-.perfume-inspired {
-  font-family: var(--font-accent);
-  font-style: italic;
-  font-size: 1.6rem;
-  opacity: 0.75;
-  margin-top: 1.6rem;
+.perfume-inspired { margin-top: 1.6rem; border-left: 0.2rem solid var(--perfume-accent); padding-left: 1.2rem; }
+.perfume-inspired__text { font-size: 1.3rem; opacity: 0.85; margin: 0; }
+.perfume-inspired__legal { display: block; margin-top: 0.5rem; font-size: 1.1rem; opacity: 0.6; line-height: 1.5; }
+@media (prefers-reduced-motion: reduce) {
+  .perfume-card,
+  .perfume-card__radio,
+  .perfume-card__radio i { transition: none; }
 }
 /* Precio grande en Bebas (token --fs-price-pdp). El tachado (compare-at) queda chico. */
 .product__info-container .price .price-item {
@@ -543,7 +858,6 @@
   "name": "Producto (perfume)",
   "tag": "section",
   "class": "section",
-  "templates": ["product"],
   "settings": [
     {
       "type": "color_scheme",
@@ -676,14 +990,96 @@
       "default": true
     },
     {
+      "type": "text",
+      "id": "selector_heading",
+      "label": "Título del selector de presentación",
+      "default": "Elegí tu presentación"
+    },
+    {
+      "type": "text",
+      "id": "best_perml_label",
+      "label": "Etiqueta badge mejor $/ml",
+      "info": "Se aplica solo a la variante con menor precio por ml (calculado).",
+      "default": "Mejor $/ml"
+    },
+    {
+      "type": "text",
+      "id": "pay_reassurance_text",
+      "label": "Línea de reaseguro de pago",
+      "default": "Pago seguro con Mercado Pago · Tarjeta, débito y transferencia"
+    },
+    {
+      "type": "header",
+      "content": "Precio y transferencia"
+    },
+    {
+      "type": "checkbox",
+      "id": "transfer_discount_enabled",
+      "label": "Mostrar descuento por transferencia",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "transfer_discount_pct",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "label": "Descuento por transferencia",
+      "default": 20
+    },
+    {
+      "type": "text",
+      "id": "transfer_label",
+      "label": "Texto del chip de transferencia",
+      "default": "con transferencia"
+    },
+    {
+      "type": "text",
+      "id": "transfer_microcopy",
+      "label": "Microcopy del descuento",
+      "info": "Aclará cómo se aplica (no se descuenta solo en el checkout).",
+      "default": "Elegí Transferencia y aplicá el código TRANSFERENCIA20 al pagar."
+    },
+    {
       "type": "header",
       "content": "Ficha olfativa"
     },
     {
       "type": "checkbox",
       "id": "show_facts",
-      "label": "Mostrar chips (familia, género, concentración, longevidad, estela)",
+      "label": "Mostrar ficha (chips + notas + medidores)",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "facts_heading",
+      "label": "Título de la ficha",
+      "default": "Ficha olfativa"
+    },
+    {
+      "type": "text",
+      "id": "notes_label",
+      "label": "Etiqueta del grupo de notas",
+      "default": "Notas"
+    },
+    {
+      "type": "text",
+      "id": "longevity_label",
+      "label": "Etiqueta longevidad",
+      "default": "Longevidad"
+    },
+    {
+      "type": "text",
+      "id": "sillage_label",
+      "label": "Etiqueta estela / proyección",
+      "default": "Estela / proyección"
+    },
+    {
+      "type": "text",
+      "id": "occasion_label",
+      "label": "Etiqueta ocasión / estación",
+      "default": "Ocasión · estación"
     },
     {
       "type": "checkbox",
@@ -717,42 +1113,90 @@
     },
     {
       "type": "header",
-      "content": "Confianza / Originalidad"
+      "content": "Confianza por presentación"
     },
     {
       "type": "checkbox",
-      "id": "show_originality",
-      "label": "Mostrar garantía de originalidad",
-      "info": "Se muestra sólo si el producto tiene el metacampo custom.original_garantizado en verdadero.",
+      "id": "show_trust",
+      "label": "Mostrar tira de confianza (variante-aware)",
       "default": true
     },
     {
       "type": "text",
-      "id": "originality_heading",
-      "label": "Título originalidad",
-      "default": "Garantía de originalidad"
+      "id": "trust_sealed_title",
+      "label": "Sellado · título",
+      "default": "Original sellado · garantía de devolución"
+    },
+    {
+      "type": "text",
+      "id": "trust_sealed_text",
+      "label": "Sellado · texto",
+      "default": "Importado, frasco sellado con lote verificable. Si no es original, te devolvemos el 100%."
+    },
+    {
+      "type": "text",
+      "id": "trust_tester_title",
+      "label": "Tester · título",
+      "default": "Tester original · garantía de devolución"
+    },
+    {
+      "type": "text",
+      "id": "trust_tester_text",
+      "label": "Tester · texto",
+      "default": "Mismo jugo que el frasco, presentación tester. Lote verificable."
+    },
+    {
+      "type": "text",
+      "id": "trust_decant_title",
+      "label": "Decant · título",
+      "default": "Fraccionado de un original verificado"
+    },
+    {
+      "type": "text",
+      "id": "trust_decant_text",
+      "label": "Decant · texto",
+      "default": "Lo decantamos a pedido de un frasco sellado. Pedí el video del lote por WhatsApp."
     },
     {
       "type": "richtext",
-      "id": "originality_text",
-      "label": "Texto originalidad",
-      "default": "<p>100% original e importado. Frasco sellado, lote verificable y política de devolución clara.</p>"
+      "id": "decant_legal_text",
+      "label": "Nota legal decant",
+      "default": "<p>Los decants se fraccionan a pedido; una vez abiertos quedan excluidos del derecho de arrepentimiento (art. 1.116 CCyC). El frasco sellado y el tester sí admiten devolución en 10 días.</p>"
     },
     {
       "type": "header",
-      "content": "Presentaciones"
+      "content": "Envío"
     },
     {
       "type": "checkbox",
-      "id": "show_ladder",
-      "label": "Mostrar comparativa de presentaciones ($/ml)",
+      "id": "show_shipping",
+      "label": "Mostrar bloque de envío",
       "default": true
     },
     {
       "type": "text",
-      "id": "ladder_heading",
-      "label": "Título comparativa",
-      "default": "Comparar presentaciones"
+      "id": "free_ship_label",
+      "label": "Texto envío gratis",
+      "info": "El monto sale del umbral global (Configuración del tema → Cuotas/Envío). Una sola fuente de verdad.",
+      "default": "Envío gratis desde"
+    },
+    {
+      "type": "checkbox",
+      "id": "envio_rosario_hoy",
+      "label": "Promesa entrega en el día (Rosario)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "envio_rosario_text",
+      "label": "Texto Rosario",
+      "default": "Entrega en el día en Rosario comprando antes de las 16 hs."
+    },
+    {
+      "type": "text",
+      "id": "envio_nacional_text",
+      "label": "Texto resto del país",
+      "default": "Resto del país: Correo Argentino, 3–6 días hábiles."
     },
     {
       "type": "header",
@@ -764,6 +1208,19 @@
       "label": "Prefijo de 'inspirado en'",
       "info": "Copy prudente. Nunca afirmar ser la marca original.",
       "default": "Inspirado en el perfil olfativo de"
+    },
+    {
+      "type": "text",
+      "id": "inspired_legal",
+      "label": "Disclaimer legal 'inspirado en'",
+      "default": "Numen es una perfumería multimarca. No representamos ni estamos asociados a las marcas mencionadas; la referencia describe el perfil olfativo."
+    },
+    {
+      "type": "text",
+      "id": "arabic_collection_handle",
+      "label": "Handle de la colección árabe",
+      "info": "El bloque 'inspirado en' sólo aparece si el producto está en esta colección o tiene este tag (gate doble).",
+      "default": "arabes"
     },
     {
       "type": "header",

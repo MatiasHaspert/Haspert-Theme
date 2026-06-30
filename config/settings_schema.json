@@ -1486,8 +1486,18 @@
     "settings": [
       { "type": "paragraph", "content": "Muestra una línea de cuotas en las tarjetas de producto (y PDP). El monto se calcula desde el precio de Shopify. \"Sin interés\" solo si realmente lo es en tu config de Mercado Pago (Defensa del Consumidor)." },
       { "type": "checkbox", "id": "installments_enabled", "label": "Mostrar cuotas", "default": true },
-      { "type": "range", "id": "installments_count", "min": 2, "max": 12, "step": 1, "label": "Cantidad de cuotas", "default": 6 },
-      { "type": "checkbox", "id": "installments_no_interest", "label": "Sin interés", "default": true }
+      { "type": "number", "id": "installments_free_count", "label": "Cuotas sin interés", "default": 6, "info": "La cuota mostrada se calcula sobre este número (precio ÷ cuotas sin interés)." },
+      { "type": "number", "id": "installments_max_count", "label": "Cuotas máximas (con interés)", "default": 12, "info": "Solo informativo (\"hasta N cuotas\"). Nunca se les agrega la frase \"sin interés\"." },
+      { "type": "checkbox", "id": "installments_no_interest", "label": "Las cuotas sin interés son realmente sin interés", "default": true, "info": "Desactivá si el costo financiero está incluido en el precio: se oculta la frase \"sin interés\"." },
+      { "type": "paragraph", "content": "Compatibilidad: \"Cantidad de cuotas\" quedó reemplazada por \"Cuotas sin interés\" / \"Cuotas máximas\". Se mantiene abajo solo como respaldo." },
+      { "type": "range", "id": "installments_count", "min": 2, "max": 12, "step": 1, "label": "Cantidad de cuotas (legacy)", "default": 6 }
+    ]
+  },
+  {
+    "name": "WhatsApp / Contacto",
+    "settings": [
+      { "type": "paragraph", "content": "Número para los CTA de autenticidad (foto/video del lote). Formato internacional sin +, ej. 5493410000000. Si dejás la X, el botón de WhatsApp no se muestra." },
+      { "type": "text", "id": "whatsapp_number", "label": "WhatsApp (sin +)", "default": "549341XXXXXXX" }
     ]
   }
 ]

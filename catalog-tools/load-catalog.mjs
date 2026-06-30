@@ -1,5 +1,6 @@
-// Loader del catálogo: lee perfumes.xlsx, computa las 4 presentaciones + precios + metafields,
-// y hace UPSERT por handle vía `productSet` (idempotente → re-correr repreciá, no duplica).
+// Loader del catálogo: lee perfumes.xlsx, computa las 4 presentaciones + precios + metafields
+// (de producto y de variante: tipo_presentacion + ml), y hace UPSERT por handle vía
+// `productSet` (idempotente → re-correr repreciá, no duplica).
 //
 //   node load-catalog.mjs --dry-run            # imprime el payload sin escribir nada
 //   node load-catalog.mjs --dry-run --limit 1
@@ -134,13 +135,21 @@ function buildProduct(row) {
   //  - Decants → tracked=false + CONTINUE (se arman a pedido desde el frasco → siempre disponibles).
   // NO seteamos inventoryQuantities acá (eso lo hace set-stock.mjs) para que un re-run de
   // repricing no pise el stock vendido.
-  const variant = (name, price, suffix, { tracked, compareAt } = {}) => ({
-    optionValues: [{ optionName: 'Tamaño', name }],
-    price: String(price),
-    ...(compareAt && compareAt > price ? { compareAtPrice: String(compareAt) } : {}),
-    inventoryPolicy: tracked ? 'DENY' : 'CONTINUE',
-    inventoryItem: { tracked, sku: `${SKU}-${suffix}` },
-  });
+  // Metafields a nivel variante: tipo_presentacion (confianza / nota decant / badge de lote / kit)
+  // y ml ($/ml exacto). El theme los lee directo; ver setup-metafields.mjs (ownerType PRODUCTVARIANT).
+  const variant = (name, price, suffix, { tracked, compareAt, tipo, ml } = {}) => {
+    const vmf = [];
+    if (tipo) vmf.push({ namespace: 'custom', key: 'tipo_presentacion', type: 'single_line_text_field', value: tipo });
+    if (ml && ml > 0) vmf.push({ namespace: 'custom', key: 'ml', type: 'number_integer', value: String(ml) });
+    return {
+      optionValues: [{ optionName: 'Tamaño', name }],
+      price: String(price),
+      ...(compareAt && compareAt > price ? { compareAtPrice: String(compareAt) } : {}),
+      inventoryPolicy: tracked ? 'DENY' : 'CONTINUE',
+      inventoryItem: { tracked, sku: `${SKU}-${suffix}` },
+      ...(vmf.length ? { metafields: vmf } : {}),
+    };
+  };
 
   const input = {
     handle,
@@ -161,10 +170,10 @@ function buildProduct(row) {
       },
     ],
     variants: [
-      variant(`Frasco ${ml}ml`, prices.frasco, 'FRASCO', { tracked: true, compareAt: anterior }),
-      variant('Decant 10ml', prices.decant10, 'D10', { tracked: false }),
-      variant('Decant 5ml', prices.decant5, 'D5', { tracked: false }),
-      variant(`Tester ${ml}ml`, prices.tester, 'TESTER', { tracked: true }),
+      variant(`Frasco ${ml}ml`, prices.frasco, 'FRASCO', { tracked: true, compareAt: anterior, tipo: 'Sellado', ml }),
+      variant('Decant 10ml', prices.decant10, 'D10', { tracked: false, tipo: 'Decant', ml: 10 }),
+      variant('Decant 5ml', prices.decant5, 'D5', { tracked: false, tipo: 'Decant', ml: 5 }),
+      variant(`Tester ${ml}ml`, prices.tester, 'TESTER', { tracked: true, tipo: 'Tester', ml }),
     ],
     metafields: buildMetafields(row),
   };
