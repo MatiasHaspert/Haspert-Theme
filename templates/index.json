@@ -20,6 +20,7 @@
         "cta1_link": "shopify://collections/all",
         "cta2_label": "Probá con un decant",
         "cta2_link": "shopify://collections/all",
+        "image": "shopify://shop_images/naxos.jpg",
         "microcopy": "Garantía de originalidad · Devolución sin vueltas",
         "padding_top": 64,
         "padding_bottom": 56
@@ -32,41 +33,74 @@
           "type": "column",
           "settings": {
             "title": "Originalidad garantizada",
-            "text": "<p>Marca auténtica, sellada de fábrica y con lote verificable.</p>"
+            "text": "<p>Marca auténtica, sellada de fábrica y con lote verificable.</p>",
+            "badge_1_text": "",
+            "badge_2_text": "",
+            "micro_copy_text": "",
+            "offer_text": "",
+            "button_label": "",
+            "price_text": "",
+            "button_link": ""
           }
         },
         "c2": {
           "type": "column",
           "settings": {
             "title": "Probá con un decant",
-            "text": "<p>Conocé el aroma desde un 5ml antes de ir por el frasco.</p>"
+            "text": "<p>Conocé el aroma desde un 5ml antes de ir por el frasco.</p>",
+            "badge_1_text": "",
+            "badge_2_text": "",
+            "micro_copy_text": "",
+            "offer_text": "",
+            "button_label": "",
+            "price_text": "",
+            "button_link": ""
           }
         },
         "c3": {
           "type": "column",
           "settings": {
             "title": "Envíos a todo el país",
-            "text": "<p>Correo Argentino. En Rosario, envío en el día.</p>"
+            "text": "<p>Correo Argentino. En Rosario, envío en el día.</p>",
+            "badge_1_text": "",
+            "badge_2_text": "",
+            "micro_copy_text": "",
+            "offer_text": "",
+            "button_label": "",
+            "price_text": "",
+            "button_link": ""
           }
         },
         "c4": {
           "type": "column",
           "settings": {
             "title": "Hasta 6 cuotas sin interés",
-            "text": "<p>Con Mercado Pago. 20% off pagando en efectivo o transferencia.</p>"
+            "text": "<p>Con Mercado Pago. 20% off pagando en efectivo o transferencia.</p>",
+            "badge_1_text": "",
+            "badge_2_text": "",
+            "micro_copy_text": "",
+            "offer_text": "",
+            "button_label": "",
+            "price_text": "",
+            "button_link": ""
           }
         }
       },
-      "block_order": ["c1", "c2", "c3", "c4"],
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
       "settings": {
         "title": "",
         "heading_size": "h2",
         "image_width": "full",
         "image_ratio": "adapt",
+        "centered_text": "<p>Escribe tu frase centrada aquí</p>",
         "columns_desktop": 4,
         "column_alignment": "center",
         "background_style": "none",
-        "button_label": "",
         "color_scheme": "scheme-1",
         "columns_mobile": "2",
         "swipe_on_mobile": false,
@@ -77,12 +111,37 @@
     "familias": {
       "type": "collection-list",
       "blocks": {
-        "f1": { "type": "featured_collection", "settings": {} },
-        "f2": { "type": "featured_collection", "settings": {} },
-        "f3": { "type": "featured_collection", "settings": {} },
-        "f4": { "type": "featured_collection", "settings": {} }
+        "f1": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "f2": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "f3": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "f4": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        }
       },
-      "block_order": ["f1", "f2", "f3", "f4"],
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4"
+      ],
       "settings": {
         "title": "Elegí por familia olfativa",
         "heading_size": "h2",
@@ -99,21 +158,27 @@
     "featured": {
       "type": "featured-collection",
       "settings": {
-        "title": "Más vendidos",
-        "heading_size": "h2",
         "collection": "all",
         "products_to_show": 8,
+        "title": "Más vendidos",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
         "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "outline",
         "color_scheme": "scheme-1",
         "image_ratio": "square",
+        "image_shape": "default",
         "show_secondary_image": false,
         "show_vendor": true,
         "show_rating": false,
-        "show_view_all": true,
-        "view_all_style": "outline",
+        "quick_add": "standard",
         "columns_mobile": "2",
         "swipe_on_mobile": true,
-        "quick_add": "standard",
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -122,10 +187,11 @@
       "type": "kit-decants",
       "settings": {
         "color_scheme": "scheme-2",
-        "accent_color": "#B25A3C",
+        "accent_color": "#b25a3c",
         "microbadge": "Armá tu kit",
         "heading": "¿No sabés cuál elegir?",
         "subheading": "Elegí varios decants para probar y ahorrá llevándolos juntos.",
+        "collection": "",
         "kit_size": 3,
         "decant_size": "Decant 5ml",
         "discount_text": "Elegí 3 y llevate 10% OFF en tu kit",
@@ -179,10 +245,16 @@
           }
         }
       },
-      "block_order": ["r1", "r2", "r3", "r4", "r5"],
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
       "settings": {
         "color_scheme": "scheme-3",
-        "accent_color": "#F3E2DA",
+        "accent_color": "#f3e2da",
         "microbadge": "Cómo reconocer un original",
         "heading": "No todos los importados son iguales",
         "subheading": "Trabajamos solo con originales. Mirá la diferencia con una réplica.",
@@ -200,11 +272,36 @@
     "resenas": {
       "type": "custom-testimonialsv2",
       "blocks": {
-        "t1": { "type": "testimonial_chat", "settings": { "align": "left" } },
-        "t2": { "type": "testimonial_chat", "settings": { "align": "right" } },
-        "t3": { "type": "testimonial_chat", "settings": { "align": "left" } }
+        "t1": {
+          "type": "testimonial_chat",
+          "settings": {
+            "align": "left",
+            "name": "Nombre de la persona",
+            "text": "¡Escribí acá el testimonio!"
+          }
+        },
+        "t2": {
+          "type": "testimonial_chat",
+          "settings": {
+            "align": "right",
+            "name": "Nombre de la persona",
+            "text": "¡Escribí acá el testimonio!"
+          }
+        },
+        "t3": {
+          "type": "testimonial_chat",
+          "settings": {
+            "align": "left",
+            "name": "Nombre de la persona",
+            "text": "¡Escribí acá el testimonio!"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3"],
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ],
       "settings": {
         "title": "Lo que dicen nuestros clientes"
       }
@@ -262,12 +359,21 @@
           }
         }
       },
-      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6", "q7"],
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7"
+      ],
       "settings": {
         "color_scheme": "scheme-1",
-        "accent_color": "#B25A3C",
+        "accent_color": "#b25a3c",
         "microbadge": "Preguntas frecuentes",
         "heading": "Todo lo que querés saber antes de comprar",
+        "legal_text": "<p><strong>Derecho de arrepentimiento.</strong> Tenés 10 días corridos desde la recepción para revocar la compra sin costo (art. 34, Ley 24.240; Disposición 954/2025, que deroga la Res. 424/2020). El botón de arrepentimiento está en el inicio del sitio. Excepción: los decants abiertos quedan excluidos (art. 1.116 CCyC).</p>",
         "padding_top": 48,
         "padding_bottom": 48
       }
@@ -293,7 +399,11 @@
           "settings": {}
         }
       },
-      "block_order": ["heading", "paragraph", "email"],
+      "block_order": [
+        "heading",
+        "paragraph",
+        "email"
+      ],
       "settings": {
         "color_scheme": "scheme-2",
         "full_width": true,
