@@ -66,6 +66,49 @@
 }
 
 /* ------------------------- */
+/*      FEATURE ICON         */
+/* ------------------------- */
+
+/* Color scopeado por sección para no colisionar entre instancias */
+#shopify-section-{{ section.id }} {
+  --mc-icon-color: {{ section.settings.icon_color }};
+}
+
+.multicolumn-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mc-icon-color, #8F4329);
+  margin-bottom: 0.8rem;
+}
+
+/* Círculo de fondo: tinte suave derivado del propio color del ícono */
+.multicolumn-card__icon--circle {
+  width: 5.6rem;
+  height: 5.6rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.multicolumn-card__icon svg {
+  display: block;
+  width: 2.8rem;
+  height: 2.8rem;
+}
+
+@media screen and (max-width: 749px) {
+  .multicolumn-card__icon--circle {
+    width: 4.8rem;
+    height: 4.8rem;
+  }
+
+  .multicolumn-card__icon svg {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}
+
+/* ------------------------- */
 /*  TITLE + BENEFIT COPY     */
 /* ------------------------- */
 
@@ -235,7 +278,7 @@
         
         {%- for block in section.blocks -%}
           {%- assign empty_column = '' -%}
-          {%- if block.settings.image == blank and block.settings.title == blank and block.settings.text == blank and block.settings.badge_1_text == blank and block.settings.badge_2_text == blank and block.settings.micro_copy_text == blank and block.settings.offer_text == blank and block.settings.button_label == blank -%}
+          {%- if block.settings.image == blank and block.settings.icon == 'none' and block.settings.title == blank and block.settings.text == blank and block.settings.badge_1_text == blank and block.settings.badge_2_text == blank and block.settings.micro_copy_text == blank and block.settings.offer_text == blank and block.settings.button_label == blank -%}
             {%- assign empty_column = ' multicolumn-list__item--empty' -%}
           {%- endif -%}
 
@@ -294,6 +337,12 @@
               {%- endif -%}
 
               <div class="multicolumn-card__info">
+                {%- if block.settings.icon != 'none' -%}
+                  <div class="multicolumn-card__icon{% if section.settings.icon_background %} multicolumn-card__icon--circle{% endif %}" aria-hidden="true">
+                    {%- render 'icon-line', icon: block.settings.icon -%}
+                  </div>
+                {%- endif -%}
+
                 {%- if block.settings.title != blank -%}
                   <h3 class="inline-richtext">{{ block.settings.title }}</h3>
                 {%- endif -%}
@@ -472,6 +521,22 @@
     },
     {
       "type": "header",
+      "content": "Íconos"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Color de los íconos",
+      "default": "#8F4329"
+    },
+    {
+      "type": "checkbox",
+      "id": "icon_background",
+      "label": "Mostrar círculo de fondo en el ícono",
+      "default": true
+    },
+    {
+      "type": "header",
       "content": "t:sections.multicolumn.settings.header_layout.content"
     },
     {
@@ -577,6 +642,22 @@
       "type": "column",
       "name": "t:sections.multicolumn.blocks.column.name",
       "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Ícono",
+          "options": [
+            { "value": "none", "label": "Sin ícono" },
+            { "value": "shield", "label": "Originalidad / Garantía" },
+            { "value": "bottle", "label": "Decant / Frasco" },
+            { "value": "truck", "label": "Envío" },
+            { "value": "card", "label": "Cuotas / Pago" },
+            { "value": "lock", "label": "Pago seguro" },
+            { "value": "return", "label": "Cambios / Devolución" },
+            { "value": "sparkle", "label": "Novedad / Exclusivo" }
+          ],
+          "default": "none"
+        },
         {
           "type": "image_picker",
           "id": "image",

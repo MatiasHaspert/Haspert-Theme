@@ -32,6 +32,7 @@
         "c1": {
           "type": "column",
           "settings": {
+            "icon": "shield",
             "title": "Originalidad garantizada",
             "text": "<p>Marca auténtica, sellada de fábrica y con lote verificable.</p>",
             "badge_1_text": "",
@@ -46,6 +47,7 @@
         "c2": {
           "type": "column",
           "settings": {
+            "icon": "bottle",
             "title": "Probá con un decant",
             "text": "<p>Conocé el aroma desde un 5ml antes de ir por el frasco.</p>",
             "badge_1_text": "",
@@ -60,6 +62,7 @@
         "c3": {
           "type": "column",
           "settings": {
+            "icon": "truck",
             "title": "Envíos a todo el país",
             "text": "<p>Correo Argentino. En Rosario, envío en el día.</p>",
             "badge_1_text": "",
@@ -74,6 +77,7 @@
         "c4": {
           "type": "column",
           "settings": {
+            "icon": "card",
             "title": "Hasta 6 cuotas sin interés",
             "text": "<p>Con Mercado Pago. 20% off pagando en efectivo o transferencia.</p>",
             "badge_1_text": "",
@@ -188,6 +192,7 @@
       "settings": {
         "color_scheme": "scheme-2",
         "accent_color": "#b25a3c",
+        "icon": "bottle",
         "microbadge": "Armá tu kit",
         "heading": "¿No sabés cuál elegir?",
         "subheading": "Elegí varios decants para probar y ahorrá llevándolos juntos.",
@@ -207,6 +212,7 @@
         "r1": {
           "type": "row",
           "settings": {
+            "icon": "truck",
             "feature": "Procedencia",
             "ours": "Importado, marca auténtica con lote/serial verificable",
             "replica": "Origen dudoso, sin respaldo"
@@ -215,6 +221,7 @@
         "r2": {
           "type": "row",
           "settings": {
+            "icon": "bottle",
             "feature": "Concentración",
             "ours": "Declarada (EDP/EDT), rinde y dura como el oficial",
             "replica": "Diluido, se va en pocas horas"
@@ -223,6 +230,7 @@
         "r3": {
           "type": "row",
           "settings": {
+            "icon": "lock",
             "feature": "Frasco y lote",
             "ours": "Sellado de fábrica, lote/serial verificable",
             "replica": "Serial falso o ausente"
@@ -231,6 +239,7 @@
         "r4": {
           "type": "row",
           "settings": {
+            "icon": "sparkle",
             "feature": "Aroma",
             "ours": "Fiel al lanzamiento oficial",
             "replica": "Aroma alterado o desviado"
@@ -239,6 +248,7 @@
         "r5": {
           "type": "row",
           "settings": {
+            "icon": "shield",
             "feature": "Garantía",
             "ours": "Si no es original, te devolvemos el 100% + el envío (hasta 30 días)",
             "replica": "Sin garantía"
@@ -303,7 +313,8 @@
         "t3"
       ],
       "settings": {
-        "title": "Lo que dicen nuestros clientes"
+        "title": "Lo que dicen nuestros clientes",
+        "icon": "quote"
       }
     },
     "faq": {
@@ -312,6 +323,7 @@
         "q1": {
           "type": "qa",
           "settings": {
+            "icon": "shield",
             "question": "¿Los perfumes son 100% originales?",
             "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>"
           }
@@ -319,6 +331,7 @@
         "q2": {
           "type": "qa",
           "settings": {
+            "icon": "lock",
             "question": "¿Cómo sé que no es una réplica?",
             "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible. Si querés, te mandamos el unboxing por WhatsApp antes de comprar. Y si algo no cierra: garantía de originalidad, te devolvemos el 100%.</p>"
           }
@@ -326,6 +339,7 @@
         "q3": {
           "type": "qa",
           "settings": {
+            "icon": "bottle",
             "question": "¿Qué es un \"decant\"? ¿Es el mismo perfume?",
             "answer": "<p>Sí, es el mismo jugo fraccionado del frasco original en un atomizador. Ideal para probar el aroma antes de comprar el frasco completo, o para llevar en la cartera.</p>"
           }
@@ -333,6 +347,7 @@
         "q4": {
           "type": "qa",
           "settings": {
+            "icon": "bottle",
             "question": "¿Y el \"tester\"? ¿En qué se diferencia del original?",
             "answer": "<p>Es exactamente el mismo perfume, en packaging de prueba (caja blanca o sin tapa premium). Por eso es más económico — pero el jugo es idéntico.</p>"
           }
@@ -340,6 +355,7 @@
         "q5": {
           "type": "qa",
           "settings": {
+            "icon": "truck",
             "question": "¿Hacen envíos a todo el país?",
             "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 4–7 días hábiles. Envío gratis en compras desde $200.000.</p>"
           }
@@ -347,6 +363,7 @@
         "q6": {
           "type": "qa",
           "settings": {
+            "icon": "card",
             "question": "¿Puedo pagar en cuotas?",
             "answer": "<p>Sí, con Mercado Pago: hasta <strong>6 cuotas sin interés</strong> y hasta <strong>12 con interés</strong>. Además, <strong>20% de descuento</strong> pagando contado o por transferencia.</p>"
           }
@@ -354,6 +371,7 @@
         "q7": {
           "type": "qa",
           "settings": {
+            "icon": "return",
             "question": "¿Qué pasa si me arrepiento o no me gusta?",
             "answer": "<p>Tenés 10 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>"
           }

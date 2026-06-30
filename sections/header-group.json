@@ -17,21 +17,24 @@
         "item_orig": {
           "type": "item",
           "settings": {
-            "text": "✅ Originalidad garantizada",
+            "icon": "shield",
+            "text": "Originalidad garantizada",
             "link": ""
           }
         },
         "item_envio": {
           "type": "item",
           "settings": {
-            "text": "🚚 Envíos a todo el país",
+            "icon": "truck",
+            "text": "Envíos a todo el país",
             "link": ""
           }
         },
         "item_cuotas": {
           "type": "item",
           "settings": {
-            "text": "💳 Hasta 6 cuotas sin interés",
+            "icon": "card",
+            "text": "Hasta 6 cuotas sin interés",
             "link": ""
           }
         }

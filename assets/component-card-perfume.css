@@ -16,6 +16,33 @@
    precio ancla, cuotas) que centrada. */
 .product-card-wrapper {
   --text-alignment: left;
+  /* Marco del design system (NUMEN): contorno arena, esquinas, fondo blanco */
+  --card-frame-border: #e0dbd0;
+  --card-frame-radius: 1.2rem;
+  --card-frame-bg: #ffffff;
+}
+
+/* — Marco de la tarjeta: contorno arena + radius + fondo, en toda la tienda — */
+.product-card-wrapper .card {
+  background-color: var(--card-frame-bg);
+  border: 0.1rem solid var(--card-frame-border);
+  border-radius: var(--card-frame-radius);
+  overflow: hidden;
+  transition: transform var(--duration-default, 0.25s) ease,
+    box-shadow var(--duration-default, 0.25s) ease;
+}
+
+/* El inner no vuelve a pintar fondo (lo maneja .card) para evitar dobles capas */
+.product-card-wrapper .card__inner {
+  background: transparent;
+}
+
+/* Elevación sutil al pasar el mouse (coherente con la multicolumna) */
+@media (hover: hover) {
+  .product-card-wrapper:hover .card {
+    transform: translateY(-4px);
+    box-shadow: 0 1.4rem 3.4rem rgba(28, 24, 20, 0.12);
+  }
 }
 
 .product-card-wrapper .card,
@@ -30,9 +57,9 @@
   padding: 1.2rem;
 }
 
-/* Línea divisoria entre la imagen y los datos (estilo "card") */
-.product-card-wrapper .card--card > .card__inner {
-  border-bottom: var(--border-width, 0.1rem) solid rgba(var(--color-foreground), 0.1);
+/* Línea divisoria entre la imagen y los datos (siempre que haya packshot) */
+.product-card-wrapper .card--media > .card__inner {
+  border-bottom: 0.1rem solid var(--card-frame-border);
 }
 
 /* — Overline de marca — */

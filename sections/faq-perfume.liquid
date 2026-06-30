@@ -30,7 +30,12 @@
         {%- if block.type == 'qa' and block.settings.question != blank -%}
           <details class="faqp__item" {{ block.shopify_attributes }}>
             <summary class="faqp__summary">
-              <span class="faqp__q">{{ block.settings.question }}</span>
+              <span class="faqp__q">
+                {%- if block.settings.icon != 'none' -%}
+                  <span class="faqp__q-icon" aria-hidden="true">{%- render 'icon-line', icon: block.settings.icon -%}</span>
+                {%- endif -%}
+                <span class="faqp__q-text">{{ block.settings.question }}</span>
+              </span>
               <span class="faqp__icon svg-wrapper" aria-hidden="true">{{ 'icon-caret.svg' | inline_asset_content }}</span>
             </summary>
             <div class="faqp__a rte">{{ block.settings.answer }}</div>
@@ -98,6 +103,9 @@
   margin-bottom: 1.4rem;
 }
 .faqp__title { margin: 0; }
+.faqp__q { display: flex; align-items: center; gap: 0.8rem; }
+.faqp__q-icon { flex-shrink: 0; display: inline-flex; color: var(--faqp-accent-ink); }
+.faqp__q-icon svg { display: block; width: 1.9rem; height: 1.9rem; }
 .faqp__list {
   max-width: 76rem;
   margin: 0 auto;
@@ -155,7 +163,7 @@
   "settings": [
     { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "default": "scheme-1" },
     { "type": "color", "id": "accent_color", "label": "Color de acento", "default": "#B25A3C" },
-    { "type": "text", "id": "microbadge", "label": "Microbadge", "default": "📘 Preguntas frecuentes" },
+    { "type": "text", "id": "microbadge", "label": "Microbadge", "default": "Preguntas frecuentes" },
     { "type": "text", "id": "heading", "label": "Título", "default": "Todo lo que querés saber antes de comprar" },
     { "type": "header", "content": "Nota legal" },
     { "type": "richtext", "id": "legal_text", "label": "Bloque legal (arrepentimiento)", "info": "No se incluye en el JSON-LD de FAQ. Mantené la cita vigente.", "default": "<p><strong>Derecho de arrepentimiento.</strong> Tenés 10 días corridos desde la recepción para revocar la compra sin costo (art. 34, Ley 24.240; Disposición 954/2025, que deroga la Res. 424/2020). El botón de arrepentimiento está en el inicio del sitio. Excepción: los decants abiertos quedan excluidos (art. 1.116 CCyC).</p>" },
@@ -168,6 +176,17 @@
       "type": "qa",
       "name": "Pregunta",
       "settings": [
+        { "type": "select", "id": "icon", "label": "Ícono",
+          "options": [
+            { "value": "none", "label": "Sin ícono" },
+            { "value": "shield", "label": "Originalidad / Garantía" },
+            { "value": "bottle", "label": "Decant / Frasco" },
+            { "value": "truck", "label": "Envío" },
+            { "value": "card", "label": "Cuotas / Pago" },
+            { "value": "lock", "label": "Pago seguro / Sellado" },
+            { "value": "return", "label": "Cambios / Devolución" },
+            { "value": "sparkle", "label": "Novedad / Aroma" }
+          ], "default": "none" },
         { "type": "text", "id": "question", "label": "Pregunta", "default": "Pregunta" },
         { "type": "richtext", "id": "answer", "label": "Respuesta", "default": "<p>Respuesta</p>" }
       ]
@@ -177,14 +196,14 @@
     {
       "name": "FAQ perfume",
       "blocks": [
-        { "type": "qa", "settings": { "question": "¿Los perfumes son 100% originales?", "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>" } },
-        { "type": "qa", "settings": { "question": "¿Cómo sé que no es una réplica?", "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. Si querés, te mandamos el unboxing por WhatsApp antes de comprar. Y si algo no cierra: garantía de originalidad, te devolvemos el 100%.</p>" } },
-        { "type": "qa", "settings": { "question": "¿Qué es un \"decant\"? ¿Es el mismo perfume?", "answer": "<p>Sí, es el mismo jugo fraccionado del frasco original en un atomizador. Ideal para probar el aroma antes de comprar el frasco completo, o para llevar en la cartera.</p>" } },
-        { "type": "qa", "settings": { "question": "¿Y el \"tester\"? ¿En qué se diferencia del original?", "answer": "<p>Es exactamente el mismo perfume, en packaging de prueba (caja blanca o sin tapa premium). Por eso es más económico — pero el jugo es idéntico.</p>" } },
-        { "type": "qa", "settings": { "question": "¿Hacen envíos a todo el país?", "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 4–7 días hábiles. Envío gratis en compras desde $200.000.</p>" } },
-        { "type": "qa", "settings": { "question": "¿Puedo pagar en cuotas?", "answer": "<p>Sí, con Mercado Pago: hasta <strong>6 cuotas sin interés</strong> y hasta <strong>12 con interés</strong>. Además, <strong>20% de descuento</strong> pagando contado o por transferencia.</p>" } },
-        { "type": "qa", "settings": { "question": "¿Qué pasa si me arrepiento o no me gusta?", "answer": "<p>Tenés 10 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido y de naturaleza no devolvible — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>" } },
-        { "type": "qa", "settings": { "question": "¿Cómo conservo el perfume para que dure?", "answer": "<p>Lejos del calor, la luz directa y la humedad. Guardalo en su caja, idealmente entre 15–20°C.</p>" } }
+        { "type": "qa", "settings": { "icon": "shield", "question": "¿Los perfumes son 100% originales?", "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>" } },
+        { "type": "qa", "settings": { "icon": "lock", "question": "¿Cómo sé que no es una réplica?", "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. Si querés, te mandamos el unboxing por WhatsApp antes de comprar. Y si algo no cierra: garantía de originalidad, te devolvemos el 100%.</p>" } },
+        { "type": "qa", "settings": { "icon": "bottle", "question": "¿Qué es un \"decant\"? ¿Es el mismo perfume?", "answer": "<p>Sí, es el mismo jugo fraccionado del frasco original en un atomizador. Ideal para probar el aroma antes de comprar el frasco completo, o para llevar en la cartera.</p>" } },
+        { "type": "qa", "settings": { "icon": "bottle", "question": "¿Y el \"tester\"? ¿En qué se diferencia del original?", "answer": "<p>Es exactamente el mismo perfume, en packaging de prueba (caja blanca o sin tapa premium). Por eso es más económico — pero el jugo es idéntico.</p>" } },
+        { "type": "qa", "settings": { "icon": "truck", "question": "¿Hacen envíos a todo el país?", "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 4–7 días hábiles. Envío gratis en compras desde $200.000.</p>" } },
+        { "type": "qa", "settings": { "icon": "card", "question": "¿Puedo pagar en cuotas?", "answer": "<p>Sí, con Mercado Pago: hasta <strong>6 cuotas sin interés</strong> y hasta <strong>12 con interés</strong>. Además, <strong>20% de descuento</strong> pagando contado o por transferencia.</p>" } },
+        { "type": "qa", "settings": { "icon": "return", "question": "¿Qué pasa si me arrepiento o no me gusta?", "answer": "<p>Tenés 10 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido y de naturaleza no devolvible — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>" } },
+        { "type": "qa", "settings": { "icon": "sparkle", "question": "¿Cómo conservo el perfume para que dure?", "answer": "<p>Lejos del calor, la luz directa y la humedad. Guardalo en su caja, idealmente entre 15–20°C.</p>" } }
       ]
     }
   ]

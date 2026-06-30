@@ -33,6 +33,21 @@
     background: #f6f3ff;
   }
 
+  .chat-bubble__quote {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    color: #b25a3c;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  .chat-bubble__quote svg {
+    width: 2.8rem;
+    height: 2.8rem;
+    display: block;
+  }
+
   .chat-bubble__avatar {
     width: 52px;
     height: 52px;
@@ -79,6 +94,9 @@
   <div class="chat-testimonials__wrapper">
     {% for block in section.blocks %}
       <div class="chat-bubble {% if block.settings.align == 'right' %}chat-bubble--right{% endif %}">
+        {%- if section.settings.icon != 'none' -%}
+          <span class="chat-bubble__quote" aria-hidden="true">{%- render 'icon-line', icon: section.settings.icon -%}</span>
+        {%- endif -%}
         {% if block.settings.person_image != blank %}
           {%- comment -%}
             Usamos image_url para generar src y añadimos width/height requeridos por theme-check.
@@ -135,7 +153,19 @@
       "type": "text",
       "id": "title",
       "label": "Título",
-      "default": "Lo que dicen nuestras familias"
+      "default": "Lo que dicen nuestros clientes"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Ícono decorativo",
+      "options": [
+        { "value": "none", "label": "Sin ícono" },
+        { "value": "quote", "label": "Comillas" },
+        { "value": "sparkle", "label": "Destello" },
+        { "value": "shield", "label": "Garantía" }
+      ],
+      "default": "quote"
     }
   ],
 

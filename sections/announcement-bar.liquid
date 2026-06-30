@@ -12,6 +12,8 @@
   /* Sistema de colores dinámico */
   --ann-bg: {{ section.settings.bg_color }};
   --ann-text: {{ section.settings.text_color }};
+  --ann-gap: 40px;
+  --ann-fade: {{ section.settings.edge_fade }}px;
 
   background: var(--ann-bg);
   padding-top: {{ section.settings.padding_top }}px;
@@ -20,25 +22,55 @@
   width: 100%;
 }
 
-.announcement-{{ section.id }}__track-wrapper {
+/* Contenedor del marquee: recorta el scroll y separa los dos grupos.
+   La máscara difumina el texto en los extremos para una entrada/salida suave. */
+.announcement-{{ section.id }}__marquee {
+  display: flex;
+  gap: var(--ann-gap);
   width: 100%;
   overflow: hidden;
-  position: relative;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--ann-fade), #000 calc(100% - var(--ann-fade)), transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 var(--ann-fade), #000 calc(100% - var(--ann-fade)), transparent 100%);
 }
 
-.announcement-{{ section.id }}__track {
-  display: inline-flex;
-  gap: 40px;
+/*
+  Cada grupo contiene la tanda completa de frases.
+  min-width: 100% garantiza que un solo grupo SIEMPRE cubra el viewport,
+  evitando el hueco en blanco antes del reinicio. Con dos grupos idénticos
+  desplazándose -100% - gap, el loop cierra sin salto ni costura.
+*/
+.announcement-{{ section.id }}__group {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: var(--ann-gap);
+  min-width: 100%;
   white-space: nowrap;
   animation: marquee-{{ section.id }} {{ section.settings.speed }}s linear infinite;
+  will-change: transform;
 }
 
 .announcement-{{ section.id }}__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
   font-size: {{ section.settings.font_size }}px;
   font-weight: 600;
   color: var(--ann-text);
   white-space: nowrap;
-  display: inline-block;
+}
+
+/* Ícono SVG inline: hereda el color del texto vía currentColor */
+.announcement-{{ section.id }}__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.announcement-{{ section.id }}__icon svg {
+  display: block;
+  width: 1.15em;
+  height: 1.15em;
 }
 
 .announcement-{{ section.id }}__item a {
@@ -47,27 +79,35 @@
 }
 
 /* Pausa al hacer hover (por si alguien quiere leer tranquilo) */
-.announcement-{{ section.id }}__track:hover {
+.announcement-{{ section.id }}__marquee:hover .announcement-{{ section.id }}__group {
   animation-play-state: paused;
 }
 
 @keyframes marquee-{{ section.id }} {
   from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  to   { transform: translateX(calc(-100% - var(--ann-gap))); }
 }
 
-/* Respeto a usuarios con reducción de movimiento */
+/* Respeto a usuarios con reducción de movimiento: sin scroll, una sola tanda centrada */
 @media (prefers-reduced-motion: reduce) {
-  .announcement-{{ section.id }}__track {
+  .announcement-{{ section.id }}__group {
     animation: none;
-    transform: translateX(0);
+    justify-content: center;
+  }
+
+  .announcement-{{ section.id }}__group[aria-hidden="true"] {
+    display: none;
   }
 }
 
 @media (max-width: 600px) {
-  .announcement-{{ section.id }}__track {
+  .announcement-{{ section.id }} {
+    --ann-gap: 24px;
+    --ann-fade: min({{ section.settings.edge_fade }}px, 24px);
+  }
+
+  .announcement-{{ section.id }}__group {
     animation-duration: {{ section.settings.speed_mobile }}s;
-    gap: 24px;
   }
 
   .announcement-{{ section.id }}__item {
@@ -78,36 +118,32 @@
 {% endstyle %}
 
 <div class="announcement-{{ section.id }}">
-  <div class="announcement-{{ section.id }}__track-wrapper">
-    <div class="announcement-{{ section.id }}__track">
+  <div class="announcement-{{ section.id }}__marquee">
 
-      {% comment %}
-        Primera pasada: todos los bloques
-      {% endcomment %}
-      {%- for block in section.blocks -%}
-        <div class="announcement-{{ section.id }}__item" {{ block.shopify_attributes }}>
-          {% if block.settings.link != blank %}
-            <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
-          {% else %}
-            {{ block.settings.text | escape }}
-          {% endif %}
-        </div>
-      {%- endfor -%}
+    {% comment %}
+      Dos grupos idénticos. El primero es el "real" (lleva shopify_attributes
+      para el editor); el segundo es la copia para el loop sin costura y se marca
+      aria-hidden para que los lectores de pantalla no lean las frases dos veces.
+    {% endcomment %}
+    {%- for pass in (1..2) -%}
+      <div class="announcement-{{ section.id }}__group"{% if pass == 2 %} aria-hidden="true"{% endif %}>
+        {%- for block in section.blocks -%}
+          <div class="announcement-{{ section.id }}__item"{% if pass == 1 %} {{ block.shopify_attributes }}{% endif %}>
+            {%- if block.settings.icon != 'none' -%}
+              <span class="announcement-{{ section.id }}__icon" aria-hidden="true">{%- render 'icon-line', icon: block.settings.icon -%}</span>
+            {%- endif -%}
+            <span class="announcement-{{ section.id }}__text">
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
+              {%- else -%}
+                {{ block.settings.text | escape }}
+              {%- endif -%}
+            </span>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
 
-      {% comment %}
-        Segunda pasada: duplicación para loop perfecto
-      {% endcomment %}
-      {%- for block in section.blocks -%}
-        <div class="announcement-{{ section.id }}__item">
-          {% if block.settings.link != blank %}
-            <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
-          {% else %}
-            {{ block.settings.text | escape }}
-          {% endif %}
-        </div>
-      {%- endfor -%}
-
-    </div>
   </div>
 </div>
 
@@ -174,6 +210,16 @@
       "max": 40,
       "step": 5,
       "default": 10
+    },
+    {
+      "type": "range",
+      "id": "edge_fade",
+      "label": "Desvanecido en los bordes (px)",
+      "info": "Suaviza la entrada y salida del texto en los extremos. 0 = sin desvanecido.",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 48
     }
   ],
   "blocks": [
@@ -182,10 +228,25 @@
       "name": "Anuncio",
       "settings": [
         {
+          "type": "select",
+          "id": "icon",
+          "label": "Ícono",
+          "options": [
+            { "value": "none", "label": "Sin ícono" },
+            { "value": "shield", "label": "Originalidad / Garantía" },
+            { "value": "truck", "label": "Envío" },
+            { "value": "card", "label": "Cuotas / Pago" },
+            { "value": "lock", "label": "Pago seguro" },
+            { "value": "return", "label": "Cambios / Devolución" },
+            { "value": "sparkle", "label": "Novedad / Exclusivo" }
+          ],
+          "default": "none"
+        },
+        {
           "type": "text",
           "id": "text",
           "label": "Texto del anuncio",
-          "default": "🔥 40% OFF por tiempo limitado"
+          "default": "Envío gratis a todo el país"
         },
         {
           "type": "url",
@@ -200,10 +261,10 @@
       "name": "Banda de Anuncios (Scrolling)",
       "category": "Texto",
       "blocks": [
-        { "type": "item", "settings": { "text": "🔥 40% OFF" } },
-        { "type": "item", "settings": { "text": "🚚 Envío gratis" } },
-        { "type": "item", "settings": { "text": "⏳ Stock limitado" } },
-        { "type": "item", "settings": { "text": "🔒 Garantía 30 días" } }
+        { "type": "item", "settings": { "icon": "sparkle", "text": "40% OFF por tiempo limitado" } },
+        { "type": "item", "settings": { "icon": "truck", "text": "Envío gratis a todo el país" } },
+        { "type": "item", "settings": { "icon": "card", "text": "Hasta 6 cuotas sin interés" } },
+        { "type": "item", "settings": { "icon": "shield", "text": "Garantía de originalidad" } }
       ]
     }
   ]

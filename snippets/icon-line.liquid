@@ -1,0 +1,33 @@
+{%- comment -%}
+  Íconos de línea de la marca (outline, heredan color vía currentColor).
+  Set reutilizable en cualquier sección. Renderiza el SVG inline (0 requests).
+
+  Uso:
+    {% render 'icon-line', icon: block.settings.icon %}
+
+  Para agregar un ícono nuevo:
+    1. Subí assets/icon-ann-<id>.svg con stroke="currentColor".
+    2. Sumá un {% when '<id>' %} acá.
+    3. Agregá la opción al select de la sección que lo use.
+{%- endcomment -%}
+{%- liquid
+  case icon
+    when 'shield'
+      assign file = 'icon-ann-shield.svg'
+    when 'truck'
+      assign file = 'icon-ann-truck.svg'
+    when 'card'
+      assign file = 'icon-ann-card.svg'
+    when 'lock'
+      assign file = 'icon-ann-lock.svg'
+    when 'return'
+      assign file = 'icon-ann-return.svg'
+    when 'sparkle'
+      assign file = 'icon-ann-sparkle.svg'
+    when 'bottle'
+      assign file = 'icon-ann-bottle.svg'
+    when 'quote'
+      assign file = 'icon-ann-quote.svg'
+  endcase
+-%}
+{%- if file -%}{{ file | inline_asset_content }}{%- endif -%}
