@@ -3618,8 +3618,10 @@ p, li, .rte p { line-height: 1.55; font-size: 1rem; }
 button[type="submit"] {
   border-radius: var(--brand-radius) !important;
   padding: 14px 18px !important;
-  font-weight: 600 !important;
-  font-size: 1rem !important;
+  font-family: var(--font-display); /* Bebas: unifica los botones con la tipografía del ATC de la PDP */
+  font-weight: 400 !important;
+  font-size: 1.8rem !important; /* 18px @ base 62.5%; el ATC hero de la PDP sube a 2.1rem */
+  letter-spacing: 0.06em;
   text-align: center;
   transition: 0.3s ease;
 }
@@ -3642,6 +3644,26 @@ button[type="submit"] {
 .button--primary::after,
 .button--secondary::after {
   display: none !important;
+}
+
+/* Judge.me · botón "Escribir una reseña" a la paleta (el verde queda reservado al
+   beneficio de transferencia). La clase la inyecta la app en runtime: confirmá con
+   Inspect que sea .jdgm-write-rev-link. Fix durable = setear el color del botón en el
+   panel de Judge.me (Customize → Design); esto es el override de respaldo en CSS.
+   !important para ganarle al estilo inyectado por la app. */
+.jdgm-write-rev-link,
+a.jdgm-write-rev-link {
+  background-color: var(--brand-button) !important; /* terracota AA #8F4329 */
+  color: #fff !important;
+  border-color: var(--brand-button) !important;
+}
+.jdgm-write-rev-link:hover,
+a.jdgm-write-rev-link:hover {
+  background-color: var(--brand-button-hover) !important;
+}
+.jdgm-write-rev-link:focus-visible {
+  outline: 0.2rem solid rgb(var(--color-foreground));
+  outline-offset: 0.2rem;
 }
 
 /* Cards de multicolumn (homepage) */
@@ -3685,7 +3707,7 @@ button[type="submit"] {
   h2 { font-size: 1.6rem; }
   .button,
   button[type="submit"] {
-    font-size: 1.05rem !important;
+    font-size: 1.6rem !important; /* 16px: legible en Bebas y evita que labels largos corten en grilla mobile */
     padding: 14px !important;
   }
 }

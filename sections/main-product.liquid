@@ -63,12 +63,25 @@
       --perfume-accent: {{ section.settings.accent_color }};
       --perfume-accent-rgb: {{ accent.red }}, {{ accent.green }}, {{ accent.blue }};
       --perfume-accent-ink: {{ accent_ink }};
-      --perfume-ok: #1c4a32;
-      --perfume-ok-bg: #e7f2ea;
-      --perfume-ok-line: #b6d8c2;
+
+      /* Motion: curvas reales (reemplazan los `ease` planos) */
+      --perfume-ease-select: cubic-bezier(0.23, 1, 0.32, 1);
+      --perfume-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+      --perfume-dur-select: 200ms;
+      --perfume-dur-tap: 140ms;
+      --perfume-dur-sticky: 260ms;
+
+      /* Verde de transferencia (sobrio, no compite con el precio ni el ATC) */
+      --perfume-ok: #246A45;
+      --perfume-ok-bg: #EDF4EE;
+      --perfume-ok-line: #CFE3D5;
       --perfume-alert: #b5471f;
       --perfume-alert-bg: #fae9df;
       --perfume-alert-line: #e7c3ac;
+
+      /* Cream/paper cálido para chips de acento de la ficha (sin oro metálico) */
+      --perfume-soft-bg: #F6EFDD;
+      --perfume-soft-line: #E7D9B6;
     }
   {%- endstyle -%}
 
@@ -173,6 +186,9 @@
                   {%- assign best_perml = 0 -%}
                   {%- assign best_vid = 0 -%}
                   {%- for v in product.variants -%}
+                    {%- comment -%} El tester se excluye del cálculo de "Mejor $/ml": su $/ml es el más bajo (≈ original −10%) pero no es la presentación protagonista. Así el badge cae en el frasco sellado. {%- endcomment -%}
+                    {%- assign v_tipo = v.metafields.custom.tipo_presentacion.value -%}
+                    {%- if v_tipo == 'Tester' -%}{%- continue -%}{%- endif -%}
                     {%- capture v_ml -%}{% render 'perfume-ml', variant: v, product: product %}{%- endcapture -%}
                     {%- assign v_ml = v_ml | plus: 0 -%}
                     {%- if v_ml > 0 and v.price > 0 -%}
@@ -228,7 +244,7 @@
                         <span class="perfume-card__price">
                           <b>{{ card_variant.price | money }}</b>
                           {%- if c_ml > 0 -%}
-                            <span class="perfume-card__perml{% if card_tipo == 'Decant' %} is-muted{% elsif card_variant.id == best_vid %} is-best{% endif %}">{{ card_variant.price | divided_by: c_ml | money }}/ml</span>
+                            <span class="perfume-card__perml{% if card_variant.id == best_vid and best_vid != 0 %} is-best{% elsif card_tipo == 'Decant' %} is-muted{% endif %}">{{ card_variant.price | divided_by: c_ml | money }}/ml</span>
                           {%- endif -%}
                         </span>
                       </label>
@@ -301,7 +317,8 @@
                     id="ProductSubmitButton-{{ section.id }}"
                     type="submit"
                     name="add"
-                    class="product-form__submit button button--full-width {% if section.settings.show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
+                    {%- comment -%} ATC = acción PRIMARIA siempre (terracota sólido). Invierte el patrón de Dawn que lo degrada a button--secondary cuando hay dynamic checkout; acá el "Comprar ahora" es el secundario (ver {% stylesheet %}). {%- endcomment -%}
+                    class="product-form__submit button button--full-width button--primary"
                     {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
                   >
                     <span>
@@ -567,7 +584,7 @@
   bottom: 0;
   z-index: 4;
   transform: translateY(110%);
-  transition: transform 0.28s ease;
+  transition: transform var(--perfume-dur-sticky, 260ms) var(--perfume-ease-drawer, ease);
   background: rgb(var(--color-background));
   border-top: 0.1rem solid rgba(var(--color-foreground), 0.1);
   box-shadow: 0 -0.4rem 1.4rem rgba(0, 0, 0, 0.07);
@@ -575,9 +592,6 @@
 }
 .sticky-atc--visible {
   transform: translateY(0);
-}
-@media (prefers-reduced-motion: reduce) {
-  .sticky-atc { transition: none; }
 }
 .sticky-atc__inner {
   display: flex;
@@ -620,12 +634,56 @@
   width: auto;
   min-width: 12rem;
   margin: 0;
+  transition: transform var(--perfume-dur-tap, 140ms) var(--perfume-ease-select, ease),
+              background-color var(--perfume-dur-select, 200ms) var(--perfume-ease-select, ease);
 }
+.sticky-atc__button:active { transform: scale(0.97); }
 @media screen and (min-width: 750px) {
   .sticky-atc {
     display: none;
   }
 }
+
+/* =====================================================================
+   1 · FOTO REAL PROTAGONISTA — estage marfil parejo + sombra de apoyo.
+   El frasco "flota" parejo sin importar el shot de origen. Pensado para
+   fotos sobre fondo blanco de estudio (lo habitual del catálogo).
+   ===================================================================== */
+.product__media-wrapper .product__media {
+  position: relative;
+  background: radial-gradient(135% 108% at 50% 40%,
+    #FFFFFF 0%, #FFFEFC 50%, #F5F0E6 86%, #EFE9DD 100%);
+  border: 0.1rem solid rgba(var(--color-foreground), 0.10);
+  border-radius: 1.4rem;
+  overflow: hidden;
+}
+@media screen and (max-width: 749px) {
+  .product__media-wrapper .product__media-item .product__media {
+    aspect-ratio: 4 / 5;
+    display: grid;
+    place-items: center;
+    padding: 3.6rem 3.4rem 4.6rem;
+  }
+}
+.product__media-wrapper .product__media img {
+  object-fit: contain;
+  transition: transform 0.5s var(--perfume-ease-select, ease),
+              opacity 0.35s var(--perfume-ease-select, ease);
+}
+.product__media-wrapper .product__media-item .product__media::after {
+  content: "";
+  position: absolute; left: 50%; bottom: 4.2rem; transform: translateX(-50%);
+  width: 46%; height: 2.4rem; border-radius: 50%;
+  background: radial-gradient(ellipse at center,
+    rgba(27, 21, 16, 0.20), rgba(27, 21, 16, 0) 70%);
+  filter: blur(5px); z-index: 0; pointer-events: none;
+}
+.product__media-wrapper .product__media img { position: relative; z-index: 1; }
+/* OPCIONAL — fotos con fondos off-white/dispares: descomentá para fundir el
+   fondo claro contra el estage marfil. `multiply` tiñe frascos muy claros;
+   probá por familia olfativa antes de dejarlo global.
+   .product__media-wrapper .product__media img { mix-blend-mode: multiply; } */
+
 .perfume-vendor {
   display: inline-block;
   margin-bottom: 0.6rem;
@@ -638,146 +696,221 @@
 .perfume-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
-  margin: 1.6rem 0 0;
+  gap: 0.7rem;
+  margin: 0;
   padding: 0;
 }
 .perfume-chip {
-  font-size: 1.2rem;
-  letter-spacing: 0.04rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 0.5rem 1rem;
-  border: 0.1rem solid rgba(var(--color-foreground), 0.18);
-  border-radius: var(--badge-corner-radius, 0.2rem);
   line-height: 1.2;
+  padding: 0.6rem 1.1rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.14);
+  border-radius: 999px;
+  color: rgba(var(--color-foreground), 0.78);
+  background: rgb(var(--color-background));
 }
 .perfume-chip--accent {
-  border-color: var(--perfume-accent-ink);
+  border-color: var(--perfume-soft-line);
   color: var(--perfume-accent-ink);
+  background: var(--perfume-soft-bg);
 }
+/* Overline de sección: Montserrat 600, mayúscula, tracking abierto. */
 .perfume-section-title {
-  font-size: 1.3rem;
-  letter-spacing: 0.08rem;
+  font-family: var(--font-body, var(--font-body-family));
   text-transform: uppercase;
-  opacity: 0.7;
-  margin: 0 0 0.8rem;
+  color: rgba(var(--color-foreground), 0.6);
+  font-size: 1.15rem; font-weight: 600; letter-spacing: 0.14em; margin: 0 0 1.4rem;
 }
-.perfume-pyramid { margin-top: 2.2rem; }
+/* Label de grupo/medidor de ficha: suave, minúscula, NO compite con la overline (= mockup). */
+.perfume-ficha__label {
+  font-family: var(--font-body, var(--font-body-family));
+  font-size: 1.1rem; font-weight: 400; letter-spacing: 0.02em;
+  color: rgba(var(--color-foreground), 0.62); margin: 0 0 0.8rem;
+}
+.perfume-pyramid { margin-top: 2.4rem; }
 .perfume-pyramid__tier {
   display: grid;
-  grid-template-columns: 9rem 1fr;
-  gap: 1rem;
-  padding: 0.9rem 0;
-  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  grid-template-columns: 8.4rem 1fr;
+  gap: 1.4rem;
+  align-items: baseline;
+  padding: 1.1rem 0;
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
 }
+.perfume-pyramid__tier:last-child { border-bottom: none; }
 .perfume-pyramid__label {
-  font-size: 1.2rem;
+  font-family: var(--font-body, var(--font-body-family));
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.06rem;
-  opacity: 0.6;
-  align-self: center;
+  color: var(--perfume-accent-ink);
 }
-.perfume-pyramid__notes { font-weight: 500; }
-/* ---- price block ---- */
+.perfume-pyramid__notes {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 1.6rem;
+  line-height: 1.4;
+  color: rgb(var(--color-foreground));
+}
+/* ---- price block · jerarquía: el precio de lista MANDA ---- */
 .perfume-price-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 1rem; }
 .perfume-price-row .price { margin: 0; }
 .perfume-perml {
   font-family: var(--font-display);
-  font-size: 1.5rem;
-  letter-spacing: 0.04em;
+  font-size: 1.5rem; letter-spacing: 0.04em;
   color: var(--perfume-accent-ink);
   font-variant-numeric: tabular-nums;
 }
-.perfume-transfer { margin-top: 1rem; }
+
+/* Transferencia = beneficio SECUNDARIO (verde sobrio, no compite). */
+.perfume-transfer { margin-top: 1.1rem; }
 .perfume-transfer__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8rem;
+  display: inline-flex; align-items: center; gap: 0.8rem;
   background: var(--perfume-ok-bg);
   border: 0.1rem solid var(--perfume-ok-line);
   border-radius: 999px;
-  padding: 0.7rem 1.3rem;
+  padding: 0.5rem 0.7rem 0.5rem 1.2rem;
 }
 .perfume-transfer__chip b {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  letter-spacing: 0.02em;
-  color: var(--perfume-ok);
-  font-variant-numeric: tabular-nums;
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 1.7rem; letter-spacing: 0.02em; line-height: 1;
+  color: var(--perfume-ok); font-variant-numeric: tabular-nums;
 }
-.perfume-transfer__chip span { font-size: 1.2rem; font-weight: 600; color: var(--perfume-ok); }
-.perfume-transfer__microcopy { margin: 0.6rem 0 0; font-size: 1.2rem; opacity: 0.7; }
-.perfume-cuotas { margin: 1rem 0 0; font-size: 1.35rem; opacity: 0.85; }
-.perfume-cuotas .installments__more { opacity: 0.65; }
+.perfume-transfer__chip span {
+  font-size: 1.05rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--perfume-ok);
+  background: rgba(36, 106, 69, 0.10);
+  border-radius: 999px; padding: 0.3rem 0.9rem;
+}
+.perfume-transfer__microcopy { margin: 0.6rem 0 0; font-size: 1.15rem; color: rgba(var(--color-foreground), 0.55); }
 
-/* ---- selector radio-cards ---- */
-.perfume-selector { border: 0; padding: 0; margin: 2.2rem 0 0; min-width: 0; }
+/* Cuotas: gris, discretas. */
+.perfume-cuotas { margin: 1.1rem 0 0; font-size: 1.3rem; line-height: 1.4; color: rgba(var(--color-foreground), 0.6); }
+.perfume-cuotas .installments__amount { color: rgba(var(--color-foreground), 0.85); font-weight: 600; }
+.perfume-cuotas .installments__more { color: rgba(var(--color-foreground), 0.6); }
+
+/* ---- selector radio-cards · selección clarísima + $/ml jerárquico ---- */
+.perfume-selector { border: 0; padding: 0; margin: 2.4rem 0 0; min-width: 0; }
 .perfume-selector__legend {
-  font-size: 1.3rem; letter-spacing: 0.08rem; text-transform: uppercase;
-  opacity: 0.7; margin: 0 0 1.1rem; padding: 0;
+  font-family: var(--font-body, var(--font-body-family));
+  font-size: 1.15rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.6);
+  margin: 0 0 1.1rem; padding: 0;
 }
 .perfume-card {
   display: flex; align-items: center; gap: 1.3rem;
   border: 0.15rem solid rgba(var(--color-foreground), 0.14);
-  border-radius: 1rem; padding: 1.2rem 1.4rem; margin-bottom: 0.9rem;
+  border-radius: 1rem; padding: 1.3rem 1.4rem; margin-bottom: 0.9rem;
   background: rgb(var(--color-background));
   cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color var(--perfume-dur-select) var(--perfume-ease-select),
+              background   var(--perfume-dur-select) var(--perfume-ease-select),
+              box-shadow   var(--perfume-dur-select) var(--perfume-ease-select),
+              transform    var(--perfume-dur-tap)    var(--perfume-ease-select);
 }
+.perfume-card:active { transform: scale(0.97); }
 .perfume-card__input:checked + .perfume-card {
   border-color: var(--perfume-accent);
-  box-shadow: inset 0 0 0 0.1rem var(--perfume-accent);
-  background: rgba(var(--perfume-accent-rgb), 0.04);
+  background: #FCF7EF;
+  box-shadow: 0 6px 18px rgba(143, 67, 41, 0.10);
 }
 .perfume-card__input:focus-visible + .perfume-card {
   outline: 0.2rem solid var(--perfume-accent-ink); outline-offset: 0.2rem;
 }
-.perfume-card__input.disabled + .perfume-card { opacity: 0.55; }
+.perfume-card__input.disabled + .perfume-card { opacity: 0.5; }
 .perfume-card__radio {
   width: 2rem; height: 2rem; border-radius: 50%;
-  border: 0.2rem solid rgba(var(--color-foreground), 0.3);
-  flex: none; display: grid; place-items: center;
-  transition: border-color 0.2s ease;
+  border: 0.2rem solid #C7BBA6; flex: none; display: grid; place-items: center;
+  transition: border-color var(--perfume-dur-select) var(--perfume-ease-select),
+              background    var(--perfume-dur-select) var(--perfume-ease-select);
 }
-.perfume-card__input:checked + .perfume-card .perfume-card__radio { border-color: var(--perfume-accent); }
+.perfume-card__input:checked + .perfume-card .perfume-card__radio {
+  border-color: var(--perfume-accent); background: var(--perfume-accent);
+}
 .perfume-card__radio i {
-  width: 1rem; height: 1rem; border-radius: 50%;
-  background: var(--perfume-accent); transform: scale(0); transition: transform 0.2s ease;
+  width: 0.7rem; height: 0.4rem; margin-top: -0.1rem;
+  border-left: 0.2rem solid #fff; border-bottom: 0.2rem solid #fff;
+  transform: rotate(-45deg) scale(0); transform-origin: center;
+  transition: transform var(--perfume-dur-select) var(--perfume-ease-select);
 }
-.perfume-card__input:checked + .perfume-card .perfume-card__radio i { transform: scale(1); }
+.perfume-card__input:checked + .perfume-card .perfume-card__radio i { transform: rotate(-45deg) scale(1); }
 .perfume-card__body { flex: 1 1 auto; min-width: 0; }
 .perfume-card__name { font-weight: 600; font-size: 1.45rem; display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
-.perfume-card__sub { display: block; font-size: 1.2rem; opacity: 0.6; margin-top: 0.2rem; }
-.perfume-card__sub--out { color: var(--perfume-alert); opacity: 1; font-weight: 600; }
+.perfume-card__sub { display: block; font-size: 1.2rem; color: rgba(var(--color-foreground), 0.6); margin-top: 0.2rem; }
+.perfume-card__sub--out { color: var(--perfume-alert); font-weight: 600; }
 .perfume-card__price { text-align: right; flex: none; }
 .perfume-card__price b {
-  display: block; font-family: var(--font-display); font-size: 2.2rem;
-  line-height: 1; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; font-weight: 400;
+  display: block; font-family: var(--font-display); font-weight: 400;
+  font-size: 2.3rem; line-height: 1; letter-spacing: 0.02em; font-variant-numeric: tabular-nums;
 }
-.perfume-card__perml { font-family: var(--font-display); font-size: 1.3rem; letter-spacing: 0.04em; color: var(--perfume-accent-ink); }
-.perfume-card__perml.is-muted { color: rgba(var(--color-foreground), 0.45); }
-.perfume-card__perml.is-best { color: var(--perfume-ok); }
+.perfume-card__perml { font-family: var(--font-display); font-size: 1.25rem; letter-spacing: 0.04em; color: var(--perfume-accent-ink); }
+.perfume-card__perml.is-muted { color: rgba(var(--color-foreground), 0.45); font-size: 1.15rem; }
+.perfume-card__perml.is-best  { color: var(--perfume-ok); }
 .perfume-badge {
-  font-size: 1rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-  border-radius: 0.3rem; padding: 0.2rem 0.6rem; white-space: nowrap;
+  font-size: 0.95rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  border-radius: 0.4rem; padding: 0.2rem 0.7rem; white-space: nowrap; line-height: 1.4;
 }
-.perfume-badge--top { color: var(--perfume-accent-ink); background: rgba(var(--perfume-accent-rgb), 0.12); border: 0.1rem solid rgba(var(--perfume-accent-rgb), 0.4); }
-.perfume-badge--ml { color: var(--perfume-ok); background: var(--perfume-ok-bg); border: 0.1rem solid var(--perfume-ok-line); }
+.perfume-badge--top { color: var(--perfume-accent-ink); background: rgba(var(--perfume-accent-rgb), 0.12); border: 0.1rem solid rgba(var(--perfume-accent-rgb), 0.40); }
+.perfume-badge--ml  { color: var(--perfume-ok); background: var(--perfume-ok-bg); border: 0.1rem solid var(--perfume-ok-line); }
 .perfume-decant-note {
   font-size: 1.2rem; color: var(--perfume-alert);
   background: var(--perfume-alert-bg); border: 0.1rem solid var(--perfume-alert-line);
-  border-radius: 0.6rem; padding: 0.9rem 1.2rem; margin-top: 0.4rem; line-height: 1.45;
+  border-radius: 0.8rem; padding: 0.9rem 1.2rem; margin-top: 0.4rem; line-height: 1.45;
 }
 .perfume-decant-note > :first-child { margin-top: 0; }
 .perfume-decant-note > :last-child { margin-bottom: 0; }
 
+/* ---- ATC buttons: tipografía Bebas (como el mockup) + feedback de tap ---- */
+/* `font-size`/`font-weight` con !important para ganarle al bloque global heredado
+   (base.css → `.button,button[type="submit"]{font-size:1rem!important;font-weight:600!important}`).
+   El payment button ("Comprar ahora") = .shopify-payment-button__button--unbranded. */
+.product-form__buttons .button,
+.product-form__buttons .shopify-payment-button__button--unbranded {
+  font-family: var(--font-display);
+  font-weight: 400 !important;
+  font-size: 2.1rem !important;
+  letter-spacing: 0.06em;
+  transition: transform var(--perfume-dur-tap) var(--perfume-ease-select),
+              background-color var(--perfume-dur-select) var(--perfume-ease-select),
+              box-shadow var(--perfume-dur-select) var(--perfume-ease-select);
+}
+.product-form__buttons .button:active,
+.product-form__buttons .shopify-payment-button__button--unbranded:active { transform: scale(0.97); }
+/* "Comprar ahora" (checkout dinámico) NO entra en el flex-center de base.css
+   (esa regla excluye .shopify-payment-button__button--unbranded), y como el botón
+   es flex por el spinner, el texto cae a la izquierda → lo centro acá. */
+.product-form__buttons .shopify-payment-button__button--unbranded {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* "Comprar ahora" (dynamic checkout) = acción SECUNDARIA en la paleta Paper/Terracota:
+   borde terracota + texto tinta + fondo papel, jerárquicamente debajo del ATC sólido.
+   Sense lo pinta con --color-button (oscuro/casi negro); lo neutralizamos. !important
+   para ganarle a section-main-product.css, y matamos los anillos ::before/::after de Dawn
+   (que dibujan el borde/sombra con el color de botón oscuro). */
+.product-form__buttons .shopify-payment-button__button--unbranded {
+  background: rgb(var(--color-background)) !important;
+  color: rgb(var(--color-foreground)) !important;
+  border: 0.15rem solid var(--perfume-accent-ink) !important;
+}
+.product-form__buttons .shopify-payment-button__button--unbranded::before { box-shadow: none !important; }
+.product-form__buttons .shopify-payment-button__button--unbranded::after { display: none !important; }
+.product-form__buttons .shopify-payment-button__button--unbranded:hover,
+.product-form__buttons .shopify-payment-button__button--unbranded:hover:not([disabled]) {
+  background: rgba(var(--perfume-accent-rgb), 0.06) !important;
+}
+
 /* ---- pay reassurance ---- */
-.perfume-pay { margin: 1.2rem 0 0; font-size: 1.2rem; opacity: 0.6; text-align: center; }
+.perfume-pay { margin: 1.2rem 0 0; font-size: 1.1rem; color: rgba(var(--color-foreground), 0.55); text-align: center; letter-spacing: 0.02em; }
 
 /* ---- trust strip ---- */
 .perfume-trust {
   display: flex; gap: 1.1rem; align-items: flex-start;
-  margin-top: 1.8rem; padding: 1.3rem 1.4rem;
+  margin-top: 2rem; padding: 1.3rem 1.4rem;
   border: 0.1rem solid rgba(var(--color-foreground), 0.12);
   border-radius: 0.8rem; background: rgb(var(--color-background));
 }
@@ -791,7 +924,7 @@
 
 /* ---- shipping ---- */
 .perfume-ship {
-  margin-top: 1.8rem; border: 0.1rem solid rgba(var(--color-foreground), 0.12);
+  margin-top: 2.4rem; border: 0.1rem solid rgba(var(--color-foreground), 0.12);
   border-radius: 0.8rem; overflow: hidden;
 }
 .perfume-ship__row { display: flex; gap: 1.1rem; align-items: flex-start; padding: 1.2rem 1.4rem; }
@@ -806,41 +939,40 @@
 /* ---- ficha: notes + meters ---- */
 .perfume-ficha { margin-top: 2.4rem; }
 .perfume-note {
-  font-size: 1.2rem; color: rgba(var(--color-foreground), 0.8);
+  font-size: 1.25rem; font-weight: 400; color: rgba(var(--color-foreground), 0.78);
   background: rgb(var(--color-background));
   border: 0.1rem solid rgba(var(--color-foreground), 0.14);
-  border-radius: 0.4rem; padding: 0.5rem 1rem; line-height: 1.2;
+  border-radius: 0.4rem; padding: 0.6rem 1.1rem; line-height: 1.2;
 }
 .perfume-ficha__group { margin-top: 1.6rem; }
-.perfume-ficha__label { font-size: 1.1rem; opacity: 0.55; margin: 0 0 0.7rem; }
 .perfume-meters {
   display: flex; flex-wrap: wrap; gap: 2rem 2.4rem;
-  margin-top: 1.6rem; padding-top: 1.6rem;
-  border-top: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  margin-top: 1.8rem; padding-top: 1.8rem;
+  border-top: 0.1rem solid rgba(var(--color-foreground), 0.08);
 }
 .perfume-meter__bar { display: flex; align-items: center; gap: 0.9rem; }
 .perfume-bars { display: inline-flex; gap: 0.4rem; }
-.perfume-bars i { width: 2rem; height: 0.6rem; border-radius: 0.3rem; background: rgba(var(--color-foreground), 0.15); }
+.perfume-bars i { width: 2rem; height: 0.6rem; border-radius: 0.3rem; background: #E2D8C4; }
 .perfume-bars i.on { background: var(--perfume-accent); }
-.perfume-meter__v { font-weight: 600; font-size: 1.2rem; opacity: 0.85; }
+.perfume-meter__v { font-weight: 600; font-size: 1.25rem; color: rgba(var(--color-foreground), 0.78); }
 .perfume-occ { display: flex; flex-wrap: wrap; gap: 0.7rem; }
 .perfume-occ span {
-  display: inline-flex; align-items: center; font-size: 1.2rem;
-  color: rgba(var(--color-foreground), 0.8); background: rgb(var(--color-background));
-  border: 0.1rem solid rgba(var(--color-foreground), 0.14); border-radius: 0.4rem; padding: 0.5rem 1rem;
+  display: inline-flex; align-items: center; gap: 0.6rem; font-size: 1.25rem;
+  color: rgba(var(--color-foreground), 0.78); background: rgb(var(--color-background));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.14); border-radius: 0.4rem; padding: 0.6rem 1rem;
 }
 
-/* ---- description + inspired ---- */
-.perfume-description { margin-top: 2.2rem; }
-.perfume-inspired { margin-top: 1.6rem; border-left: 0.2rem solid var(--perfume-accent); padding-left: 1.2rem; }
-.perfume-inspired__text { font-size: 1.3rem; opacity: 0.85; margin: 0; }
-.perfume-inspired__legal { display: block; margin-top: 0.5rem; font-size: 1.1rem; opacity: 0.6; line-height: 1.5; }
-@media (prefers-reduced-motion: reduce) {
-  .perfume-card,
-  .perfume-card__radio,
-  .perfume-card__radio i { transition: none; }
+/* ---- description (aroma en Fraunces itálica) + inspired ---- */
+.perfume-description { margin-top: 2.4rem; }
+.perfume-description p {
+  font-family: var(--font-accent); font-style: italic; font-weight: 400;
+  font-size: 1.8rem; line-height: 1.5; color: rgb(var(--color-foreground)); margin: 0;
 }
-/* Precio grande en Bebas (token --fs-price-pdp). El tachado (compare-at) queda chico. */
+.perfume-description p + p { margin-top: 1.3rem; }
+.perfume-inspired { margin-top: 1.6rem; border-left: 0.2rem solid var(--perfume-accent); padding-left: 1.2rem; }
+.perfume-inspired__text { font-size: 1.3rem; color: rgba(var(--color-foreground), 0.8); margin: 0; line-height: 1.5; }
+.perfume-inspired__legal { display: block; margin-top: 0.5rem; font-size: 1.1rem; color: rgba(var(--color-foreground), 0.55); line-height: 1.5; }
+/* Precio de lista domina (Bebas). El tachado (compare-at) queda chico. */
 .product__info-container .price .price-item {
   font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
@@ -848,8 +980,25 @@
 }
 .product__info-container .price--large .price__regular .price-item,
 .product__info-container .price--large .price__sale .price-item--sale {
-  font-size: clamp(4rem, 8vw, 5.4rem);
-  line-height: 1;
+  font-size: clamp(4.6rem, 13vw, 5.6rem);
+  line-height: 0.9;
+}
+
+/* ---- Foco visible AA ---- */
+.product__info-container a:focus-visible,
+.product__info-container .button:focus-visible,
+.thumbnail:focus-visible,
+.sticky-atc__button:focus-visible {
+  outline: 0.2rem solid var(--perfume-accent); outline-offset: 0.2rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .perfume-card, .perfume-card__radio, .perfume-card__radio i,
+  .product-form__buttons .button, .product-form__buttons .shopify-payment-button__button--unbranded,
+  .sticky-atc, .sticky-atc__button,
+  .product__media-wrapper .product__media img { transition: none; }
+  .perfume-card:active, .product-form__buttons .button:active,
+  .product-form__buttons .shopify-payment-button__button--unbranded:active,
+  .sticky-atc__button:active { transform: none; }
 }
 {% endstylesheet %}
 

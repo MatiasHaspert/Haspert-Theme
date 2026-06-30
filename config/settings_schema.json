@@ -1457,8 +1457,8 @@
     "settings": [
       { "type": "checkbox", "id": "free_ship_enabled", "label": "Activar barra de envío gratis", "default": true },
       { "type": "number", "id": "free_ship_threshold", "label": "Umbral de envío gratis (en pesos)", "default": 200000 },
-      { "type": "text", "id": "free_ship_text", "label": "Texto en progreso", "default": "Te faltan {amount} para el ENVÍO GRATIS 🚚", "info": "Usá {amount} donde va el monto restante." },
-      { "type": "text", "id": "free_ship_success", "label": "Texto al llegar", "default": "🎉 ¡Tenés ENVÍO GRATIS!" },
+      { "type": "text", "id": "free_ship_text", "label": "Texto en progreso", "default": "Te faltan {amount} para el envío gratis", "info": "Usá {amount} donde va el monto restante. El ícono ya lo pone la sección (SVG), no agregues emojis." },
+      { "type": "text", "id": "free_ship_success", "label": "Texto al llegar", "default": "¡Tenés envío gratis!" },
       { "type": "color", "id": "free_ship_bar_color", "label": "Color de la barra", "default": "#B25A3C" }
     ]
   },

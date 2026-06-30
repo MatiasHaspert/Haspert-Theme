@@ -1,10 +1,12 @@
 {%- comment -%}
   Barra de progreso de envío gratis (AOV).
   Lee settings globales (Theme settings → Envío gratis) + el carrito.
-  Se actualiza solo porque se renderiza dentro de zonas del carrito que re-renderizan
-  (cart notification y .js-contents del carrito). Precio/umbral desde Shopify, nada hardcodeado.
+  En el carrito/notificación se re-renderiza solo (zonas .js-contents / cart-notification).
+  En la PDP se renderiza estática como meta de AOV: visible aun con el carrito vacío
+  (muestra "te faltan $[umbral]"); refleja el carrito al cargar la página, no en vivo.
+  Precio/umbral desde Shopify, nada hardcodeado.
 {%- endcomment -%}
-{%- if settings.free_ship_enabled and settings.free_ship_threshold > 0 and cart.item_count > 0 -%}
+{%- if settings.free_ship_enabled and settings.free_ship_threshold > 0 -%}
   {%- liquid
     assign threshold = settings.free_ship_threshold | times: 100
     assign current = cart.total_price
@@ -19,7 +21,13 @@
       assign amount_str = remaining | money
       assign message = settings.free_ship_text | replace: '{amount}', amount_str
     endif
-    assign bar_color = settings.free_ship_bar_color | default: '#B25A3C'
+    comment
+      Color a prueba de balas: un setting `color` sin guardar puede stringificar a algo
+      NO vacío (p. ej. 'none' o un objeto truthy), así que ni `append: ''` ni `default`
+      lo atrapan y el relleno queda sin color (gris). Por eso NO confiamos en el valor:
+      el CSS pone un literal terracota como base y sólo aplica `bar_color` si es hex válido.
+    endcomment
+    assign bar_color = settings.free_ship_bar_color | append: ''
   -%}
   <div class="free-ship{% if reached %} free-ship--reached{% endif %}">
     <p class="free-ship__text">{{ message }}</p>
@@ -32,23 +40,30 @@
       aria-valuenow="{{ pct }}"
       aria-valuetext="{{ message | strip_html | escape }}"
     >
-      <div class="free-ship__fill" style="width: {{ pct }}%; background-color: {{ bar_color }};"></div>
+      <div class="free-ship__fill" style="width: {{ pct }}%;"></div>
     </div>
   </div>
   {%- style -%}
     .free-ship { margin: 0 0 1.6rem; }
     .free-ship__text { margin: 0 0 0.8rem; font-size: 1.4rem; text-align: center; font-weight: 500; }
     .free-ship__track {
-      height: 0.8rem;
-      border-radius: 1rem;
-      background: rgba(var(--color-foreground), 0.12);
+      height: 0.6rem;
+      border-radius: 999px;
+      background: rgba(var(--color-foreground), 0.08);
       overflow: hidden;
     }
-    .free-ship__fill {
+    /* `display: block` para anular la regla global `div:empty { display:none }` de
+       base.css (L468): el fill es un <div> vacío a propósito y se ocultaba entero.
+       2 clases (0,2,0) > especificidad de `div:empty` (0,1,1) → gana sin !important. */
+    .free-ship__track .free-ship__fill {
+      display: block;
       height: 100%;
-      min-width: 0.8rem;
-      background-color: {{ bar_color }};
-      border-radius: 1rem;
+      min-width: 0.6rem;
+      background-color: #B25A3C; /* terracota base (vale aunque el setting venga vacío/none) */
+      {%- if bar_color contains '#' %}
+      background-color: {{ bar_color }}; /* override del merchant sólo si es un hex válido */
+      {%- endif %}
+      border-radius: 999px;
       transition: width 0.4s ease;
     }
     @media (prefers-reduced-motion: reduce) {
