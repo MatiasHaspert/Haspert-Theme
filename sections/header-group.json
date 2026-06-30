@@ -42,8 +42,8 @@
         "item_cuotas"
       ],
       "settings": {
-        "bg_color": "#8F4329",
-        "text_color": "#FFFFFF",
+        "bg_color": "#8f4329",
+        "text_color": "#ffffff",
         "font_size": 16,
         "speed": 10,
         "speed_mobile": 10,
@@ -62,12 +62,12 @@
         "show_line_separator": false,
         "color_scheme": "scheme-1",
         "menu_color_scheme": "scheme-1",
-        "enable_country_selector": true,
-        "enable_language_selector": true,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
         "enable_customer_avatar": true,
         "margin_bottom": 0,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "padding_top": 12,
+        "padding_bottom": 12
       }
     }
   },
