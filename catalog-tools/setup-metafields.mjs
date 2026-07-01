@@ -4,6 +4,7 @@
 // (Settings → Custom data → Products / Variants), para que un no-dev edite sin romper filtros.
 //
 //   node setup-metafields.mjs
+//   node setup-metafields.mjs --dry-run   # muestra qué crearía/actualizaría, sin escribir
 //
 // Contrato verificado en el theme (no cambiar namespace/key/type sin tocar el Liquid):
 //   PRODUCT:  sections/main-product.liquid · snippets/card-product.liquid
@@ -14,6 +15,7 @@
 import { gql, loadDotEnv } from './lib/shopify.mjs';
 
 await loadDotEnv();
+const DRY = process.argv.includes('--dry-run');
 
 const LIST = 'list.single_line_text_field';
 const TEXT = 'single_line_text_field';
@@ -32,6 +34,11 @@ const PRODUCT_FIELDS = [
       'Dulce/Gourmand', 'Frutal', 'Fresco/Acuático', 'Cuero', 'Chipre', 'Fougère', 'Almizclado',
     ],
     listMin: 1, listMax: 20,
+  },
+  {
+    name: 'Casa', key: 'casa', type: TEXT,
+    description: 'Tipo de casa / origen de la marca. Facet PRIMARIO del catálogo (colecciones Árabes / Diseñador / Nicho). Lista cerrada.',
+    choices: ['Árabe', 'Diseñador', 'Nicho'],
   },
   { name: 'Notas de salida', key: 'notas_salida', type: LIST, description: 'Notas de la pirámide (salida). Texto libre (hay cientos de notas).' },
   { name: 'Notas de corazón', key: 'notas_corazon', type: LIST, description: 'Notas de la pirámide (corazón). Texto libre.' },
@@ -107,6 +114,20 @@ function buildValidations(f) {
   return v;
 }
 
+// Campos FACETABLES: llevan las capabilities `smartCollectionCondition` (armar colecciones
+// automáticas por regla — create-collections / create-landing) y `adminFilterable` (filtrar
+// productos en el admin) HABILITADAS. Sin esto, `collectionCreate` con una regla
+// PRODUCT_METAFIELD_DEFINITION sobre el campo rebota. Verificado (2026-04): crear una
+// definición NO auto-habilita estas capabilities → hay que pedirlas explícitas.
+const FACET_KEYS = new Set([
+  'familia_olfativa', 'casa', 'genero', 'ocasion', 'estacion', 'longevidad', 'concentracion',
+]);
+const isFacet = (f) => FACET_KEYS.has(f.key);
+const FACET_CAPS = {
+  smartCollectionCondition: { enabled: true },
+  adminFilterable: { enabled: true },
+};
+
 const CREATE = `
   mutation CreateDef($definition: MetafieldDefinitionInput!) {
     metafieldDefinitionCreate(definition: $definition) {
@@ -125,11 +146,12 @@ const UPDATE = `
   }
 `;
 
-// Capabilities actuales (smart collection / admin filter): si una definición ya
-// se usa en una colección automática, hay que re-enviarlas o el update rebota
-// con CAPABILITY_CANNOT_BE_DISABLED. Sólo aplica a PRODUCT (las variantes no
-// arman smart collections), así que las prefetcheamos sólo para ese ownerType.
-async function fetchCapabilities(ownerType) {
+// Definiciones existentes (keys + capabilities). Las capabilities importan porque:
+//   - un facet ya en uso rebota el update con CAPABILITY_CANNOT_BE_DISABLED si no se re-envían;
+//   - habilitar (enable) nunca rebota, así que a los facets les forzamos ON.
+// Sólo usamos capByKey para PRODUCT (las variantes no arman smart collections ni admin filter);
+// las `keys` sirven para el reporte de --dry-run en ambos ownerTypes.
+async function fetchDefs(ownerType) {
   const data = await gql(`{
     metafieldDefinitions(first: 100, ownerType: ${ownerType}, namespace: "custom") {
       nodes {
@@ -141,21 +163,26 @@ async function fetchCapabilities(ownerType) {
       }
     }
   }`);
-  const byKey = {};
+  const caps = {};
+  const keys = new Set();
   for (const n of data.metafieldDefinitions.nodes) {
-    byKey[n.key] = {
+    keys.add(n.key);
+    caps[n.key] = {
       smartCollectionCondition: { enabled: n.capabilities.smartCollectionCondition.enabled },
       adminFilterable: { enabled: n.capabilities.adminFilterable.enabled },
     };
   }
-  return byKey;
+  return { keys, caps };
 }
 
 // Crea o, si ya existe (TAKEN), actualiza la definición. Devuelve 'created' | 'updated' | 'error'.
-async function ensureDefinition(f, ownerType, capByKey) {
+async function ensureDefinition(f, ownerType, { dry, keys, capByKey }) {
   const validations = buildValidations(f);
 
-  // 1) Intento crear.
+  // --dry-run: no escribe; deduce la acción por si la key ya existe.
+  if (dry) return keys.has(f.key) ? 'updated' : 'created';
+
+  // 1) Intento crear (los facets nacen con las capabilities habilitadas).
   const createData = await gql(CREATE, {
     definition: {
       name: f.name,
@@ -166,6 +193,7 @@ async function ensureDefinition(f, ownerType, capByKey) {
       ownerType,
       pin: true,
       validations,
+      ...(isFacet(f) ? { capabilities: FACET_CAPS } : {}),
     },
   });
   const cRes = createData.metafieldDefinitionCreate;
@@ -188,8 +216,10 @@ async function ensureDefinition(f, ownerType, capByKey) {
     pin: true,
     validations,
   };
-  // Preservar capabilities si la definición ya existe (smart collection / filtro admin).
-  if (capByKey && capByKey[f.key]) updateDefinition.capabilities = capByKey[f.key];
+  // Facets → forzar capabilities ON (enable nunca rebota; corrige las que estaban OFF).
+  // Resto → preservar lo que haya (evita CAPABILITY_CANNOT_BE_DISABLED en las ya en uso).
+  if (isFacet(f)) updateDefinition.capabilities = FACET_CAPS;
+  else if (capByKey && capByKey[f.key]) updateDefinition.capabilities = capByKey[f.key];
 
   const updateData = await gql(UPDATE, { definition: updateDefinition });
   const uRes = updateData.metafieldDefinitionUpdate;
@@ -204,17 +234,25 @@ let created = 0;
 let updated = 0;
 
 async function run(fields, ownerType, label) {
-  const capByKey = ownerType === 'PRODUCT' ? await fetchCapabilities(ownerType) : null;
+  const { keys, caps } = await fetchDefs(ownerType);
+  const capByKey = ownerType === 'PRODUCT' ? caps : null;
   console.log(`\n${label}:`);
   for (const f of fields) {
-    const result = await ensureDefinition(f, ownerType, capByKey);
+    const result = await ensureDefinition(f, ownerType, { dry: DRY, keys, capByKey });
     const extra = f.choices ? ` · ${f.choices.length} opciones` : '';
+    // Aviso de facet: marcá si va a HABILITAR capabilities que hoy están OFF.
+    let facetNote = '';
+    if (isFacet(f)) {
+      const cur = caps[f.key];
+      const off = !cur || !cur.smartCollectionCondition.enabled || !cur.adminFilterable.enabled;
+      facetNote = off ? ' · facet→habilita smart+filter' : ' · facet✓';
+    }
     if (result === 'created') {
       created++;
-      console.log(`  ✓ creada      custom.${f.key} (${f.type})${extra}`);
+      console.log(`  ${DRY ? '+ crearía     ' : '✓ creada      '}custom.${f.key} (${f.type})${extra}${facetNote}`);
     } else if (result === 'updated') {
       updated++;
-      console.log(`  ↻ actualizada custom.${f.key}${extra}`);
+      console.log(`  ${DRY ? '↻ actualizaría ' : '↻ actualizada  '}custom.${f.key}${extra}${facetNote}`);
     }
   }
 }
@@ -222,5 +260,5 @@ async function run(fields, ownerType, label) {
 await run(PRODUCT_FIELDS, 'PRODUCT', 'Producto');
 await run(VARIANT_FIELDS, 'PRODUCTVARIANT', 'Variante');
 
-console.log(`\nListo: ${created} creadas, ${updated} actualizadas.`);
+console.log(`\nListo: ${created} ${DRY ? 'a crear' : 'creadas'}, ${updated} ${DRY ? 'a actualizar' : 'actualizadas'}${DRY ? ' · DRY-RUN (no escribió nada)' : ''}.`);
 console.log('Verificá en Admin → Settings → Custom data → Products y → Variants.');

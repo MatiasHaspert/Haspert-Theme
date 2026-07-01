@@ -309,7 +309,7 @@
       "empty_text": "Imported originals, curated one by one. Start with a decant if you want to try before you invest.",
       "empty_cta": "Explore the catalog",
       "empty_shipping": "Shipping nationwide",
-      "transfer_label": "With bank transfer",
+      "transfer_label": "With bank transfer you save",
       "transfer_code_html": "Enter the code <code>{{ code }}</code> at checkout.",
       "or": "or",
       "remove_title": "Remove {{ title }}",

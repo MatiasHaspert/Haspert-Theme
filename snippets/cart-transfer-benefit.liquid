@@ -21,6 +21,7 @@
       assign show_transfer = true
       assign factor = 100 | minus: settings.transfer_pct
       assign transfer_price = cart.items_subtotal_price | times: factor | divided_by: 100
+      assign transfer_savings = cart.items_subtotal_price | minus: transfer_price
     endif
   -%}
   {%- capture cuotas_html -%}{% render 'installments', price: cart.items_subtotal_price, layout: 'cart' %}{%- endcapture -%}
@@ -28,16 +29,19 @@
 
   {%- if show_transfer or cuotas_html != blank -%}
     <div class="nc-pay">
+      {%- comment -%}
+        Se muestra el AHORRO (transfer_savings), no un 2º precio: el total manda arriba y acá
+        se comunica cuánto se ahorra con transferencia. transfer_savings es derivado (no cambia
+        el cálculo de transfer_price ni de cuotas). NUNCA se tacha un precio.
+      {%- endcomment -%}
       {%- if show_transfer -%}
-        <div class="nc-pay__transfer">
-          <span class="nc-pay__label">
-            {{- 'sections.cart.transfer_label' | t -}}
-            <span class="nc-pay__off">{{ settings.transfer_pct }}% OFF</span>
-          </span>
-          <span class="nc-pay__val">{{ transfer_price | money }}</span>
-        </div>
+        <p class="nc-pay__line">
+          <span class="nc-pay__label">{{ 'sections.cart.transfer_label' | t }}</span>
+          <span class="nc-pay__save">{{ transfer_savings | money }}</span>
+          <span class="nc-pay__off">{{ settings.transfer_pct }}% OFF</span>
+        </p>
         {%- if settings.transfer_code != blank -%}
-          <p class="nc-pay__code">
+          <p class="nc-pay__fine">
             {{- 'sections.cart.transfer_code_html' | t: code: settings.transfer_code -}}
           </p>
         {%- endif -%}

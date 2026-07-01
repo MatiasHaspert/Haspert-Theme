@@ -12,6 +12,8 @@
     "dry": "node load-catalog.mjs --dry-run",
     "load": "node load-catalog.mjs",
     "collections": "node create-collections.mjs",
+    "landing": "node create-landing-collections.mjs",
+    "audit": "node audit-metafield-values.mjs",
     "stock": "node set-stock.mjs",
     "pull": "node pull-stock.mjs"
   },

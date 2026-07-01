@@ -8,11 +8,14 @@
     <path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
     <path d="M8.5 12l2.2 2.2 4.3-4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
-  <b>{{ 'sections.cart.trust_original' | t }}</b>
-  <span class="nc-trust__dot" aria-hidden="true"></span>
-  {{ 'sections.cart.trust_returns' | t }}
+  {%- comment -%}
+    Cada token va en su propio .nc-trust__seg (nowrap). El separador "·" lo pone el CSS
+    con ::before del segmento, así viaja SIEMPRE con su texto → si la línea wrapea en
+    mobile, nunca queda un "·" huérfano colgando al final de un renglón.
+  {%- endcomment -%}
+  <span class="nc-trust__seg"><b>{{ 'sections.cart.trust_original' | t }}</b></span>
+  <span class="nc-trust__seg">{{ 'sections.cart.trust_returns' | t }}</span>
   {%- if settings.dispatch_today_enabled -%}
-    <span class="nc-trust__dot" aria-hidden="true"></span>
-    {{ 'sections.cart.trust_dispatch' | t }}
+    <span class="nc-trust__seg">{{ 'sections.cart.trust_dispatch' | t }}</span>
   {%- endif -%}
 </p>

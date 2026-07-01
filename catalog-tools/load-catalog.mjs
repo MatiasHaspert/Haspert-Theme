@@ -93,8 +93,13 @@ function buildMetafields(row) {
   const text = (key, val) => {
     if (val && String(val).trim()) mf.push({ namespace: 'custom', key, type: 'single_line_text_field', value: String(val).trim() });
   };
+  const int = (key, val) => {
+    const n = toInt(val);
+    if (n > 0) mf.push({ namespace: 'custom', key, type: 'number_integer', value: String(n) });
+  };
 
   list('familia_olfativa', row.familia_olfativa);
+  text('casa', row.casa); // facet primario (Árabe/Diseñador/Nicho) → colecciones por casa
   list('notas_salida', row.notas_salida);
   list('notas_corazon', row.notas_corazon);
   list('notas_fondo', row.notas_fondo);
@@ -102,8 +107,15 @@ function buildMetafields(row) {
   text('concentracion', row.concentracion);
   text('longevidad', row.longevidad);
   text('estela', row.estela);
+  list('ocasion', row.ocasion); // lista cerrada (separá con ;) → landing "Para la noche"
+  list('estacion', row.estacion); // lista cerrada (separá con ;) → landing "Frescos para el verano"
   text('pais_origen', row.pais_origen);
   text('inspirado_en', row.inspirado_en); // LEGAL: cargar con criterio
+  // IMPORTANTE: productSet BORRA los metafields custom que no se incluyan. Todo metafield que
+  // queramos conservar tiene que escribirse acá. anio_lanzamiento (columna) + tamano_frasco_ml
+  // (derivado de frasco_ml) se escriben para no perderlos al reestructurar un producto.
+  int('anio_lanzamiento', row.anio_lanzamiento);
+  int('tamano_frasco_ml', row.frasco_ml);
 
   // boolean: en blanco asume true (garantía de originalidad por defecto)
   const garantizado = row.original_garantizado === '' || row.original_garantizado == null ? true : truthy(row.original_garantizado);

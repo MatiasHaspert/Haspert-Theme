@@ -54,22 +54,39 @@ debe usar exactamente esos textos o `productSet` rebota con `INVALID_METAFIELD`:
 | campo | valores válidos |
 |---|---|
 | `familia_olfativa` | Amaderado · Oriental/Ámbar · Floral · Cítrico · Aromático · Especiado · Dulce/Gourmand · Frutal · Fresco/Acuático · Cuero · Chipre · Fougère · Almizclado |
+| `casa` | Árabe · Diseñador · Nicho |
 | `genero` | Masculino · Femenino · Unisex |
+| `ocasion` | Diario · Oficina · Casual/Fin de semana · Noche · Formal/Evento · Cita romántica · Deporte |
+| `estacion` | Primavera · Verano · Otoño · Invierno · Todo el año |
 | `concentracion` | Eau Fraîche · Eau de Cologne (EDC) · Eau de Toilette (EDT) · Eau de Parfum (EDP) · Eau de Parfum Intense · Parfum/Extrait · Attar / Aceite |
 | `longevidad` | Baja (2–4h) · Moderada (4–6h) · Larga (6–8h) · Muy larga (8–12h) · Eterna (12h+) |
 | `estela` | Íntima · Moderada · Notable · Enorme |
 
-Para cambiar estas listas, editá `FIELDS` en `setup-metafields.mjs` y re-corré `npm run setup`.
+Para cambiar estas listas, editá `PRODUCT_FIELDS` en `setup-metafields.mjs` y re-corré `npm run setup`.
 `familia_olfativa` y `genero` están en uso en smart collections; el script re-envía las
 `capabilities` para poder editarlos (sin eso rebota con `CAPABILITY_CANNOT_BE_DISABLED`).
+
+**Facets (capabilities).** Los campos facetables (`FACET_KEYS` en el script: `familia_olfativa`,
+`casa`, `genero`, `ocasion`, `estacion`, `longevidad`, `concentracion`) se crean/actualizan con las
+capabilities `smartCollectionCondition` (armar colecciones automáticas por regla) y `adminFilterable`
+(filtrar en el admin) **habilitadas**. Verificado en 2026-04: crear una definición **no** las
+auto-habilita → sin esto, `create-collections` / `create-landing` rebotan al armar la regla.
+`npm run setup` también soporta `--dry-run` (no escribe; muestra qué crearía/actualizaría y qué
+capabilities habilitaría).
 
 ## 3. Cargar el catálogo
 
 Editá `perfumes.xlsx` en Excel (o Google Sheets / LibreOffice). Primera hoja, fila 1 = headers
 (no la cambies de orden ni de nombre), una fila por perfume.
 
-- Listas (familia, notas) → separá con `;` dentro de la celda: `Amaderado;Oriental`.
+- Listas (familia, notas, `ocasion`, `estacion`) → separá con `;` dentro de la celda: `Amaderado;Oriental`.
+- `casa` → **facet primario** (`Árabe` / `Diseñador` / `Nicho`). Lista cerrada; escribí el valor exacto.
+  Ver `CASA-MAPEO-SUGERIDO.md` para un borrador marca→casa (revisá y cargá vos; no está hardcodeado).
+- `ocasion` / `estacion` → listas cerradas (ver tabla de arriba). Alimentan las colecciones landing
+  "Para la noche" (`ocasion` = Noche) y "Frescos para el verano" (`estacion` = Verano).
 - `precio_frasco` y `frasco_ml` → números. Sin separadores de miles (`38000`, no `38.000`).
+  (`frasco_ml` también se guarda como metafield `tamano_frasco_ml`.)
+- `anio_lanzamiento` → opcional, año de lanzamiento (número). Se guarda como metafield.
 - `precio_frasco_anterior` → opcional. **Ancla REAL previa** para el precio tachado. Vacío = sin
   tachado. Nunca inventes un "antes" más alto (Defensa del Consumidor + quema confianza).
 - `inspirado_en` → opcional y **legalmente sensible**. Copy prudente; nunca afirma ser la marca.
@@ -98,19 +115,66 @@ Cambiás `precio_frasco`, re-corrés `npm run load` y se repreciá todo (flujo a
 
 ## Después de cargar
 
-Las colecciones de esta tienda son **automáticas por metafield** (`PRODUCT_METAFIELD_DEFINITION`
-sobre `familia_olfativa` / `genero`), **no por tag**.
+Las colecciones de esta tienda son **automáticas por metafield** (`PRODUCT_METAFIELD_DEFINITION`),
+**no por tag**. El orden importa (las capabilities las habilita `setup`):
 
 ```bash
-npm run collections             # crea las colecciones por familia que falten (idempotente)
-node create-collections.mjs --dry-run
+npm run setup        # 1. definiciones + capabilities de facets (incluye casa). Soporta --dry-run
+npm run load         # 2. carga/repreciá el catálogo desde el xlsx (incluye casa/ocasion/estacion)
+npm run collections  # 3. colecciones por familia_olfativa + casa (idempotente). --dry-run
+npm run landing      # 4. colecciones landing por ángulo de campaña (smart/manual). --dry-run
+npm run audit        # 5. auditoría de valores (solo lectura) — corré antes de escalar
 ```
 
-`create-collections.mjs` crea una colección por cada familia **en uso** que todavía no tenga una
-(no crea vacías). Las de género (Masculino/Femenino/Unisex) y por marca ya existen.
+### Colecciones por facet (`create-collections.mjs`)
+
+Crea una colección por cada valor **en uso** de `familia_olfativa` y `casa` que todavía no tenga
+una (no crea vacías; idempotente por condición de regla). Las de género (Masculino/Femenino/Unisex)
+y por marca (regla `VENDOR`) ya existen y no se tocan.
+
+- familia → `Perfumes {familia}` (handle derivado por Shopify).
+- casa → `Árabes` {`arabes`} · `Diseñador` {`disenador`} · `Nicho` {`nicho`} (handles fijos para
+  linkear estable desde el theme). Requiere que `casa` esté cargado en ≥1 producto.
 
 > El loader escribe solo `familia` como `tag` (utilidad de búsqueda); las colecciones leen los
 > metafields directamente, no los tags.
+
+### Colecciones landing (`create-landing-collections.mjs`)
+
+Colecciones por **ángulo de campaña** para la PLP. Cada una decide **smart vs manual** en runtime:
+si el metafield de la regla existe y tiene la capability habilitada → **smart** (regla); si no →
+**manual** con aviso. Idempotente por handle. Cada una lleva un `descriptionHtml` placeholder de 1
+línea (editable en el Admin).
+
+| colección | handle | tipo | regla / motivo |
+|---|---|---|---|
+| Rinden todo el día | `rinden-todo-el-dia` | smart | `longevidad` = Eterna (12h+) |
+| Para la noche | `para-la-noche` | smart | `ocasion` = Noche |
+| Frescos para el verano | `frescos-para-el-verano` | smart | `estacion` = Verano (fallback: familia Cítrico/Fresco-Acuático) |
+| Alternativas a los clásicos | `alternativas-a-los-clasicos` | **manual** | LEGAL (equivalencias): curaduría 100% manual a propósito |
+| Los más elegidos | `los-mas-elegidos` | **manual** | sin data de ventas todavía |
+| Para regalar | `para-regalar` | **manual** | curaduría editorial |
+| Para arrancar: probá con decants | `arranca-con-decants` | **manual** | `VARIANT_PRICE` no aísla el frasco → manual (falta umbral) |
+
+> "Rinden todo el día" usa **solo** el valor tope `Eterna (12h+)`. Para ampliar a "8h+", agregá
+> `'Muy larga (8–12h)'` al array `values` de esa entrada en el script (queda OR automático).
+
+### Auditoría de valores (`audit-metafield-values.mjs`) — solo lectura
+
+Lista, por facet, los valores distintos en uso + su conteo, y marca inconsistencias que crean
+**facets fantasma** (espacios sobrantes, valores fuera de la lista cerrada, duplicados por
+mayúsculas/acentos). No escribe nada. Corré `npm run audit` antes de una carga grande y normalizá
+en el Admin/xlsx lo que marque.
+
+### Filtros del storefront (Search & Discovery)
+
+`catalog-tools` **solo garantiza que los metafields existan** y tengan `adminFilterable`
+habilitado. Los **filtros que ve el comprador** en la colección se configuran a mano en
+**Admin → Settings → Search & discovery → Filtros** (no hay API estable de Admin para gestionarlos).
+Activá ahí, en este orden de prioridad: **casa, familia_olfativa, género, precio, marca** (primarios)
+y **longevidad, ocasión** (secundarios).
+
+### Apuntar colecciones en el theme
 
 En el editor del theme, apuntá las colecciones en:
 - `kit-decants` (Colección de decants) — toma la variante "Decant 5ml".
@@ -169,6 +233,15 @@ npm run pull                    # node pull-stock.mjs  (Shopify → hoja "Stock 
   + `CONTINUE` (siempre disponibles). Las cantidades las maneja `set-stock` / el admin, no el
   repricing (verificado: re-correr `npm run load` NO pisa el stock). Frasco/tester sin cantidad
   cargada aparecen **agotados**.
+- **⚠️ `productSet` BORRA los metafields `custom` que no le mandás.** Al cargar un producto, el
+  loader es la **fuente de verdad** de sus metafields custom: todo lo que no esté en `buildMetafields`
+  se pierde. Por eso el loader escribe también `anio_lanzamiento` y `tamano_frasco_ml`. Si agregás un
+  metafield custom nuevo que quieras conservar, agregalo a `buildMetafields` (si no, el próximo
+  `npm run load` lo borra). Verificado en 2026-04. Otros namespaces (ej. `reviews`) no se tocan.
+- **Reestructurar un producto resetea su stock.** Si `productSet` cambia las variantes de un producto
+  existente (opción/estructura distinta), el inventario de las variantes nuevas arranca en 0 → corré
+  `set-stock` (con `stock_frasco`/`stock_tester` cargados) después de la carga. Repreciar un producto
+  que YA está en el modelo (mismas variantes) **no** toca el stock.
 - **Reviews:** `reviews.rating` lo provee la app de reviews; los productos nuevos arrancan sin
   estrellas hasta tener reseñas. El loader no toca ese namespace.
 - **Tope ~50 productos** en los loops Liquid de cross-sell/related/kit: apuntá esas secciones a

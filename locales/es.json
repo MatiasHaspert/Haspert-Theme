@@ -311,7 +311,7 @@
       "empty_text": "Originales importados, curados uno por uno. Empezá por un decant si querés probar antes de invertir.",
       "empty_cta": "Explorar el catálogo",
       "empty_shipping": "Envío a todo el país",
-      "transfer_label": "Con transferencia",
+      "transfer_label": "Con transferencia ahorrás",
       "transfer_code_html": "Cargás el código <code>{{ code }}</code> al finalizar la compra.",
       "or": "o",
       "remove_title": "Eliminar {{ title }}",
