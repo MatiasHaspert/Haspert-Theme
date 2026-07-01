@@ -1,0 +1,18 @@
+{%- comment -%}
+  Reaseguro de confianza del carrito (1 línea, muteada, sin badges ni emojis).
+  El token "Hoy en Rosario" se gatea con settings.dispatch_today_enabled (apagalo en días sin
+  capacidad de despacho, para no exponerte ante Defensa del Consumidor). Textos desde locale.
+{%- endcomment -%}
+<p class="nc-trust">
+  <svg class="nc-trust__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+    <path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M8.5 12l2.2 2.2 4.3-4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <b>{{ 'sections.cart.trust_original' | t }}</b>
+  <span class="nc-trust__dot" aria-hidden="true"></span>
+  {{ 'sections.cart.trust_returns' | t }}
+  {%- if settings.dispatch_today_enabled -%}
+    <span class="nc-trust__dot" aria-hidden="true"></span>
+    {{ 'sections.cart.trust_dispatch' | t }}
+  {%- endif -%}
+</p>

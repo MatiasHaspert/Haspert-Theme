@@ -1,0 +1,141 @@
+{%- comment -%}
+  Línea de producto del carrito Numen — COMPARTIDA por el drawer y /cart.
+
+  Acepta:
+    - item    (requerido): line item del carrito.
+    - context (requerido): 'drawer' | 'cart'. Define los ids que cablea el JS de Dawn.
+
+  Se conservan los hooks de Dawn (no tocar cart.js / cart-drawer.js):
+    cart-item#{row_id} · quantity-input con name="minus"/"plus" · #{qty_id} (name="updates[]") ·
+    cart-remove-button[data-index] con <a href=url_to_remove> · .cart-item__name (foco tras update) ·
+    .loading__spinner · #{error_id} con .cart-item__error-text.
+  El <a> de remove es progressive-enhancement: cart.js lo intercepta (preventDefault → AJAX);
+  sin JS, el link elimina por navegación.
+{%- endcomment -%}
+{%- liquid
+  assign i = item.index | plus: 1
+  if context == 'drawer'
+    assign row_id = 'CartDrawer-Item-' | append: i
+    assign qty_id = 'Drawer-quantity-' | append: i
+    assign remove_id = 'CartDrawer-Remove-' | append: i
+    assign error_id = 'CartDrawer-LineItemError-' | append: i
+  else
+    assign row_id = 'CartItem-' | append: i
+    assign qty_id = 'Quantity-' | append: i
+    assign remove_id = 'Remove-' | append: i
+    assign error_id = 'Line-item-error-' | append: i
+  endif
+
+  assign tipo = item.variant.metafields.custom.tipo_presentacion.value
+  if tipo == blank
+    assign tipo = 'Sellado'
+  endif
+  assign is_decant = false
+  if tipo == 'Decant'
+    assign is_decant = true
+  endif
+  assign can_update_quantity = item.instructions.can_update_quantity | default: true
+  assign can_remove = item.instructions.can_remove | default: true
+-%}
+{%- capture v_ml -%}{% render 'perfume-ml', variant: item.variant, product: item.product %}{%- endcapture -%}
+{%- assign v_ml = v_ml | plus: 0 -%}
+
+<li class="cart-item nc-line" id="{{ row_id }}">
+  {%- render 'loading-spinner' -%}
+
+  {% if item.image %}
+    <a href="{{ item.url }}" class="nc-line__media" tabindex="-1" aria-hidden="true">
+      <img
+        src="{{ item.image | image_url: width: 300 }}"
+        alt="{{ item.image.alt | escape }}"
+        loading="lazy"
+        width="150"
+        height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
+      >
+    </a>
+  {% else %}
+    <span class="nc-line__media" aria-hidden="true"></span>
+  {% endif %}
+
+  <div class="nc-line__body">
+    <div class="nc-line__top">
+      <div class="nc-line__head">
+        {%- if item.product.vendor != blank -%}
+          <p class="nc-line__vendor">{{ item.product.vendor }}</p>
+        {%- endif -%}
+        <a href="{{ item.url }}" class="cart-item__name nc-line__name">
+          {{- item.product.title | escape -}}
+        </a>
+      </div>
+      <cart-remove-button class="nc-line__rm-wrap" id="{{ remove_id }}" data-index="{{ i }}">
+        <a
+          href="{{ item.url_to_remove }}"
+          class="nc-line__rm{% if can_remove == false %} hidden{% endif %}"
+          aria-label="{{ 'sections.cart.remove_title' | t: title: item.title | escape }}"
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <path d="M4 6.5h16M9 6.5V5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 5v1.5M6.5 6.5l.8 12a1.5 1.5 0 0 0 1.5 1.4h6.4a1.5 1.5 0 0 0 1.5-1.4l.8-12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </cart-remove-button>
+    </div>
+
+    <span class="nc-chip{% if is_decant %} nc-chip--decant{% endif %}">
+      {{- tipo -}}
+      {%- if v_ml > 0 %} <span class="nc-chip__sz">· {{ v_ml }} ml</span>{% endif -%}
+    </span>
+
+    <div class="nc-line__foot">
+      <div class="nc-line__price-wrap">
+        {%- if item.original_line_price != item.final_line_price -%}
+          <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+          <span class="nc-price__old">{{ item.original_line_price | money }}</span>
+          <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
+          <span class="nc-price">{{ item.final_line_price | money }}</span>
+        {%- else -%}
+          <span class="nc-price">{{ item.original_line_price | money }}</span>
+        {%- endif -%}
+        {%- if v_ml > 0 -%}
+          <span class="nc-perml{% if is_decant %} nc-perml--muted{% endif %}">
+            {{- item.variant.price | divided_by: v_ml | money -}}/ml
+          </span>
+        {%- endif -%}
+      </div>
+
+      <quantity-input class="quantity cart-quantity nc-stepper">
+        <button class="quantity__button" name="minus" type="button" {% if can_update_quantity == false %}disabled{% endif %}>
+          <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M2.5 7h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </button>
+        <input
+          class="quantity__input"
+          type="number"
+          data-quantity-variant-id="{{ item.variant.id }}"
+          name="updates[]"
+          value="{{ item.quantity }}"
+          {% # theme-check-disable %}
+          data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+          min="0"
+          data-min="{{ item.variant.quantity_rule.min }}"
+          {% if item.variant.quantity_rule.max != null %}
+            max="{{ item.variant.quantity_rule.max }}"
+          {% endif %}
+          step="{{ item.variant.quantity_rule.increment }}"
+          {% # theme-check-enable %}
+          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+          id="{{ qty_id }}"
+          data-index="{{ i }}"
+          {% if can_update_quantity == false %}disabled{% endif %}
+        >
+        <button class="quantity__button" name="plus" type="button" {% if can_update_quantity == false %}disabled{% endif %}>
+          <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M7 2.5v9M2.5 7h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </button>
+      </quantity-input>
+    </div>
+
+    <div class="cart-item__error" id="{{ error_id }}" role="alert">
+      <small class="cart-item__error-text"></small>
+    </div>
+  </div>
+</li>

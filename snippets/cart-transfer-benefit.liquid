@@ -1,0 +1,54 @@
+{%- comment -%}
+  Card de pago alternativo del carrito (AOV informativo): beneficio por transferencia + cuotas.
+
+  Vive DENTRO de la región re-renderizada del footer (.cart-drawer__footer en el drawer /
+  #main-cart-footer .js-contents en /cart), así el monto se recalcula al cambiar el carrito.
+  Base = subtotal de LISTA (cart.items_subtotal_price), coherente con la barra de envío.
+
+  Transferencia (Camino A): NO aplica nada en el checkout ni se autoaplica; el % baja recién en
+  el checkout cargando el código. NUNCA se tacha el precio: es informativo. Todo desde Shopify.
+
+  Consolidé transferencia + cuotas en un solo snippet (en vez de dos piezas sueltas) porque el
+  footer del drawer y el de /cart necesitan la misma card; así es un solo {% render %} por footer,
+  sin duplicar el wrapper ni el gating, y sin card vacía. Cuotas = reuso de installments.liquid.
+
+  Settings: transfer_enabled, transfer_pct, transfer_code + installments_* (ver installments.liquid).
+{%- endcomment -%}
+{%- if cart != empty and cart.items_subtotal_price > 0 -%}
+  {%- liquid
+    assign show_transfer = false
+    if settings.transfer_enabled and settings.transfer_pct > 0
+      assign show_transfer = true
+      assign factor = 100 | minus: settings.transfer_pct
+      assign transfer_price = cart.items_subtotal_price | times: factor | divided_by: 100
+    endif
+  -%}
+  {%- capture cuotas_html -%}{% render 'installments', price: cart.items_subtotal_price, layout: 'cart' %}{%- endcapture -%}
+  {%- assign cuotas_html = cuotas_html | strip -%}
+
+  {%- if show_transfer or cuotas_html != blank -%}
+    <div class="nc-pay">
+      {%- if show_transfer -%}
+        <div class="nc-pay__transfer">
+          <span class="nc-pay__label">
+            {{- 'sections.cart.transfer_label' | t -}}
+            <span class="nc-pay__off">{{ settings.transfer_pct }}% OFF</span>
+          </span>
+          <span class="nc-pay__val">{{ transfer_price | money }}</span>
+        </div>
+        {%- if settings.transfer_code != blank -%}
+          <p class="nc-pay__code">
+            {{- 'sections.cart.transfer_code_html' | t: code: settings.transfer_code -}}
+          </p>
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if cuotas_html != blank -%}
+        <p class="nc-pay__inst">
+          {%- if show_transfer %}{{ 'sections.cart.or' | t }} {% endif -%}
+          {{ cuotas_html }}
+        </p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+{%- endif -%}

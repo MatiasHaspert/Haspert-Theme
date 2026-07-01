@@ -1,17 +1,24 @@
 {%- comment -%}
-  Cross-sell en carrito por familia olfativa (AOV).
-  Lee settings globales (Theme settings → Cross-sell en carrito) + el carrito.
-  Recomienda perfumes que comparten familia (metafield lista custom.familia_olfativa) con algún
-  item del carrito, excluyendo los que ya están. Re-renderiza junto con la notificación del carrito.
-  Mini-cards que enlazan a la PDP (liviano, sin JS extra). Precios desde Shopify, nada hardcodeado.
+  Cross-sell en carrito por familia olfativa (AOV) — empuja DECANTS con "+ Sumar" (AJAX).
+
+  Match (igual que antes): comparte familia (metafield lista custom.familia_olfativa) con algún
+  item del carrito y no está ya en el carrito. Cambia QUÉ se ofrece y QUÉ hace el botón:
+  ofrece la variante Decant DISPONIBLE más barata (gancho de entrada); si el candidato no tiene
+  decant disponible, se saltea. El botón agrega por AJAX (assets/numen-cart-add.js) reusando el
+  re-render del carrito — NO linkea a la PDP.
+
+  Vive DENTRO de la región re-renderizada (cart-drawer-items en el drawer / #main-cart-items
+  .js-contents en /cart) para actualizarse en vivo. Precios desde Shopify, nada hardcodeado.
+
+  Heading dinámico: si falta para el envío gratis usa cart_xsell_heading_progress (con acento en
+  la parte envuelta en *asteriscos*); si ya hay envío gratis, cart_xsell_heading.
 {%- endcomment -%}
 {%- if settings.cart_xsell_enabled and cart.item_count > 0 and settings.cart_xsell_collection != blank -%}
   {%- liquid
     assign coll = settings.cart_xsell_collection
     assign max = settings.cart_xsell_count | default: 2
 
-    # Familias e IDs presentes en el carrito. Se envuelven en delimitadores (|token| , id ,)
-    # para que `contains` haga match exacto por token y no por subcadena.
+    # Familias e IDs presentes en el carrito. Delimitados (|token|, ,id,) para match exacto por token.
     assign cart_fams = ''
     assign cart_ids = ','
     for item in cart.items
@@ -30,95 +37,89 @@
         {%- unless candidate.available -%}{%- continue -%}{%- endunless -%}
         {%- assign cid = ',' | append: candidate.id | append: ',' -%}
         {%- if cart_ids contains cid -%}{%- continue -%}{%- endif -%}
+
         {%- assign cand_fams = candidate.metafields.custom.familia_olfativa.value -%}
         {%- assign is_match = false -%}
         {%- for cf in cand_fams -%}
           {%- assign token = '|' | append: cf | append: '|' -%}
           {%- if cart_fams contains token -%}{%- assign is_match = true -%}{%- break -%}{%- endif -%}
         {%- endfor -%}
-        {%- if is_match -%}
-          <li class="cart-xsell__item">
-            <a class="cart-xsell__link" href="{{ candidate.url }}">
-              {%- if candidate.featured_media -%}
-                <span class="cart-xsell__media global-media-settings">
-                  <img
-                    src="{{ candidate.featured_media | image_url: width: 120 }}"
-                    alt="{{ candidate.featured_media.alt | escape }}"
-                    loading="lazy"
-                    width="60"
-                    height="60"
-                  >
-                </span>
-              {%- endif -%}
-              <span class="cart-xsell__info">
-                <span class="cart-xsell__name">{{ candidate.title | escape }}</span>
-                <span class="cart-xsell__price">
-                  {%- if candidate.price_varies -%}{{ 'sections.cart.xsell_from' | t }} {% endif -%}
-                  {{ candidate.price | money }}
-                </span>
-              </span>
-              <span class="cart-xsell__cta">{{ 'sections.cart.xsell_cta' | t }}</span>
-            </a>
-          </li>
-          {%- assign shown = shown | plus: 1 -%}
-        {%- endif -%}
+        {%- unless is_match -%}{%- continue -%}{%- endunless -%}
+
+        {%- comment -%} Variante Decant disponible más barata. {%- endcomment -%}
+        {%- assign decant_variant = null -%}
+        {%- assign decant_found = false -%}
+        {%- for v in candidate.variants -%}
+          {%- if v.available and v.metafields.custom.tipo_presentacion.value == 'Decant' -%}
+            {%- if decant_found == false or v.price < decant_variant.price -%}
+              {%- assign decant_variant = v -%}
+              {%- assign decant_found = true -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- unless decant_found -%}{%- continue -%}{%- endunless -%}
+
+        {%- capture d_ml -%}{% render 'perfume-ml', variant: decant_variant, product: candidate %}{%- endcapture -%}
+        {%- assign d_ml = d_ml | plus: 0 -%}
+
+        <div class="nc-xcard">
+          <span class="nc-xcard__media">
+            {%- if candidate.featured_media -%}
+              <img
+                src="{{ candidate.featured_media | image_url: width: 120 }}"
+                alt="{{ candidate.featured_media.alt | escape }}"
+                loading="lazy"
+                width="48"
+                height="48"
+              >
+            {%- endif -%}
+          </span>
+          <span class="nc-xcard__info">
+            <span class="nc-xcard__name">
+              {%- if candidate.vendor != blank %}{{ candidate.vendor }} {% endif -%}
+              {{- candidate.title | escape -}}
+            </span>
+            <span class="nc-xcard__meta">
+              Decant{% if d_ml > 0 %} {{ d_ml }} ml{% endif %} · <b>{{ decant_variant.price | money }}</b>
+            </span>
+          </span>
+          <button
+            type="button"
+            class="nc-xcard__add"
+            data-cart-add="{{ decant_variant.id }}"
+            data-adding-label="{{ 'sections.cart.adding' | t }}"
+            aria-label="{{ 'sections.cart.xsell_add_aria' | t: title: candidate.title | escape }}"
+          >
+            <svg class="nc-xcard__add-icon" width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+              <path d="M7 2.5v9M2.5 7h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <span class="nc-xcard__add-label">{{ 'sections.cart.xsell_add' | t }}</span>
+          </button>
+        </div>
+        {%- assign shown = shown | plus: 1 -%}
       {%- endfor -%}
     {%- endcapture -%}
+
     {%- if shown > 0 -%}
-      <div class="cart-xsell">
-        {%- if settings.cart_xsell_heading != blank -%}
-          <p class="cart-xsell__heading">{{ settings.cart_xsell_heading }}</p>
-        {%- endif -%}
-        <ul class="cart-xsell__list list-unstyled" role="list">{{ xsell_items }}</ul>
+      {%- assign gap = settings.free_ship_threshold | times: 100 | minus: cart.items_subtotal_price -%}
+      <div class="nc-xsell">
+        <div class="nc-xsell__head">
+          <p class="nc-xsell__title">
+            {%- if gap > 0 and settings.cart_xsell_heading_progress != blank -%}
+              {%- assign hp = settings.cart_xsell_heading_progress -%}
+              {%- if hp contains '*' -%}
+                {%- assign hparts = hp | split: '*' -%}
+                {{- hparts[0] | escape -}}<span class="nc-xsell__accent">{{ hparts[1] | escape }}</span>{{ hparts[2] | escape -}}
+              {%- else -%}
+                {{- hp | escape -}}
+              {%- endif -%}
+            {%- else -%}
+              {{- settings.cart_xsell_heading | escape -}}
+            {%- endif -%}
+          </p>
+        </div>
+        {{ xsell_items }}
       </div>
-      {%- style -%}
-        .cart-xsell {
-          margin: 1.6rem 0 0;
-          padding-top: 1.4rem;
-          border-top: 0.1rem solid rgba(var(--color-foreground), 0.12);
-        }
-        .cart-xsell__heading {
-          margin: 0 0 1rem;
-          font-size: 1.3rem;
-          font-weight: 600;
-          letter-spacing: 0.04rem;
-          text-transform: uppercase;
-        }
-        .cart-xsell__list { margin: 0; display: flex; flex-direction: column; gap: 0.8rem; }
-        .cart-xsell__link {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          text-decoration: none;
-          color: inherit;
-        }
-        .cart-xsell__media {
-          flex-shrink: 0;
-          width: 4.8rem;
-          height: 4.8rem;
-          border-radius: var(--media-radius, 0.4rem);
-          overflow: hidden;
-        }
-        .cart-xsell__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .cart-xsell__info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 0.2rem; }
-        .cart-xsell__name {
-          font-size: 1.4rem;
-          line-height: 1.2;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-        .cart-xsell__price { font-size: 1.3rem; opacity: 0.8; }
-        .cart-xsell__cta {
-          flex-shrink: 0;
-          font-size: 1.3rem;
-          font-weight: 600;
-          text-decoration: underline;
-          text-underline-offset: 0.3rem;
-        }
-        .cart-xsell__link:hover .cart-xsell__cta { opacity: 0.7; }
-      {%- endstyle -%}
     {%- endif -%}
   {%- endif -%}
 {%- endif -%}

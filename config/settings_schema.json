@@ -1465,11 +1465,28 @@
   {
     "name": "Cross-sell en carrito",
     "settings": [
-      { "type": "paragraph", "content": "Sugiere perfumes de la misma familia olfativa en la notificación del carrito. Reacciona a lo que hay en el carrito y excluye lo ya agregado." },
+      { "type": "paragraph", "content": "Sugiere DECANTS de la misma familia olfativa en el carrito. \"Sumar\" los agrega sin salir del carrito (AJAX). Reacciona a lo que hay en el carrito y excluye lo ya agregado." },
       { "type": "checkbox", "id": "cart_xsell_enabled", "label": "Activar cross-sell en el carrito", "default": true },
-      { "type": "collection", "id": "cart_xsell_collection", "label": "Colección donde buscar", "info": "Apuntá a un catálogo de perfumes con el metafield \"Familia olfativa\" cargado." },
-      { "type": "text", "id": "cart_xsell_heading", "label": "Título", "default": "Combina con tu compra" },
+      { "type": "collection", "id": "cart_xsell_collection", "label": "Colección donde buscar", "info": "Apuntá a un catálogo de perfumes con el metafield \"Familia olfativa\" cargado y variantes Decant disponibles (solo se ofrecen candidatos con decant)." },
+      { "type": "text", "id": "cart_xsell_heading", "label": "Título (con envío gratis ya logrado)", "default": "Combiná con tu compra" },
+      { "type": "text", "id": "cart_xsell_heading_progress", "label": "Título (cuando falta para el envío gratis)", "default": "*Sumá y llegás* al envío gratis", "info": "Envolvé en *asteriscos* la parte que va en acento (terracota). Ej: *Sumá y llegás* al envío gratis." },
       { "type": "range", "id": "cart_xsell_count", "min": 1, "max": 3, "step": 1, "label": "Cantidad de sugerencias", "default": 2 }
+    ]
+  },
+  {
+    "name": "Transferencia (beneficio informativo)",
+    "settings": [
+      { "type": "paragraph", "content": "Muestra en el carrito el precio con transferencia (informativo). NO se autoaplica: el cliente carga el código en el checkout. El precio nunca se tacha." },
+      { "type": "checkbox", "id": "transfer_enabled", "label": "Mostrar beneficio por transferencia", "default": true },
+      { "type": "number", "id": "transfer_pct", "label": "% de descuento por transferencia", "default": 20 },
+      { "type": "text", "id": "transfer_code", "label": "Código de descuento", "default": "TRANSFERENCIA20", "info": "Informativo en la web. El descuento se aplica con este código recién en el checkout (no hay Plus; no se autoaplica)." }
+    ]
+  },
+  {
+    "name": "Reaseguro / legal del carrito",
+    "settings": [
+      { "type": "checkbox", "id": "dispatch_today_enabled", "label": "Mostrar \"Hoy en Rosario\" en el carrito", "default": true, "info": "Apagalo en días sin capacidad de despacho para no exponerte ante Defensa del Consumidor." },
+      { "type": "richtext", "id": "cart_decant_legal_text", "label": "Nota legal del decant en el carrito", "default": "<p>Tenés un decant en el carrito. Se fracciona a pedido; una vez abierto queda excluido del derecho de arrepentimiento (art. 1.116 CCyC). El frasco sellado y el tester sí admiten devolución en 10 días.</p>" }
     ]
   },
   {

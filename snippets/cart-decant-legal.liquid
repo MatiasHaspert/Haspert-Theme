@@ -1,0 +1,25 @@
+{%- comment -%}
+  Nota legal del decant en el carrito (art. 1.116 CCyC). Solo aparece si hay al menos un decant
+  en el carrito (variante custom.tipo_presentacion == 'Decant'). Texto editable desde
+  settings.cart_decant_legal_text (richtext). Vive DENTRO de la región re-renderizada
+  (cart-drawer-items / #main-cart-items .js-contents) para aparecer/desaparecer al sumar o quitar.
+{%- endcomment -%}
+{%- if settings.cart_decant_legal_text != blank -%}
+  {%- assign has_decant = false -%}
+  {%- for item in cart.items -%}
+    {%- if item.variant.metafields.custom.tipo_presentacion.value == 'Decant' -%}
+      {%- assign has_decant = true -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if has_decant -%}
+    <div class="nc-legal" role="note">
+      <svg class="nc-legal__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M12 7.5v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="12" cy="16.4" r="1" fill="currentColor"/>
+      </svg>
+      <div class="nc-legal__text rte">{{ settings.cart_decant_legal_text }}</div>
+    </div>
+  {%- endif -%}
+{%- endif -%}

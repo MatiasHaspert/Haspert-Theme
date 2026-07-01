@@ -1,0 +1,754 @@
+/*
+  Sistema de carrito Numen — drawer + /cart.
+  Fuente visual: numen-cart-mockup.html. Tokens idénticos a la PDP.
+
+  Por qué un asset externo y no {%- style -%} inline:
+  el drawer re-inyecta su HTML en cada update (cart.js → replaceWith de
+  cart-drawer-items / .cart-drawer__footer). Un <style> dentro de esa región
+  se duplica en cada cambio de cantidad (FOUC + bytes repetidos). Acá vive una
+  sola vez, cacheado, y sirve a drawer + /cart + (a futuro) la barra de PDP.
+
+  Carga DESPUÉS de component-cart-drawer.css → gana overrides a igual especificidad.
+  Se mantienen las clases/ids de Dawn (drawer__header, cart-item, cart-drawer__footer…)
+  para no romper su JS/CSS; las clases nc-* sólo agregan el reskin.
+*/
+
+/* ————————————————————— Tokens (scope carrito) ————————————————————— */
+.numen-cart,
+#main-cart-items,
+#main-cart-footer {
+  --nc-bg: #f4f2ed;          /* paper */
+  --nc-surface: #ffffff;     /* card */
+  --nc-ink: #1f1b16;         /* texto principal */
+  --nc-ink-2: #6b6157;       /* muteado */
+  --nc-ink-3: #9a9086;       /* muy muteado (fine print, $/ml decant) */
+  --nc-line: #e0dbd0;        /* hairline */
+  --nc-line-soft: #ece7dc;
+  --nc-terra: #b25a3c;       /* acento */
+  --nc-terra-deep: #8f4329;  /* acento profundo */
+  --nc-cream: #fcf9f0;       /* fondo seleccionado/suave */
+  --nc-ok: #246a45;          /* verde sobrio (NO fluo) */
+  --nc-ok-bg: #edf4ee;
+  --nc-ok-line: #cfe3d5;
+  --nc-alert: #b5471f;
+  --nc-alert-bg: #fbede4;
+  --nc-alert-line: #e7c3ac;
+  --nc-soft-bg: #f6efdd;     /* badge suave */
+  --nc-soft-line: #e7d9b6;
+
+  --nc-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --nc-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --nc-dur-tap: 140ms;
+  --nc-dur-select: 200ms;
+  --nc-dur-drawer: 320ms;
+  --nc-shadow-btn: 0 8px 26px rgba(111, 88, 72, 0.18);
+  --nc-shadow-drawer: -18px 0 60px rgba(40, 28, 18, 0.2);
+
+  --nc-font-display: 'Bebas Neue', var(--font-heading-family, sans-serif);
+}
+
+/* ————————————————————— Panel del drawer ————————————————————— */
+/* Scrim más cálido que el gris de Dawn. */
+cart-drawer.drawer {
+  background-color: rgba(31, 27, 22, 0.46);
+}
+
+.numen-cart.drawer__inner {
+  width: 100%;
+  /* Panel: nunca ocupa toda la pantalla. Deja ver (y tocar para cerrar) la página detrás.
+     85vw en teléfonos, tope 42rem de tablet en adelante. */
+  max-width: min(42rem, 85vw);
+  padding: 0;
+  border: 0;
+  background: var(--nc-surface);
+  color: var(--nc-ink);
+  box-shadow: var(--nc-shadow-drawer);
+  transition: transform var(--nc-dur-drawer) var(--nc-ease-drawer);
+}
+
+/* ————————————————————— Header ————————————————————— */
+.numen-cart .drawer__header.nc-head {
+  flex: 0 0 auto;
+  gap: 1.2rem;
+  padding: 1.8rem 1.8rem 1.4rem;
+  margin: 0;
+  border-bottom: 0.1rem solid var(--nc-line);
+}
+
+.nc-head__title {
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 2.6rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  margin: 0;
+  color: var(--nc-ink);
+}
+
+.nc-head__count {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--nc-terra-deep);
+  background: var(--nc-soft-bg);
+  border: 0.1rem solid var(--nc-soft-line);
+  border-radius: 999px;
+  min-width: 2.2rem;
+  height: 2.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.6rem;
+}
+
+.numen-cart .drawer__close.nc-head__close {
+  position: static;
+  margin-left: auto;
+  width: 3.8rem;
+  height: 3.8rem;
+  min-width: 3.8rem;
+  min-height: 3.8rem;
+  border-radius: 1rem;
+  border: 0.1rem solid var(--nc-line);
+  background: var(--nc-surface);
+  color: var(--nc-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--nc-dur-tap) var(--nc-ease-out), transform var(--nc-dur-tap) var(--nc-ease-out);
+}
+.numen-cart .drawer__close.nc-head__close .svg-wrapper { height: 1.6rem; width: 1.6rem; }
+.numen-cart .drawer__close.nc-head__close:active { transform: scale(0.94); }
+@media (hover: hover) and (pointer: fine) {
+  .numen-cart .drawer__close.nc-head__close:hover { background: var(--nc-bg); }
+}
+
+/* ————————————————————— Zona scrolleable ————————————————————— */
+.numen-cart cart-drawer-items {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.numen-cart cart-drawer-items::-webkit-scrollbar { width: 0.8rem; }
+.numen-cart cart-drawer-items::-webkit-scrollbar-thumb {
+  background: var(--nc-line);
+  border-radius: 99px;
+  border: 0.2rem solid var(--nc-surface);
+}
+.numen-cart .cart-drawer__form { display: block; }
+.numen-cart .drawer__contents { display: block; }
+
+/* Banda superior (reaseguro + barra de envío) dentro del scroll (trade-off §2: scrollea). */
+.numen-cart .nc-top {
+  padding: 1.3rem 1.8rem 1.4rem;
+  border-bottom: 0.1rem solid var(--nc-line-soft);
+  background: linear-gradient(180deg, var(--nc-surface), #fcfbf7);
+}
+.numen-cart .nc-top .free-ship { margin: 0; }
+.nc-trust {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  margin: 0 0 1.2rem;
+  font-size: 1.1rem;
+  color: var(--nc-ink-2);
+  letter-spacing: 0.01em;
+}
+.nc-trust__icon { flex: 0 0 auto; color: var(--nc-terra); }
+.nc-trust b { font-weight: 600; color: var(--nc-ink); }
+.nc-trust__dot { width: 0.3rem; height: 0.3rem; border-radius: 50%; background: var(--nc-line); display: inline-block; }
+
+/* ————————————————————— Líneas de producto ————————————————————— */
+.nc-items {
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem 1.8rem;
+}
+
+.numen-cart .cart-item.nc-line {
+  display: grid;
+  grid-template-columns: 7.4rem 1fr;
+  gap: 1.4rem;
+  padding: 1.6rem 0;
+  margin: 0;
+  border-bottom: 0.1rem solid var(--nc-line-soft);
+  position: relative;
+}
+.numen-cart .cart-item.nc-line:last-child { border-bottom: 0; }
+
+.nc-line__media {
+  width: 7.4rem;
+  height: 8.8rem;
+  border-radius: 1.1rem;
+  overflow: hidden;
+  border: 0.1rem solid var(--nc-line);
+  background: var(--nc-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nc-line__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.nc-line__body { min-width: 0; display: flex; flex-direction: column; }
+.nc-line__top { display: flex; align-items: flex-start; gap: 0.8rem; }
+.nc-line__head { min-width: 0; }
+.nc-line__vendor {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--nc-ink-2); /* marca = texto esencial → AA (ink-3 no llega en 10px) */
+  margin: 0 0 0.1rem;
+}
+.numen-cart .nc-line__name {
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.22;
+  color: var(--nc-ink);
+  margin: 0;
+  text-decoration: none;
+  word-break: break-word;
+}
+@media (hover: hover) and (pointer: fine) {
+  .numen-cart .nc-line__name:hover { color: var(--nc-terra-deep); }
+}
+
+.numen-cart .nc-line__rm-wrap { margin-left: auto; flex: 0 0 auto; }
+.numen-cart .nc-line__rm {
+  width: 3rem;
+  height: 3rem;
+  min-width: 3rem;
+  min-height: 3rem;
+  padding: 0;
+  border-radius: 0.8rem;
+  border: none;
+  background: none;
+  color: var(--nc-ink-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color var(--nc-dur-tap) var(--nc-ease-out), background var(--nc-dur-tap) var(--nc-ease-out), transform var(--nc-dur-tap) var(--nc-ease-out);
+}
+.numen-cart .nc-line__rm:active { transform: scale(0.9); }
+@media (hover: hover) and (pointer: fine) {
+  .numen-cart .nc-line__rm:hover { color: var(--nc-alert); background: var(--nc-alert-bg); }
+}
+
+/* Chip de presentación */
+.nc-chip {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.9rem;
+  border-radius: 0.6rem;
+  margin: 0.7rem 0 0;
+  border: 0.1rem solid var(--nc-line);
+  background: #faf8f3;
+  color: var(--nc-ink-2);
+}
+.nc-chip--decant {
+  background: var(--nc-soft-bg);
+  border-color: var(--nc-soft-line);
+  color: var(--nc-terra-deep);
+}
+.nc-chip__sz { color: var(--nc-ink-3); font-weight: 500; }
+
+.nc-line__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+.nc-line__price-wrap { min-width: 0; }
+.numen-cart .nc-price {
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 2.3rem;
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+  color: var(--nc-ink);
+}
+.numen-cart .nc-price__old {
+  display: block;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--nc-ink-3);
+  text-decoration: line-through;
+  line-height: 1;
+  margin-bottom: 0.1rem;
+}
+.nc-perml {
+  display: block;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  color: var(--nc-terra-deep);
+  margin-top: 0.3rem;
+}
+.nc-perml--muted { color: var(--nc-ink-3); }
+
+/* Stepper (reusa el quantity-input de Dawn) */
+.numen-cart .nc-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 0.1rem solid var(--nc-line);
+  border-radius: 0.9rem;
+  overflow: hidden;
+  background: var(--nc-surface);
+  height: 3.8rem;
+  width: auto;
+  min-width: 0;
+  min-height: 0; /* anula el min-height ~4.7rem de Dawn .quantity */
+}
+/* Dawn dibuja el marco del input con ::before/::after; acá el borde lo pone .nc-stepper (evita el doble marco). */
+.numen-cart .nc-stepper::before,
+.numen-cart .nc-stepper::after {
+  content: none;
+  display: none;
+}
+.numen-cart .nc-stepper .quantity__button {
+  width: 3.6rem;
+  height: 100%;
+  margin: 0; /* Dawn agrega margin a first/last-child */
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--nc-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--nc-dur-tap) var(--nc-ease-out), transform var(--nc-dur-tap) var(--nc-ease-out);
+}
+/* Fix del "+": sin esto, el tap cae en el <svg> y global.js lee event.target.name = undefined → stepDown. */
+.numen-cart .nc-stepper .quantity__button > * {
+  pointer-events: none;
+}
+.numen-cart .nc-stepper .quantity__button:active:not(:disabled) { transform: scale(0.88); }
+@media (hover: hover) and (pointer: fine) {
+  .numen-cart .nc-stepper .quantity__button:not(:disabled):hover { background: var(--nc-bg); }
+}
+.numen-cart .nc-stepper .quantity__button:disabled { color: var(--nc-line); cursor: not-allowed; }
+.numen-cart .nc-stepper .quantity__input {
+  flex: 0 0 auto; /* Dawn le da flex-grow; lo fijamos a 3rem */
+  width: 3rem;
+  min-width: 3rem;
+  padding: 0;
+  text-align: center;
+  border: 0;
+  background: none;
+  color: var(--nc-ink);
+  opacity: 1; /* Dawn lo pone en 0.85 */
+  font-size: 1.4rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+}
+.numen-cart .nc-stepper .quantity__input::-webkit-outer-spin-button,
+.numen-cart .nc-stepper .quantity__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.numen-cart .nc-line__qty { display: block; }
+
+/* Spinner de carga de Dawn, centrado sobre la línea */
+.numen-cart .cart-item.nc-line .loading__spinner {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 1;
+}
+.numen-cart .cart-item.nc-line .loading__spinner:not(.hidden) { display: flex; }
+.numen-cart .cart-item.nc-line .loading__spinner svg { width: 2rem; height: 2rem; }
+
+/* Error de línea (dentro del body; invisible cuando no hay mensaje) */
+.numen-cart .nc-line .cart-item__error { color: var(--nc-alert); font-size: 1.1rem; line-height: 1.4; }
+.numen-cart .nc-line .cart-item__error-text { display: block; margin-top: 0.5rem; }
+.numen-cart .nc-line .cart-item__error-text:empty { display: none; }
+
+/* ————————————————————— Cross-sell de decants ————————————————————— */
+.nc-xsell { padding: 1.6rem 0 0.4rem; border-top: 0.1rem solid var(--nc-line); }
+.numen-cart .nc-xsell { margin: 0.6rem 1.8rem 0.4rem; }
+#main-cart-items .nc-xsell { margin: 1.6rem 0 0; }
+.nc-xsell__head { margin: 0 0 1.2rem; }
+.nc-xsell__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--nc-ink);
+}
+.nc-xsell__accent { color: var(--nc-terra-deep); }
+
+.nc-xcard {
+  display: grid;
+  grid-template-columns: 4.8rem 1fr auto;
+  gap: 1.1rem;
+  align-items: center;
+  padding: 0.9rem;
+  margin-bottom: 0.8rem;
+  border: 0.1rem solid var(--nc-line);
+  border-radius: 1.1rem;
+  background: var(--nc-surface);
+  transition: border-color var(--nc-dur-select) var(--nc-ease-out), box-shadow var(--nc-dur-select) var(--nc-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nc-xcard:hover { border-color: #d6cdbc; box-shadow: 0 6px 18px rgba(111, 88, 72, 0.08); }
+}
+.nc-xcard__media {
+  width: 4.8rem;
+  height: 4.8rem;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  border: 0.1rem solid var(--nc-line);
+  background: var(--nc-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nc-xcard__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.nc-xcard__info { min-width: 0; }
+.nc-xcard__name {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--nc-ink);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nc-xcard__meta { display: block; margin-top: 0.2rem; font-size: 1.1rem; color: var(--nc-ink-2); }
+.nc-xcard__meta b {
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  color: var(--nc-ink);
+}
+.nc-xcard__add {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--nc-terra-deep);
+  background: var(--nc-cream);
+  border: 0.1rem solid var(--nc-soft-line);
+  border-radius: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+  transition: background var(--nc-dur-tap) var(--nc-ease-out), color var(--nc-dur-tap) var(--nc-ease-out), transform var(--nc-dur-tap) var(--nc-ease-out), border-color var(--nc-dur-tap) var(--nc-ease-out);
+}
+.nc-xcard__add:active { transform: scale(0.95); }
+@media (hover: hover) and (pointer: fine) {
+  .nc-xcard__add:hover { background: var(--nc-terra); color: #fff; border-color: var(--nc-terra); }
+  .nc-xcard__add:hover .nc-xcard__add-icon { transform: rotate(90deg); }
+}
+.nc-xcard__add.is-loading { opacity: 0.75; cursor: default; }
+.nc-xcard__add.is-added { background: var(--nc-ok); color: #fff; border-color: var(--nc-ok); }
+.nc-xcard__add-icon { flex: 0 0 auto; transition: transform var(--nc-dur-tap) var(--nc-ease-out); }
+@media (prefers-reduced-motion: reduce) {
+  .nc-xcard,
+  .nc-xcard__add,
+  .nc-xcard__add-icon { transition: none; }
+}
+
+/* ————————————————————— Footer ————————————————————— */
+.numen-cart .drawer__footer {
+  flex: 0 0 auto;
+  border-top: 0.1rem solid var(--nc-line);
+  background: linear-gradient(180deg, #fcfbf7, var(--nc-surface));
+  padding: 1.4rem 1.8rem calc(1.4rem + env(safe-area-inset-bottom));
+}
+.numen-cart .cart-drawer__footer > * + * { margin-top: 0; }
+
+.numen-cart .cart-drawer__footer .totals {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.2rem;
+}
+.numen-cart .cart-drawer__footer .totals__total {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--nc-ink);
+}
+.numen-cart .cart-drawer__footer .totals__total-value {
+  margin: 0;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 2.6rem;
+  letter-spacing: 0.02em;
+  color: var(--nc-ink);
+}
+.numen-cart .cart-drawer__footer .tax-note {
+  margin: 0.6rem 0 0;
+  text-align: left;
+  font-size: 1.15rem;
+  color: var(--nc-ink-3);
+}
+
+/* Card de pago alternativo: transferencia + cuotas (drawer y /cart) */
+.nc-pay {
+  margin: 1.2rem 0 0;
+  border-radius: 1.1rem;
+  background: var(--nc-cream);
+  border: 0.1rem solid var(--nc-soft-line);
+  padding: 1.1rem 1.3rem;
+}
+.nc-pay__transfer { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.nc-pay__label { font-size: 1.25rem; font-weight: 600; color: var(--nc-ink); }
+.nc-pay__off {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: var(--nc-terra);
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  margin-left: 0.6rem;
+  white-space: nowrap;
+}
+.nc-pay__val {
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 2.1rem;
+  letter-spacing: 0.02em;
+  color: var(--nc-terra-deep);
+  white-space: nowrap;
+}
+.nc-pay__code { margin: 0.5rem 0 0; font-size: 1.05rem; color: var(--nc-ink-2); line-height: 1.4; }
+.nc-pay__code code {
+  font-family: var(--nc-font-display);
+  font-size: 1.3rem;
+  letter-spacing: 0.06em;
+  color: var(--nc-terra-deep);
+  background: var(--nc-surface);
+  border: 0.1rem solid var(--nc-soft-line);
+  border-radius: 0.4rem;
+  padding: 0 0.5rem;
+}
+.nc-pay__inst { margin: 0.9rem 0 0; font-size: 1.2rem; color: var(--nc-ink-2); text-align: center; }
+/* Reusa installments.liquid; forzamos inline + tipografía de marca (no dependemos de component-installments.css). */
+.nc-pay__inst .installments {
+  display: inline;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  color: inherit;
+}
+.nc-pay__inst .installments__amount {
+  font-family: var(--nc-font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  color: var(--nc-ink);
+}
+
+/* CTA terracota con monto */
+.numen-cart .nc-cta {
+  width: 100%;
+  max-width: none;
+  margin: 1.3rem 0 0;
+  height: 5.4rem;
+  border: 0;
+  border-radius: 1.1rem;
+  cursor: pointer;
+  background: var(--nc-terra);
+  color: #fff;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 2.1rem;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  box-shadow: var(--nc-shadow-btn);
+  transition: background var(--nc-dur-tap) var(--nc-ease-out), transform var(--nc-dur-tap) var(--nc-ease-out), box-shadow var(--nc-dur-tap) var(--nc-ease-out);
+}
+.numen-cart .nc-cta:active { transform: scale(0.985); }
+@media (hover: hover) and (pointer: fine) {
+  .numen-cart .nc-cta:hover { background: #9e4e33; box-shadow: 0 12px 30px rgba(146, 67, 41, 0.3); }
+}
+.numen-cart .nc-cta:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.nc-cta__sep { width: 0.1rem; height: 2rem; background: rgba(255, 255, 255, 0.4); }
+.nc-cta__amt { font-size: 2.1rem; }
+
+.numen-cart .nc-keep {
+  width: 100%;
+  margin: 0.9rem 0 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--nc-ink-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0.6rem;
+  transition: color var(--nc-dur-tap) var(--nc-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .numen-cart .nc-keep:hover { color: var(--nc-ink); }
+}
+
+/* Nota del carrito (Dawn details), discreta */
+.numen-cart .drawer__footer > details {
+  margin: 0 0 1rem;
+  border-bottom: 0.1rem solid var(--nc-line-soft);
+}
+.numen-cart .drawer__footer summary { padding: 1rem 2.8rem 1rem 0; font-size: 1.3rem; color: var(--nc-ink-2); }
+
+/* ————————————————————— Nota legal decant ————————————————————— */
+.nc-legal {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  margin: 1rem 1.8rem 0.2rem;
+  padding: 1.1rem 1.3rem;
+  border-radius: 1rem;
+  background: var(--nc-alert-bg);
+  border: 0.1rem solid var(--nc-alert-line);
+}
+#main-cart-items .nc-legal { margin: 1.6rem 0 0; }
+.nc-legal__icon { flex: 0 0 auto; margin-top: 0.1rem; color: var(--nc-alert); }
+.nc-legal__text { font-size: 1.1rem; line-height: 1.45; color: #7a4226; }
+.nc-legal__text > :first-child { margin-top: 0; }
+.nc-legal__text > :last-child { margin-bottom: 0; }
+.nc-legal__text b { font-weight: 600; }
+
+/* ————————————————————— Empty state (drawer + /cart) ————————————————————— */
+cart-drawer.is-empty .numen-cart.drawer__inner { display: flex; flex-direction: column; padding: 0; }
+cart-drawer.is-empty .numen-cart cart-drawer-items,
+cart-drawer.is-empty .numen-cart .drawer__footer { display: none; }
+.numen-cart .drawer__inner-empty {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.nc-empty__head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.8rem 1.8rem 1.4rem;
+  border-bottom: 0.1rem solid var(--nc-line);
+}
+.nc-empty__bar-title {
+  margin: 0;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 2.6rem;
+  letter-spacing: 0.06em;
+  color: var(--nc-ink);
+}
+.nc-empty__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 3rem 4rem;
+}
+.nc-empty__glyph {
+  width: 8.8rem;
+  height: 8.8rem;
+  border-radius: 50%;
+  margin-bottom: 1.8rem;
+  background: var(--nc-cream);
+  border: 0.1rem solid var(--nc-soft-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nc-terra);
+}
+.nc-empty__title {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-accent, 'Fraunces', Georgia, serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.3rem;
+  line-height: 1.2;
+  color: var(--nc-ink);
+}
+.nc-empty__text {
+  margin: 0 0 2.2rem;
+  max-width: 32ch;
+  font-size: 1.35rem;
+  line-height: 1.5;
+  color: var(--nc-ink-2);
+}
+.numen-cart .nc-empty__cta,
+#main-cart-items .nc-empty__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 5.2rem;
+  padding: 0 3rem;
+  border-radius: 1.1rem;
+  background: var(--nc-terra);
+  color: #fff;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 2rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  box-shadow: var(--nc-shadow-btn);
+  transition: background var(--nc-dur-tap) var(--nc-ease-out), transform var(--nc-dur-tap) var(--nc-ease-out);
+}
+.numen-cart .nc-empty__cta:active,
+#main-cart-items .nc-empty__cta:active { transform: scale(0.98); }
+@media (hover: hover) and (pointer: fine) {
+  .numen-cart .nc-empty__cta:hover,
+  #main-cart-items .nc-empty__cta:hover { background: #9e4e33; }
+}
+.nc-empty__hints {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--nc-ink-3);
+}
+.nc-empty__hint { display: inline-flex; align-items: center; gap: 0.5rem; }
+.nc-empty__hint svg { flex: 0 0 auto; }
+.cart__warnings.nc-empty { padding: 0; }
+
+/* /cart: columna centrada mobile-first (mismo aire que el drawer); full-width en mobile */
+#main-cart-items .js-contents,
+#main-cart-footer .cart__footer,
+.nc-cart-head { max-width: 64rem; margin-left: auto; margin-right: auto; }
+
+/* ————————————————————— Reduced motion ————————————————————— */
+@media (prefers-reduced-motion: reduce) {
+  .numen-cart.drawer__inner { transition: none; }
+  .numen-cart .nc-cta,
+  .numen-cart .nc-line__rm,
+  .numen-cart .nc-stepper .quantity__button,
+  .numen-cart .drawer__close.nc-head__close,
+  .nc-empty__cta { transition: none; }
+}

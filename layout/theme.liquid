@@ -293,6 +293,8 @@
       {{ 'component-totals.css' | asset_url | stylesheet_tag }}
       {{ 'component-price.css' | asset_url | stylesheet_tag }}
       {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+      {%- comment -%} Reskin Numen del carrito: carga DESPUÉS de Dawn para ganar overrides a igual especificidad. {%- endcomment -%}
+      {{ 'component-numen-cart.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
 
     {%- unless settings.type_body_font.system? -%}
@@ -400,6 +402,8 @@
 
     {%- if settings.cart_type == 'drawer' -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+      {%- comment -%} "+ Sumar" del cross-sell (AJAX). Presente en el drawer (global) y en /cart. {%- endcomment -%}
+      <script src="{{ 'numen-cart-add.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
   </body>
 </html>

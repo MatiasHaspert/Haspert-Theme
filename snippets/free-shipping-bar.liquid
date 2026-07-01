@@ -1,15 +1,21 @@
 {%- comment -%}
   Barra de progreso de envío gratis (AOV).
   Lee settings globales (Theme settings → Envío gratis) + el carrito.
-  En el carrito/notificación se re-renderiza solo (zonas .js-contents / cart-notification).
-  En la PDP se renderiza estática como meta de AOV: visible aun con el carrito vacío
-  (muestra "te faltan $[umbral]"); refleja el carrito al cargar la página, no en vivo.
+  En el carrito (drawer / notificación) y en /cart se re-renderiza solo (vive dentro de
+  cart-drawer-items / .js-contents). En la PDP se renderiza estática como meta de AOV.
   Precio/umbral desde Shopify, nada hardcodeado.
+
+  Base = subtotal de LISTA (cart.items_subtotal_price): un descuento de carrito no mueve la
+  barra (coherente con el beneficio por transferencia y las cuotas, que también van por lista).
+
+  Colores a prueba de balas: literales en el CSS (el snippet se rendea en 4 lugares y no
+  podemos depender de tokens del scope ni de un setting `color` que stringifique raro).
+  En progreso = terracota; logrado = verde sobrio (#246A45), nunca fluo.
 {%- endcomment -%}
 {%- if settings.free_ship_enabled and settings.free_ship_threshold > 0 -%}
   {%- liquid
     assign threshold = settings.free_ship_threshold | times: 100
-    assign current = cart.total_price
+    assign current = cart.items_subtotal_price
     if current >= threshold
       assign reached = true
       assign pct = 100
@@ -19,18 +25,27 @@
       assign remaining = threshold | minus: current
       assign pct = current | times: 100 | divided_by: threshold
       assign amount_str = remaining | money
-      assign message = settings.free_ship_text | replace: '{amount}', amount_str
+      assign amount_html = '<span class="free-ship__amt">' | append: amount_str | append: '</span>'
+      assign message = settings.free_ship_text | replace: '{amount}', amount_html
     endif
-    comment
-      Color a prueba de balas: un setting `color` sin guardar puede stringificar a algo
-      NO vacío (p. ej. 'none' o un objeto truthy), así que ni `append: ''` ni `default`
-      lo atrapan y el relleno queda sin color (gris). Por eso NO confiamos en el valor:
-      el CSS pone un literal terracota como base y sólo aplica `bar_color` si es hex válido.
-    endcomment
     assign bar_color = settings.free_ship_bar_color | append: ''
   -%}
   <div class="free-ship{% if reached %} free-ship--reached{% endif %}">
-    <p class="free-ship__text">{{ message }}</p>
+    <p class="free-ship__text">
+      {%- if reached -%}
+        <svg class="free-ship__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+          <path d="M5 12.5l4.2 4.2L19 7" stroke="#246A45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      {%- else -%}
+        <svg class="free-ship__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+          <rect x="2" y="6.5" width="13" height="10" rx="1.4" stroke="#B25A3C" stroke-width="1.6"/>
+          <path d="M15 9.5h3.6l2.4 3v4H15z" stroke="#B25A3C" stroke-width="1.6" stroke-linejoin="round"/>
+          <circle cx="6.5" cy="17.5" r="1.7" stroke="#B25A3C" stroke-width="1.6"/>
+          <circle cx="17.2" cy="17.5" r="1.7" stroke="#B25A3C" stroke-width="1.6"/>
+        </svg>
+      {%- endif -%}
+      <span class="free-ship__msg">{{ message }}</span>
+    </p>
     <div
       class="free-ship__track"
       role="progressbar"
@@ -45,27 +60,39 @@
   </div>
   {%- style -%}
     .free-ship { margin: 0 0 1.6rem; }
-    .free-ship__text { margin: 0 0 0.8rem; font-size: 1.4rem; text-align: center; font-weight: 500; }
+    .free-ship__text {
+      margin: 0 0 0.8rem;
+      font-size: 1.4rem;
+      font-weight: 500;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .free-ship__icon { flex: 0 0 auto; }
+    .free-ship__amt { font-weight: 700; color: #8F4329; }
+    .free-ship--reached .free-ship__text { color: #246A45; font-weight: 600; }
     .free-ship__track {
-      height: 0.6rem;
+      height: 0.7rem;
       border-radius: 999px;
-      background: rgba(var(--color-foreground), 0.08);
+      background: rgba(31, 27, 22, 0.07);
       overflow: hidden;
     }
-    /* `display: block` para anular la regla global `div:empty { display:none }` de
-       base.css (L468): el fill es un <div> vacío a propósito y se ocultaba entero.
-       2 clases (0,2,0) > especificidad de `div:empty` (0,1,1) → gana sin !important. */
+    /* `display: block` anula la regla global `div:empty { display:none }` de base.css
+       (L468): el fill es un <div> vacío a propósito. 2 clases (0,2,0) > (0,1,1) → gana. */
     .free-ship__track .free-ship__fill {
       display: block;
       height: 100%;
       min-width: 0.6rem;
       background-color: #B25A3C; /* terracota base (vale aunque el setting venga vacío/none) */
       {%- if bar_color contains '#' %}
-      background-color: {{ bar_color }}; /* override del merchant sólo si es un hex válido */
+      background-color: {{ bar_color }}; /* override del merchant sólo si es hex válido */
       {%- endif %}
       border-radius: 999px;
-      transition: width 0.4s ease;
+      transition: width 460ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms cubic-bezier(0.23, 1, 0.32, 1);
     }
+    /* Logrado: verde sobrio. (0,3,0) gana sobre el override del merchant (0,2,0). */
+    .free-ship--reached .free-ship__track .free-ship__fill { background-color: #246A45; }
     @media (prefers-reduced-motion: reduce) {
       .free-ship__fill { transition: none; }
     }
