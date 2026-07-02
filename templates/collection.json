@@ -11,7 +11,9 @@
   "sections": {
     "breadcrumbs": {
       "type": "breadcrumbs",
-      "settings": {}
+      "settings": {
+        "home_label": "Inicio"
+      }
     },
     "main-collection-banner": {
       "type": "main-collection-banner",
@@ -23,15 +25,73 @@
     },
     "collection-nav-bar": {
       "type": "collection-nav-bar",
-      "blocks": {},
-      "block_order": [],
-      "settings": {}
+      "blocks": {
+        "angle_7rgLFU": {
+          "type": "angle",
+          "settings": {
+            "collection": "disenador",
+            "label": "",
+            "image": "shopify://shop_images/savage-edp-2.webp",
+            "link": ""
+          }
+        },
+        "angle_YQ4NpH": {
+          "type": "angle",
+          "settings": {
+            "collection": "arabes",
+            "label": "",
+            "image": "shopify://shop_images/lataffaasad2.webp",
+            "link": ""
+          }
+        },
+        "angle_7KFRTx": {
+          "type": "angle",
+          "settings": {
+            "collection": "frescos-para-el-verano",
+            "label": "",
+            "image": "shopify://shop_images/nuit1.webp",
+            "link": ""
+          }
+        },
+        "angle_YB3gDi": {
+          "type": "angle",
+          "settings": {
+            "collection": "perfumes-masculinos-copia",
+            "label": "Femeninos",
+            "image": "shopify://shop_images/Yara_Pink_caja__75339_zoom.jpg",
+            "link": ""
+          }
+        },
+        "angle_ikALYc": {
+          "type": "angle",
+          "settings": {
+            "collection": "perfumes-especiados-copia",
+            "label": "Masculinos",
+            "image": "shopify://shop_images/edt-intense-1.webp",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "angle_7rgLFU",
+        "angle_YQ4NpH",
+        "angle_7KFRTx",
+        "angle_YB3gDi",
+        "angle_ikALYc"
+      ],
+      "settings": {
+        "aria_label": "Colecciones",
+        "color_scheme": "",
+        "padding_top": 14,
+        "padding_bottom": 8
+      }
     },
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
         "products_per_page": 20,
         "columns_desktop": 4,
+        "columns_mobile": "2",
         "color_scheme": "scheme-1",
         "image_ratio": "adapt",
         "image_shape": "default",
@@ -47,7 +107,6 @@
         "enable_filtering": true,
         "filter_type": "drawer",
         "enable_sorting": true,
-        "columns_mobile": "2",
         "padding_top": 0,
         "padding_bottom": 68
       }
