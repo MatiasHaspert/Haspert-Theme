@@ -26,6 +26,15 @@
     "collection-nav-bar": {
       "type": "collection-nav-bar",
       "blocks": {
+        "angle_jRMTTb": {
+          "type": "angle",
+          "settings": {
+            "collection": "los-mas-elegidos",
+            "label": "",
+            "image": "shopify://shop_images/edt-intense-2.webp",
+            "link": ""
+          }
+        },
         "angle_7rgLFU": {
           "type": "angle",
           "settings": {
@@ -73,6 +82,7 @@
         }
       },
       "block_order": [
+        "angle_jRMTTb",
         "angle_7rgLFU",
         "angle_YQ4NpH",
         "angle_7KFRTx",
