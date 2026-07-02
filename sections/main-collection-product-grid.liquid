@@ -10,6 +10,9 @@
   {{ 'quick-add.css' | asset_url | stylesheet_tag }}
 {%- endunless -%}
 
+{%- comment -%} Tracking PLP (dataLayer + Meta Pixel): ángulos, presentación, add_to_cart. {%- endcomment -%}
+<script src="{{ 'numen-tracking.js' | asset_url }}" defer="defer"></script>
+
 {%- if section.settings.quick_add == 'standard' -%}
   <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
@@ -201,6 +204,33 @@
         {%- endif -%}
       </div>
     </div>
+
+    {%- comment -%}
+      SEO: CollectionPage + ItemList de la página ACTUAL (paginada). NO emitimos
+      Product por card (Google lo prefiere en la PDP, donde ya está; en un listado
+      va ItemList). BreadcrumbList lo emite la sección breadcrumbs.
+    {%- endcomment -%}
+    {%- if collection.products.size > 0 -%}
+      {%- capture collection_ld -%}
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": {{ collection.title | json }},
+  "url": {{ shop.url | append: collection.url | json }},
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": {{ collection.all_products_count }},
+    "itemListElement": [
+      {%- for product in collection.products -%}
+        {%- unless forloop.first %},{% endunless -%}
+        { "@type": "ListItem", "position": {{ forloop.index | plus: paginate.current_offset }}, "url": {{ shop.url | append: product.url | json }}, "name": {{ product.title | json }} }
+      {%- endfor -%}
+    ]
+  }
+}
+      {%- endcapture -%}
+      <script type="application/ld+json">{{ collection_ld }}</script>
+    {%- endif -%}
   {%- endpaginate -%}
   {% if section.settings.image_shape == 'arch' %}
     {{ 'mask-arch.svg' | inline_asset_content }}

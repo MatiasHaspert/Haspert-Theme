@@ -53,14 +53,22 @@
     var input = card.querySelector('.product-variant-id');
     if (input && data.variantId) input.value = data.variantId;
 
-    // Hook de tracking (se cablea en la Fase 5).
-    if (window.dataLayer && data.variantId) {
-      window.dataLayer.push({
-        event: 'select_presentation',
-        kind: data.kind,
-        variant_id: data.variantId,
-        price: Number(data.price)
-      });
+    // Tracking (Fase 5): dataLayer + Meta Pixel vía numen-tracking.js.
+    if (data.variantId) {
+      if (window.numenTrack) {
+        window.numenTrack(
+          'select_presentation',
+          { kind: data.kind, variant_id: data.variantId, price: Number(data.price) },
+          { event: 'SelectPresentation', standard: false, data: { kind: data.kind, variant_id: data.variantId } }
+        );
+      } else if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'select_presentation',
+          kind: data.kind,
+          variant_id: data.variantId,
+          price: Number(data.price)
+        });
+      }
     }
   }
 

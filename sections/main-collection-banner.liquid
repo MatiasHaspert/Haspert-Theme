@@ -1,5 +1,6 @@
 {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
 {{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
+{{ 'component-numen-collection-hero.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
   @media screen and (max-width: 749px) {
@@ -12,6 +13,9 @@
 <div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
   <div class="collection-hero__inner page-width {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     <div class="collection-hero__text-wrapper">
+      {%- if section.settings.show_overline and section.settings.overline != blank -%}
+        <p class="collection-hero__overline">{{ section.settings.overline | escape }}</p>
+      {%- endif -%}
       <h1 class="collection-hero__title">
         <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
         {{- collection.title | escape -}}
@@ -19,6 +23,12 @@
 
       {%- if section.settings.show_collection_description -%}
         <div class="collection-hero__description rte">{{ collection.description }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.show_count -%}
+        <p class="collection-hero__count">
+          {{- collection.all_products_count }} {{ section.settings.count_suffix | escape -}}
+        </p>
       {%- endif -%}
     </div>
 
@@ -65,6 +75,35 @@
       "id": "show_collection_image",
       "default": false,
       "label": "t:sections.main-collection-banner.settings.show_collection_image.label"
+    },
+    {
+      "type": "header",
+      "content": "Banner por ángulo (NUMEN)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overline",
+      "label": "Mostrar overline",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "overline",
+      "label": "Overline",
+      "default": "Colección"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Mostrar conteo de productos",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "count_suffix",
+      "label": "Texto después del número",
+      "info": "Ej.: 'perfumes · originales importados'.",
+      "default": "perfumes · originales importados"
     },
     {
       "type": "color_scheme",

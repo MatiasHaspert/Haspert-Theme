@@ -1,0 +1,70 @@
+{%- comment -%}
+  Barra de búsqueda predictiva PERSISTENTE (visible), para el header en mobile.
+  Reusa el mismo <predictive-search> + form que 'header-search' pero SIN el modal:
+  la barra queda a la vista (no detrás de un ícono). Es una instancia ADICIONAL
+  de <predictive-search>: predictive-search.js las soporta y sincroniza su caché
+  entre todas (ver assets/predictive-search.js L6/196).
+
+  Accepts:
+  - input_id: {String} id único del input (requerido; distinto al del modal).
+{%- endcomment -%}
+<div class="header-search-bar">
+  {%- if settings.predictive_search_enabled -%}
+    <predictive-search class="header-search-bar__wrap" data-loading-text="{{ 'accessibility.loading' | t }}">
+  {%- else -%}
+    <search-form class="header-search-bar__wrap">
+  {%- endif -%}
+  <form action="{{ routes.search_url }}" method="get" role="search" class="search header-search-bar__form">
+    <div class="field">
+      <input
+        class="search__input field__input"
+        id="{{ input_id }}"
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ 'general.search.search' | t }}"
+        {%- if settings.predictive_search_enabled -%}
+          role="combobox"
+          aria-expanded="false"
+          aria-owns="predictive-search-results"
+          aria-controls="predictive-search-results"
+          aria-haspopup="listbox"
+          aria-autocomplete="list"
+          autocorrect="off"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+        {%- endif -%}
+      >
+      <label class="field__label" for="{{ input_id }}">{{ 'general.search.search' | t }}</label>
+      <input type="hidden" name="options[prefix]" value="last">
+      <button
+        type="reset"
+        class="reset__button field__button{% if search.terms == blank %} hidden{% endif %}"
+        aria-label="{{ 'general.search.reset' | t }}"
+      >
+        <span class="svg-wrapper">
+          {{- 'icon-reset.svg' | inline_asset_content -}}
+        </span>
+      </button>
+      <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+        <span class="svg-wrapper">
+          {{- 'icon-search.svg' | inline_asset_content -}}
+        </span>
+      </button>
+    </div>
+
+    {%- if settings.predictive_search_enabled -%}
+      <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+        {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
+      </div>
+
+      <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+    {%- endif -%}
+  </form>
+  {%- if settings.predictive_search_enabled -%}
+    </predictive-search>
+  {%- else -%}
+    </search-form>
+  {%- endif -%}
+</div>

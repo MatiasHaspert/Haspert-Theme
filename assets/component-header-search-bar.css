@@ -1,0 +1,106 @@
+/* ============================================================================
+   BARRA DE BÚSQUEDA PROMINENTE (mobile) — NUMEN
+   ----------------------------------------------------------------------------
+   Convierte el campo de búsqueda de Sense (.field + .field__button) en una
+   píldora visible en el header mobile. En desktop/tablet la barra se oculta y
+   sigue el ícono-modal original. Reusa <predictive-search> y su JS.
+   ========================================================================== */
+
+/* En mobile: barra visible, ícono-modal oculto (lo reemplaza la barra). */
+@media screen and (max-width: 749px) {
+  .header__search {
+    display: none;
+  }
+}
+
+.header-search-bar {
+  padding: 0 1.4rem 1rem;
+}
+
+.header-search-bar__wrap,
+.header-search-bar .search {
+  display: block;
+  position: relative;
+}
+
+/* Campo → píldora: [ícono buscar] [input] [reset] */
+.header-search-bar .field {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 0;
+  border-radius: 999px;
+  border: 0.15rem solid rgba(var(--color-foreground), 0.16);
+  background: rgb(var(--color-background));
+  padding: 0 1.2rem;
+  box-shadow: none;
+  transition: border-color 0.16s ease;
+}
+.header-search-bar .field::after {
+  display: none; /* Sense dibuja un borde inferior en .field::after; acá no va */
+}
+.header-search-bar .field:focus-within {
+  border-color: var(--accent);
+}
+
+.header-search-bar .field__input {
+  order: 2;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 4.6rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 1.4rem;
+  color: rgb(var(--color-foreground));
+}
+.header-search-bar .field__input::placeholder {
+  color: rgba(var(--color-foreground), 0.5);
+  opacity: 1;
+}
+
+/* Label accesible pero oculto (usamos placeholder) */
+.header-search-bar .field__label {
+  position: absolute;
+  width: 0.1rem;
+  height: 0.1rem;
+  margin: -0.1rem;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Botones (buscar / reset): en flujo, no absolutos como en Sense */
+.header-search-bar .search__button {
+  order: 1;
+}
+.header-search-bar .reset__button {
+  order: 3;
+}
+.header-search-bar .field__button {
+  position: static;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  flex: 0 0 auto;
+  color: rgba(var(--color-foreground), 0.55);
+}
+.header-search-bar .field__button .svg-wrapper {
+  display: inline-flex;
+}
+.header-search-bar .field__button svg {
+  width: 1.9rem;
+  height: 1.9rem;
+}
+
+/* Dropdown predictivo pegado bajo la barra */
+.header-search-bar .predictive-search {
+  top: calc(100% + 0.4rem);
+  border-radius: var(--inputs-radius, 0.8rem);
+  overflow: hidden;
+}

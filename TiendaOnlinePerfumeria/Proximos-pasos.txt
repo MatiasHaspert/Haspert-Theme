@@ -5,3 +5,5 @@
 - Realizar un documento con los detalles de nuestra marca.
 
 - Como gestionar los números ?
+
+-Ver la manera de publicar las colecciones en todos los canales de venta desde la api.

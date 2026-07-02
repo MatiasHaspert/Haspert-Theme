@@ -1,0 +1,53 @@
+/* ============================================================================
+   BANNER DE COLECCIÓN POR ÁNGULO — NUMEN
+   ----------------------------------------------------------------------------
+   Reskin del collection-hero de Sense al mockup: overline + título Bebas +
+   descripción en cursiva (Fraunces) + línea de conteo. Se carga DESPUÉS de
+   component-collection-hero.css. El texto/copy sale de settings y de Shopify
+   (título, descripción y conteo de la colección), nada hardcodeado.
+   ========================================================================== */
+
+.collection-hero__text-wrapper {
+  max-width: 62rem;
+}
+
+.collection-hero__overline {
+  font-family: var(--font-body-family);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.6rem;
+}
+
+.collection-hero__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 4.4rem;
+  line-height: 0.94;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.8rem;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-hero__title {
+    font-size: 5.8rem;
+  }
+}
+
+.collection-hero__description {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 1.6rem;
+  line-height: 1.4;
+  color: rgba(var(--color-foreground), 0.72);
+  max-width: 42ch;
+}
+
+.collection-hero__count {
+  font-family: var(--font-body-family);
+  font-size: 1.2rem;
+  color: rgba(var(--color-foreground), 0.55);
+  margin: 1.2rem 0 0;
+}

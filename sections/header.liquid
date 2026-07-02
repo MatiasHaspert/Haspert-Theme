@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-header-search-bar.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-cart-notification.css' | asset_url }}" media="print" onload="this.media='all'">
 
@@ -345,6 +346,10 @@
       </a>
     </div>
   </header>
+  {%- comment -%} NUMEN: búsqueda prominente en mobile (barra visible; el ícono-modal queda para tablet/desktop). {%- endcomment -%}
+  <div class="header__mobile-search medium-hide large-up-hide">
+    {% render 'header-search-bar', input_id: 'Search-Bar' %}
+  </div>
 </{{ header_tag }}>
 
 {%- if settings.cart_type == "notification" -%}

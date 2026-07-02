@@ -255,6 +255,12 @@
   }
 }
 
+/* Foco visible por teclado (a11y): los badges son operables con Tab + Enter/Espacio */
+.product-card-wrapper .card-perfume__pres-btn:focus-visible {
+  outline: 0.2rem solid var(--accent);
+  outline-offset: 0.2rem;
+}
+
 .product-card-wrapper .card-perfume__pres-btn.is-selected {
   border-color: var(--accent);
   color: var(--accent);
@@ -267,7 +273,8 @@
   font-family: var(--font-body-family);
   font-size: 1rem;
   line-height: 1.3;
-  color: rgba(var(--color-foreground), 0.55);
+  /* 0.68: sube el contraste de la letra chica para acercarse a AA (verificar con tool) */
+  color: rgba(var(--color-foreground), 0.68);
   margin-top: 0.4rem;
 }
 
@@ -286,6 +293,6 @@
   font-family: var(--font-body-family);
   font-size: 1.1rem;
   line-height: 1.3;
-  color: rgba(var(--color-foreground), 0.6);
+  color: rgba(var(--color-foreground), 0.68);
   margin-top: 0.5rem;
 }
