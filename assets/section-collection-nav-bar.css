@@ -1,0 +1,95 @@
+/* ============================================================================
+   BARRA DE ÁNGULOS CURATORIALES (NUMEN) — collection-nav-bar
+   ----------------------------------------------------------------------------
+   Fila horizontal scrolleable de chips (imagen circular + label). Va entre el
+   banner y los controles de la grilla. Chip activo = colección actual.
+   Tokens: variables de esquema de Sense (--color-*) + --accent.
+   ========================================================================== */
+
+.collnav {
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
+}
+
+.collnav__track {
+  display: flex;
+  gap: 1.2rem;
+  margin: 0;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+.collnav__track::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+.collnav__item {
+  flex: 0 0 auto;
+}
+
+.collnav__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  width: 6.4rem;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.collnav__thumb {
+  width: 5.6rem;
+  height: 5.6rem;
+  border-radius: 50%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: rgb(var(--color-background));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.14);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.12s ease;
+}
+
+.collnav__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.collnav__monogram {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+}
+
+.collnav__label {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: rgba(var(--color-foreground), 0.7);
+}
+
+.collnav__link:active .collnav__thumb {
+  transform: scale(0.94);
+}
+
+/* Chip activo: colección actual */
+.collnav__link.is-active .collnav__thumb {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem #f3e2da; /* accent-soft del design system */
+}
+.collnav__link.is-active .collnav__label {
+  color: var(--accent);
+}
+
+@media (hover: hover) {
+  .collnav__link:hover .collnav__thumb {
+    border-color: var(--accent);
+  }
+}

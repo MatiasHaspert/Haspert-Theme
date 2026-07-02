@@ -516,6 +516,11 @@
                     else
                       assign visual_layout_class = 'facets-layout facets-layout-list facets-layout-list--' | append: presentation
                     endif
+                    # NUMEN acordeón: pre-abrir Casa, Familia y Precio; el resto colapsado.
+                    assign is_open = false
+                    if filter.type == 'price_range' or filter.param_name contains 'casa' or filter.param_name contains 'familia'
+                      assign is_open = true
+                    endif
                   %}
 
                   {% case filter.type %}
@@ -524,10 +529,12 @@
                         id="Details-Mobile-{{ filter.param_name | escape }}-{{ section.id }}"
                         class="mobile-facets__details js-filter"
                         data-index="mobile-{{ forloop.index }}"
+                        {% if is_open %}open data-numen-open{% endif %}
                       >
                         <summary class="mobile-facets__summary focus-inset">
                           <div>
                             <span>{{ filter.label | escape }}</span>
+                            <span class="mobile-facets__opt-count">{{ filter.values.size }}</span>
                             <span class="mobile-facets__arrow">
                               {{- 'icon-arrow.svg' | inline_asset_content -}}
                             </span>
@@ -666,6 +673,7 @@
                         id="Details-Mobile-{{ filter.param_name | escape }}-{{ section.id }}"
                         class="mobile-facets__details js-filter"
                         data-index="mobile-{{ forloop.index }}"
+                        {% if is_open %}open data-numen-open{% endif %}
                       >
                         <summary class="mobile-facets__summary focus-inset">
                           <div>

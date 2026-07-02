@@ -25,7 +25,6 @@
   {{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
 
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
-  {{ 'component-installments.css' | asset_url | stylesheet_tag }}
   {{ 'component-card-perfume.css' | asset_url | stylesheet_tag }}
   {{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
   {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
@@ -42,22 +41,58 @@
       assign ratio = 1
     endif
 
-    comment
-      Presentación SELLADA: la variante "Frasco" (opción "Tamaño"). NO la más
-      barata (decant). Fallback a la variante por defecto si el producto no
-      sigue el modelo de presentaciones. Precio/compare_at vienen de Shopify.
-    endcomment
-    assign sealed_variant = card_product.selected_or_first_available_variant
+    # ── Presentaciones (perfumería) ──────────────────────────────────────────
+    # El TIPO (sealed/tester/decant) vive en el metafield de variante
+    # custom.tipo_presentacion (no se parsea del título). Default por prioridad
+    # sellado > tester > decant, SOLO entre las presentaciones con stock.
+    # Precio/compare_at salen de Shopify.
+    assign sealed_default = null
+    assign tester_default = null
+    assign decant_default = null
+    assign decant_min_variant = null
+    assign available_pres_count = 0
     for card_variant in card_product.variants
-      if card_variant.title contains 'Frasco'
-        assign sealed_variant = card_variant
-        break
+      if card_variant.available
+        assign available_pres_count = available_pres_count | plus: 1
+        capture pres_kind
+          render 'perfume-presentation-kind', variant: card_variant
+        endcapture
+        assign pres_kind = pres_kind | strip
+        if pres_kind == 'sealed' and sealed_default == null
+          assign sealed_default = card_variant
+        elsif pres_kind == 'tester' and tester_default == null
+          assign tester_default = card_variant
+        elsif pres_kind == 'decant'
+          if decant_default == null
+            assign decant_default = card_variant
+          endif
+          if decant_min_variant == null or card_variant.price < decant_min_variant.price
+            assign decant_min_variant = card_variant
+          endif
+        endif
       endif
     endfor
+    assign default_variant = sealed_default | default: tester_default | default: decant_default | default: card_product.selected_or_first_available_variant
+
     assign sale_pct = 0
-    if sealed_variant.compare_at_price > sealed_variant.price
-      assign sale_diff = sealed_variant.compare_at_price | minus: sealed_variant.price | times: 100.0
-      assign sale_pct = sale_diff | divided_by: sealed_variant.compare_at_price | round
+    if default_variant.compare_at_price > default_variant.price
+      assign sale_diff = default_variant.compare_at_price | minus: default_variant.price | times: 100.0
+      assign sale_pct = sale_diff | divided_by: default_variant.compare_at_price | round
+    endif
+
+    # Pista "desde $X en decant": solo si el frasco supera el umbral y hay
+    # decant con stock. Umbral en pesos; variant.price en centavos (ARS) → /100.
+    assign show_from_hint = false
+    assign decant_min_display = ''
+    if decant_min_variant != null
+      assign decant_min_display = decant_min_variant.price | money
+    endif
+    if show_decant_hint and decant_min_variant != null and sealed_default != null
+      assign hint_threshold = decant_hint_threshold | default: 80000
+      assign sealed_pesos = sealed_default.price | divided_by: 100
+      if sealed_pesos > hint_threshold
+        assign show_from_hint = true
+      endif
     endif
   -%}
   <div class="card-wrapper product-card-wrapper underline-links-hover">
@@ -239,20 +274,75 @@
             {%- endif -%}
 
             {%- comment -%}
-              Precio de la presentación SELLADA (variante "Frasco", resuelta arriba).
+              Badges de presentación (perfumería): una por variante con stock,
+              agrupadas sellado → tester → decant. El JS (plp-card.js) actualiza
+              precio + línea fiscal + pista al tocar, y apunta el add al variante.
+            {%- endcomment -%}
+            {%- if card_product.available and available_pres_count > 1 and quick_add == 'standard' -%}
+              {%- assign badges_sealed = '' -%}
+              {%- assign badges_tester = '' -%}
+              {%- assign badges_decant = '' -%}
+              {%- for card_variant in card_product.variants -%}
+                {%- if card_variant.available -%}
+                  {%- capture pres_kind -%}{% render 'perfume-presentation-kind', variant: card_variant %}{%- endcapture -%}
+                  {%- assign pres_kind = pres_kind | strip -%}
+                  {%- capture v_ml -%}{% render 'perfume-ml', variant: card_variant, product: card_product %}{%- endcapture -%}
+                  {%- assign v_ml = v_ml | strip -%}
+                  {%- capture v_net -%}{% if show_price_no_tax %}{% render 'price-no-tax', price: card_variant.price, tax_rate: tax_rate %}{% endif %}{%- endcapture -%}
+                  {%- capture pres_label -%}
+                    {%- case pres_kind -%}
+                      {%- when 'tester' -%}{{ 'products.product.presentation.tester' | t }}
+                      {%- when 'decant' -%}{%- if v_ml != '0' and v_ml != blank -%}{{ 'products.product.presentation.decant' | t: ml: v_ml }}{%- else -%}{{ 'products.product.presentation.decant_generic' | t }}{%- endif -%}
+                      {%- else -%}{%- if v_ml != '0' and v_ml != blank -%}{{ 'products.product.presentation.frasco_ml' | t: ml: v_ml }}{%- else -%}{{ 'products.product.presentation.frasco' | t }}{%- endif -%}
+                    {%- endcase -%}
+                  {%- endcapture -%}
+                  {%- capture btn -%}<button type="button" class="card-perfume__pres-btn{% if card_variant.id == default_variant.id %} is-selected{% endif %}" data-variant-id="{{ card_variant.id }}" data-kind="{{ pres_kind }}" data-price="{{ card_variant.price }}" data-price-display="{{ card_variant.price | money }}" data-compare-display="{% if card_variant.compare_at_price > card_variant.price %}{{ card_variant.compare_at_price | money }}{% endif %}" data-net-display="{{ v_net | strip }}" aria-pressed="{% if card_variant.id == default_variant.id %}true{% else %}false{% endif %}">{{ pres_label | strip }}</button>{%- endcapture -%}
+                  {%- case pres_kind -%}
+                    {%- when 'tester' -%}{%- assign badges_tester = badges_tester | append: btn -%}
+                    {%- when 'decant' -%}{%- assign badges_decant = badges_decant | append: btn -%}
+                    {%- else -%}{%- assign badges_sealed = badges_sealed | append: btn -%}
+                  {%- endcase -%}
+                {%- endif -%}
+              {%- endfor -%}
+              <div class="card-perfume__pres" role="group" aria-label="{{ 'products.product.presentation.label' | t }}">
+                {{ badges_sealed }}{{ badges_tester }}{{ badges_decant }}
+              </div>
+            {%- endif -%}
+
+            {%- comment -%}
+              Precio de la presentación por defecto (resuelta arriba por prioridad).
               El símbolo $ lo aporta el formato de moneda de la tienda (no se hardcodea).
+              Los badges de arriba lo actualizan en cliente sin recargar.
             {%- endcomment -%}
             <div class="card-perfume__pricing">
               <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
               <div class="card-perfume__price">
-                <span class="card-perfume__price-now">{{ sealed_variant.price | money }}</span>
-                {%- if sealed_variant.compare_at_price > sealed_variant.price -%}
-                  <s class="card-perfume__price-was">
-                    {{- sealed_variant.compare_at_price | money -}}
-                  </s>
-                {%- endif -%}
+                <span class="card-perfume__price-now">{{ default_variant.price | money }}</span>
+                <s
+                  class="card-perfume__price-was"
+                  {%- unless default_variant.compare_at_price > default_variant.price %} hidden{% endunless -%}
+                >
+                  {%- if default_variant.compare_at_price > default_variant.price -%}
+                    {{- default_variant.compare_at_price | money -}}
+                  {%- endif -%}
+                </s>
               </div>
-              {% render 'installments', price: sealed_variant.price %}
+              {%- if show_price_no_tax -%}
+                <div class="card-perfume__net">
+                  {{ 'products.product.price.no_national_tax' | t }}
+                  <span class="card-perfume__net-amount">
+                    {%- render 'price-no-tax', price: default_variant.price, tax_rate: tax_rate -%}
+                  </span>
+                </div>
+              {%- endif -%}
+              {%- if show_from_hint -%}
+                <div class="card-perfume__from">
+                  {{- 'products.product.from_decant' | t: price: decant_min_display -}}
+                </div>
+              {%- endif -%}
+              {%- if show_installments_note -%}
+                <div class="card-perfume__cuotas">{{ 'products.product.installments_note' | t }}</div>
+              {%- endif -%}
             </div>
             {%- if card_product.quantity_price_breaks_configured? -%}
               {% if card_product.variants_count == 1 and quick_add == 'bulk' %}
@@ -345,8 +435,8 @@
               <button type="button" class="quick-add__submit card-perfume__add" disabled>
                 <span>{{ 'products.product.sold_out' | t }}</span>
               </button>
-            {%- elsif sealed_variant.available -%}
-              {%- comment -%} Agrega directo la presentación SELLADA (Frasco) vía AJAX → cart-notification. {%- endcomment -%}
+            {%- elsif default_variant.available -%}
+              {%- comment -%} Agrega la presentación elegida (default por prioridad; los badges la cambian) vía AJAX → cart drawer. {%- endcomment -%}
               <product-form data-section-id="{{ section_id }}">
                 {%- form 'product',
                   card_product,
@@ -358,7 +448,7 @@
                   <input
                     type="hidden"
                     name="id"
-                    value="{{ sealed_variant.id }}"
+                    value="{{ default_variant.id }}"
                     class="product-variant-id"
                   >
                   <button

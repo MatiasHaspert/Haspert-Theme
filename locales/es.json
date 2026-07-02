@@ -120,6 +120,16 @@
       "add_short": "Agregar",
       "description": "Descripción",
       "on_sale": "Oferta",
+      "presentation": {
+        "label": "Presentación",
+        "frasco": "Frasco",
+        "frasco_ml": "{{ ml }}ml",
+        "tester": "Tester",
+        "decant": "Decant {{ ml }}ml",
+        "decant_generic": "Decant"
+      },
+      "from_decant": "Desde {{ price }} en decant",
+      "installments_note": "6 cuotas sin interés · CFTA 0%",
       "quantity": {
         "label": "Cantidad",
         "input_label": "Cantidad para {{ product }}",
@@ -136,6 +146,7 @@
       },
       "price": {
         "from_price_html": "A partir de {{ price }}",
+        "no_national_tax": "Precio sin imp. nacionales:",
         "regular_price": "Precio habitual",
         "sale_price": "Precio de oferta",
         "unit_price": "Precio unitario"

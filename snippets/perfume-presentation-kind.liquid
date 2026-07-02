@@ -1,0 +1,30 @@
+{%- comment -%}
+  Normaliza el TIPO de presentación de una variante a: sealed | tester | decant.
+  Fuente de verdad: metafield de variante custom.tipo_presentacion
+  (Sellado / Tester / Decant), igual que la PDP. Fallback por heurística de
+  título solo si el metafield está vacío. Único lugar donde vive esta lógica.
+
+  Acepta: variant (requerido).
+  Uso:
+    {%- capture kind -%}{% render 'perfume-presentation-kind', variant: v %}{%- endcapture -%}
+    {%- assign kind = kind | strip -%}
+{%- endcomment -%}
+{%- liquid
+  assign tipo = variant.metafields.custom.tipo_presentacion.value
+  if tipo == 'Sellado'
+    echo 'sealed'
+  elsif tipo == 'Tester'
+    echo 'tester'
+  elsif tipo == 'Decant'
+    echo 'decant'
+  else
+    assign lower_title = variant.title | downcase
+    if lower_title contains 'tester'
+      echo 'tester'
+    elsif lower_title contains 'decant'
+      echo 'decant'
+    else
+      echo 'sealed'
+    endif
+  endif
+-%}

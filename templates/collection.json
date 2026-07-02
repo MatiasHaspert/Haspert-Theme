@@ -21,6 +21,12 @@
         "color_scheme": "scheme-1"
       }
     },
+    "collection-nav-bar": {
+      "type": "collection-nav-bar",
+      "blocks": {},
+      "block_order": [],
+      "settings": {}
+    },
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
@@ -32,9 +38,14 @@
         "show_secondary_image": true,
         "show_vendor": true,
         "show_rating": false,
-        "quick_add": "none",
+        "quick_add": "standard",
+        "show_price_no_tax": true,
+        "tax_rate": 21,
+        "show_decant_hint": true,
+        "decant_hint_threshold": 80000,
+        "show_installments_note": true,
         "enable_filtering": true,
-        "filter_type": "horizontal",
+        "filter_type": "drawer",
         "enable_sorting": true,
         "columns_mobile": "2",
         "padding_top": 0,
@@ -45,6 +56,7 @@
   "order": [
     "breadcrumbs",
     "main-collection-banner",
+    "collection-nav-bar",
     "main-collection-product-grid"
   ]
 }

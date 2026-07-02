@@ -13,6 +13,8 @@
 {%- if section.settings.quick_add == 'standard' -%}
   <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  {%- comment -%} Precio dinámico por presentación en la card (un listener delegado). {%- endcomment -%}
+  <script src="{{ 'plp-card.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
 {%- if section.settings.quick_add == 'bulk' -%}
@@ -99,6 +101,11 @@
 
     <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
       {{ 'component-facets.css' | asset_url | stylesheet_tag }}
+      {%- if section.settings.filter_type == 'drawer' -%}
+        {%- comment -%} NUMEN: bottom sheet + acordeón (reusa facets.js/menu-drawer sin tocarlos). {%- endcomment -%}
+        {{ 'component-numen-facets.css' | asset_url | stylesheet_tag }}
+        <script src="{{ 'numen-facets-accordion.js' | asset_url }}" defer="defer"></script>
+      {%- endif -%}
       <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
       {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
         <aside
@@ -175,7 +182,12 @@
                     lazy_load: lazy_load,
                     skip_styles: skip_card_product_styles,
                     quick_add: section.settings.quick_add,
-                    section_id: section.id
+                    section_id: section.id,
+                    show_price_no_tax: section.settings.show_price_no_tax,
+                    tax_rate: section.settings.tax_rate,
+                    show_decant_hint: section.settings.show_decant_hint,
+                    decant_hint_threshold: section.settings.decant_hint_threshold,
+                    show_installments_note: section.settings.show_installments_note
                   %}
                 </li>
                 {%- assign skip_card_product_styles = true -%}
@@ -343,6 +355,46 @@
           "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3"
         }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Card de perfume"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price_no_tax",
+      "label": "Mostrar 'precio sin impuestos nacionales'",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "tax_rate",
+      "min": 0,
+      "max": 30,
+      "step": 0.5,
+      "unit": "%",
+      "label": "Tasa impuestos nacionales (provisional)",
+      "info": "Provisional hasta definir la figura fiscal (RI vs monotributo). Neto = precio ÷ (1 + tasa).",
+      "default": 21
+    },
+    {
+      "type": "checkbox",
+      "id": "show_decant_hint",
+      "label": "Mostrar pista 'desde $X en decant'",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "decant_hint_threshold",
+      "label": "Umbral de precio para la pista (ARS, en pesos)",
+      "default": 80000
+    },
+    {
+      "type": "checkbox",
+      "id": "show_installments_note",
+      "label": "Mostrar nota de cuotas en la card",
+      "info": "Claim financiero: confirmá que 6 cuotas sin interés / CFTA 0% sea real antes de publicar. El texto se edita en Contenido → 'installments_note'.",
+      "default": true
     },
     {
       "type": "header",

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NUMEN · Colección (PLP · mockup hi-fi mobile)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#B25A3C; --accent-soft:#F3E2DA; --accent-ink:#8F4329;
+  --bg:#F4F2ED; --surface:#FFFFFF; --panel:#ECE8DF; --line:#E0DBD0;
+  --ink:#1F1B16; --ink-2:#57514A; --ink-3:#6B6157;
+  --ok:#246A45; --ok-bg:#E7F2EA; --ok-line:#B6D8C2;
+  --alert:#B5471F; --alert-bg:#FAE9DF; --alert-line:#E7C3AC;
+  --font-display:'Bebas Neue','Oswald',sans-serif;
+  --font-body:'Montserrat',system-ui,sans-serif;
+  --font-accent:'Fraunces',Georgia,serif;
+  --r-sm:4px; --r-md:8px; --r-lg:14px; --r-pill:999px;
+  --tap:44px;
+  --shadow-sm:0 1px 2px rgba(27,21,16,.06);
+  --shadow-md:0 4px 16px rgba(27,21,16,.08);
+  --shadow-lg:0 18px 48px rgba(27,21,16,.16);
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-drawer:cubic-bezier(.32,.72,0,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0; background:#E7E2D8; color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; line-height:1.5}
+.phone{max-width:430px; margin:0 auto; background:var(--bg); min-height:100vh; position:relative; box-shadow:0 0 60px rgba(27,21,16,.12); overflow:hidden}
+img{max-width:100%; display:block}
+button{font-family:inherit; cursor:pointer; border:none; background:none}
+a{color:inherit; text-decoration:none}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.overline{font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:0}
+
+/* header */
+.hdr{position:sticky; top:0; z-index:40; background:rgba(244,242,237,.9); backdrop-filter:saturate(140%) blur(10px); border-bottom:1px solid var(--line)}
+.hdr__bar{display:flex; align-items:center; justify-content:space-between; padding:10px 16px 8px}
+.hdr__icon{width:var(--tap); height:var(--tap); display:grid; place-items:center; color:var(--ink); border-radius:var(--r-md)}
+.hdr__brand{font-family:var(--font-display); font-size:26px; letter-spacing:.16em; line-height:1}
+.search{position:relative; padding:0 14px 12px}
+.search__field{display:flex; align-items:center; gap:9px; background:var(--surface); border:1.5px solid var(--line); border-radius:var(--r-pill); padding:11px 15px; transition:border-color .18s var(--ease-out)}
+.search__field:focus-within{border-color:var(--accent)}
+.search__field input{border:none; outline:none; background:none; flex:1; font-family:inherit; font-size:14px; color:var(--ink); min-width:0}
+.search__field input::placeholder{color:var(--ink-3)}
+.predict{position:absolute; left:14px; right:14px; top:calc(100% - 4px); background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); box-shadow:var(--shadow-md); padding:6px; z-index:50; display:none}
+.predict.show{display:block}
+.predict__row{display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--r-sm); font-size:13px}
+.predict__row:active{background:var(--panel)}
+.predict__row .k{color:var(--ink-3); font-size:11px; margin-left:auto}
+.predict__lbl{font-size:10.5px; color:var(--ink-3); letter-spacing:.08em; text-transform:uppercase; padding:6px 10px 3px}
+
+/* banner */
+.banner{position:relative; padding:26px 18px 22px; background:radial-gradient(120% 120% at 80% 0%, #F0E7DC, var(--panel)); border-bottom:1px solid var(--line); overflow:hidden}
+.banner__ov{color:var(--accent-ink)}
+.banner__h{font-family:var(--font-display); font-size:52px; line-height:.9; letter-spacing:.01em; margin:6px 0 8px}
+.banner__d{font-family:var(--font-accent); font-style:italic; font-size:16px; color:var(--ink-2); max-width:30ch; line-height:1.4}
+.banner__count{margin-top:12px; font-size:12px; color:var(--ink-3)}
+
+/* trust strip */
+.trust{display:flex; gap:6px; padding:11px 12px; background:var(--surface); border-bottom:1px solid var(--line); overflow-x:auto}
+.trust__i{display:flex; align-items:center; gap:7px; font-size:11.5px; font-weight:500; color:var(--ink-2); white-space:nowrap; padding:0 6px}
+.trust__i svg{color:var(--accent-ink); flex:none}
+
+/* controls */
+.controls{position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; background:rgba(244,242,237,.94); backdrop-filter:saturate(140%) blur(10px); border-bottom:1px solid var(--line)}
+.ctrl-btn{display:flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--ink); padding:9px 14px; border:1.5px solid var(--line); border-radius:var(--r-pill); background:var(--surface); transition:border-color .18s var(--ease-out), transform .12s var(--ease-out)}
+.ctrl-btn:active{transform:scale(.97)}
+.ctrl-btn .dot{width:16px; height:16px; border-radius:50%; background:var(--accent); color:#fff; font-size:10px; display:grid; place-items:center; font-weight:700}
+.ctrl-count{font-size:12px; color:var(--ink-3); font-weight:500}
+
+/* active chips */
+.achips{display:flex; gap:8px; padding:12px 14px 4px; overflow-x:auto}
+.achip{display:inline-flex; align-items:center; gap:7px; white-space:nowrap; font-size:12px; font-weight:600; color:var(--accent-ink); background:#F6EFDD; border:1px solid #E4D6AE; border-radius:var(--r-pill); padding:6px 8px 6px 12px}
+.achip button{width:18px; height:18px; display:grid; place-items:center; color:var(--accent-ink); border-radius:50%}
+.achip button:active{background:#e9dcc0}
+
+/* grid */
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px}
+.pcard{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; display:flex; flex-direction:column; opacity:0; transform:translateY(8px); animation:rise .45s var(--ease-out) forwards}
+@keyframes rise{to{opacity:1; transform:none}}
+.pcard__media{position:relative; aspect-ratio:1; background:#FBFAF7; display:grid; place-items:center; border-bottom:1px solid var(--line)}
+.pcard__media a{position:absolute; inset:0; display:grid; place-items:center}
+.pcard__badge{position:absolute; top:8px; left:8px; font-size:10px; font-weight:700; letter-spacing:.03em; padding:3px 7px; border-radius:var(--r-sm); z-index:2}
+.pcard__badge--sale{background:var(--accent); color:#fff}
+.pcard__badge--out{background:var(--ink); color:#fff}
+.pcard__fav{position:absolute; top:6px; right:6px; width:30px; height:30px; display:grid; place-items:center; color:var(--ink-3); z-index:2}
+.pcard__body{padding:11px 11px 12px; display:flex; flex-direction:column; gap:0; flex:1}
+.pcard__brand{font-size:10.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--accent-ink)}
+.pcard__name{font-size:13.5px; font-weight:600; line-height:1.25; margin:3px 0 7px; color:var(--ink)}
+.pcard__facts{display:inline-flex; align-items:center; gap:6px; font-size:10.5px; font-weight:600; color:#4A4039; background:#F2EBDD; border:1px solid var(--line); border-radius:var(--r-pill); padding:4px 9px; width:fit-content; margin-bottom:9px}
+.pcard__facts i{width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none}
+.pcard__rating{display:flex; align-items:center; gap:5px; font-size:11px; color:var(--ink-2); margin-bottom:7px}
+.pcard__rating .stars{color:var(--accent); letter-spacing:1px}
+.pcard__price{font-family:var(--font-display); font-size:27px; letter-spacing:.02em; line-height:1; color:var(--ink); font-variant-numeric:tabular-nums}
+.pcard__price s{font-family:var(--font-body); font-size:12px; color:var(--ink-3); font-weight:500; margin-left:5px}
+.pcard__net{font-size:9.5px; color:var(--ink-3); margin-top:3px; line-height:1.3}
+.pcard__from{font-size:10.5px; font-weight:600; color:var(--accent-ink); margin-top:4px}
+.pcard__cuotas{font-size:10.5px; color:var(--ink-2); margin-top:5px}
+.pcard__decant{display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:600; color:var(--accent-ink); background:#FBF3E6; border:1px dashed #E4D6AE; border-radius:var(--r-sm); padding:4px 7px; width:fit-content; margin-top:8px}
+.pcard__spacer{flex:1; min-height:8px}
+.pcard__add{margin-top:10px; width:100%; min-height:40px; background:var(--accent); color:#fff; border-radius:var(--r-md); font-family:var(--font-display); font-size:16px; letter-spacing:.05em; display:flex; align-items:center; justify-content:center; gap:7px; transition:background .18s, transform .12s var(--ease-out)}
+.pcard__add:active{transform:scale(.97)}
+.pcard__add[disabled]{background:var(--panel); color:var(--ink-3); cursor:not-allowed}
+@media (hover:hover){.pcard__add:not([disabled]):hover{background:var(--accent-ink)}}
+
+/* barra de colecciones (sub-navegación por ángulo) */
+.collbar{display:flex; gap:12px; padding:14px 14px 8px; overflow-x:auto; background:var(--bg); border-bottom:1px solid var(--line)}
+.collbar__i{flex:none; display:flex; flex-direction:column; align-items:center; gap:6px; width:62px; text-align:center}
+.collbar__img{width:56px; height:56px; border-radius:50%; background:radial-gradient(120% 100% at 50% 18%, #FBF8F1, var(--panel)); border:1px solid var(--line); display:grid; place-items:center; transition:border-color .16s, box-shadow .16s, transform .12s var(--ease-out)}
+.collbar__i:active .collbar__img{transform:scale(.94)}
+.collbar__i.on .collbar__img{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft)}
+.collbar__t{font-size:10.5px; font-weight:600; color:var(--ink-2); line-height:1.1}
+.collbar__i.on .collbar__t{color:var(--accent-ink)}
+
+/* badges de presentación (en la card) */
+.pres{display:flex; flex-wrap:wrap; gap:6px; margin:1px 0 9px}
+.pres__b{font-size:10px; font-weight:600; color:var(--ink-2); background:var(--surface); border:1.5px solid var(--line); border-radius:var(--r-pill); padding:5px 10px; white-space:nowrap; transition:border-color .16s var(--ease-out), background .16s, color .16s, transform .1s var(--ease-out)}
+.pres__b:active{transform:scale(.95)}
+.pres__b.sel{border-color:var(--accent); background:#FCF9F0; color:var(--accent-ink)}
+
+/* load more */
+.more{padding:6px 14px 30px; text-align:center}
+.more button{border:1.5px solid var(--ink); border-radius:var(--r-md); padding:13px 26px; font-family:var(--font-display); font-size:17px; letter-spacing:.05em; color:var(--ink); background:var(--surface); transition:transform .12s var(--ease-out)}
+.more button:active{transform:scale(.98)}
+.more p{font-size:11px; color:var(--ink-3); margin:10px 0 0}
+
+/* ===== filters drawer (bottom sheet) ===== */
+.scrim{position:fixed; inset:0; background:rgba(27,21,16,.42); opacity:0; visibility:hidden; transition:opacity .26s ease, visibility .26s; z-index:60}
+.scrim.show{opacity:1; visibility:visible}
+.sheet{position:fixed; left:0; right:0; bottom:0; max-width:430px; margin:0 auto; background:var(--bg); border-radius:18px 18px 0 0; z-index:61; transform:translateY(100%); transition:transform .32s var(--ease-drawer); display:flex; flex-direction:column; max-height:88vh}
+.sheet.show{transform:translateY(0)}
+.sheet__head{display:flex; align-items:center; justify-content:space-between; padding:16px 18px 12px; border-bottom:1px solid var(--line)}
+.sheet__head h3{font-family:var(--font-display); font-size:26px; letter-spacing:.03em; margin:0; line-height:1}
+.sheet__grip{width:38px; height:4px; border-radius:2px; background:var(--line); margin:8px auto 0; position:absolute; top:6px; left:50%; transform:translateX(-50%)}
+.sheet__clear{font-size:12px; font-weight:600; color:var(--accent-ink)}
+.sheet__body{overflow-y:auto; padding:4px 18px 12px; flex:1}
+.facet{border-bottom:1px solid var(--line)}
+.facet__head{width:100%; display:flex; align-items:center; justify-content:space-between; padding:15px 2px; font-weight:600; font-size:14px; color:var(--ink)}
+.facet__head .n{font-size:11px; color:var(--ink-3); font-weight:500; margin-left:auto; margin-right:10px}
+.facet__chev{transition:transform .2s var(--ease-out); color:var(--accent-ink)}
+.facet.open .facet__chev{transform:rotate(180deg)}
+.facet__panel{display:grid; grid-template-rows:0fr; transition:grid-template-rows .28s var(--ease-out)}
+.facet.open .facet__panel{grid-template-rows:1fr}
+.facet__wrap{overflow:hidden}
+.facet__opts{padding:2px 0 14px; display:flex; flex-wrap:wrap; gap:8px}
+.fopt{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:500; color:var(--ink-2); background:var(--surface); border:1.5px solid var(--line); border-radius:var(--r-pill); padding:8px 13px; transition:border-color .16s var(--ease-out), background .16s var(--ease-out), color .16s}
+.fopt:active{transform:scale(.97)}
+.fopt.on{border-color:var(--accent); background:#FCF9F0; color:var(--accent-ink); font-weight:600}
+.fopt .c{width:16px; height:16px; border:1.5px solid #C7BBA6; border-radius:4px; display:grid; place-items:center; transition:background .16s, border-color .16s}
+.fopt.on .c{background:var(--accent); border-color:var(--accent)}
+.price-row{display:flex; align-items:center; gap:10px; padding:6px 0 16px}
+.price-in{flex:1; border:1.5px solid var(--line); border-radius:var(--r-md); padding:10px 12px; font-family:inherit; font-size:13px; color:var(--ink); background:var(--surface)}
+.sheet__foot{padding:12px 18px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:var(--bg)}
+.apply{width:100%; min-height:50px; background:var(--accent); color:#fff; border-radius:var(--r-md); font-family:var(--font-display); font-size:20px; letter-spacing:.05em; transition:transform .12s var(--ease-out), background .18s}
+.apply:active{transform:scale(.98)}
+
+/* sort menu */
+.sortmenu{position:absolute; right:14px; top:calc(100% + 6px); background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); box-shadow:var(--shadow-md); padding:6px; display:none; z-index:35; min-width:180px}
+.sortmenu.show{display:block}
+.sortmenu button{width:100%; text-align:left; padding:10px 12px; border-radius:var(--r-sm); font-size:13px; color:var(--ink); display:flex; align-items:center; gap:8px}
+.sortmenu button:active{background:var(--panel)}
+.sortmenu button.on{color:var(--accent-ink); font-weight:600}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important; transition-duration:.001ms!important}
+  .pcard{opacity:1; transform:none}
+  .sheet,.scrim{transition:none}
+}
+.foot-note{padding:18px; font-size:11px; color:var(--ink-3); text-align:center; border-top:1px solid var(--line); line-height:1.6}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- HEADER + BÚSQUEDA PREDICTIVA -->
+  <header class="hdr">
+    <div class="hdr__bar">
+      <button class="hdr__icon" aria-label="Menú">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </button>
+      <span class="hdr__brand">NUMEN</span>
+      <button class="hdr__icon" aria-label="Carrito">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 7h13l-1.2 9.5a2 2 0 01-2 1.75H9.2a2 2 0 01-2-1.75L6 7zm0 0L5 3.5H3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="search">
+      <div class="search__field">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="var(--ink-3)" stroke-width="1.7"/><path d="M20 20l-3.2-3.2" stroke="var(--ink-3)" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <input id="search" type="search" placeholder="Buscá tu perfume, marca o nota…" autocomplete="off">
+      </div>
+      <div class="predict" id="predict">
+        <div class="predict__lbl">Marcas</div>
+        <div class="predict__row"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="var(--ink-3)" stroke-width="1.7"/><path d="M20 20l-3.2-3.2" stroke="var(--ink-3)" stroke-width="1.7" stroke-linecap="round"/></svg>Lattafa <span class="k">42 productos</span></div>
+        <div class="predict__row"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="var(--ink-3)" stroke-width="1.7"/><path d="M20 20l-3.2-3.2" stroke="var(--ink-3)" stroke-width="1.7" stroke-linecap="round"/></svg>Armaf <span class="k">28 productos</span></div>
+        <div class="predict__lbl">Productos</div>
+        <div class="predict__row">Lattafa Asad <span class="k">$52.900</span></div>
+        <div class="predict__row">Armaf Club de Nuit <span class="k">$61.500</span></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BANNER DE COLECCIÓN (por ángulo) -->
+  <section class="banner">
+    <p class="overline banner__ov">Colección</p>
+    <h1 class="banner__h">Amaderados</h1>
+    <p class="banner__d">Perfiles secos y cálidos: cedro, oud y vetiver. Para los que buscan carácter.</p>
+    <p class="banner__count">86 perfumes · originales importados</p>
+  </section>
+
+  <!-- BARRA DE COLECCIONES (ángulos curatoriales · no duplican los filtros) -->
+  <nav class="collbar" aria-label="Colecciones">
+    <a class="collbar__i on"><span class="collbar__img"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 7h16M4 17h16" stroke="var(--accent-ink)" stroke-width="1.6" stroke-linecap="round"/></svg></span><span class="collbar__t">Todos</span></a>
+    <a class="collbar__i"><span class="collbar__img"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.5 5.5 6 .5-4.5 4 1.4 6L12 16l-5.4 3 1.4-6-4.5-4 6-.5L12 3z" stroke="var(--accent-ink)" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span class="collbar__t">Más elegidos</span></a>
+    <a class="collbar__i"><span class="collbar__img"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 109.8 9.8z" stroke="var(--accent-ink)" stroke-width="1.6"/></svg></span><span class="collbar__t">Para la noche</span></a>
+    <a class="collbar__i"><span class="collbar__img"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 14a6 6 0 0112 0M12 3v2M5 7l1.5 1.5M19 7l-1.5 1.5M3 14h18" stroke="var(--accent-ink)" stroke-width="1.6" stroke-linecap="round"/></svg></span><span class="collbar__t">Frescos</span></a>
+    <a class="collbar__i"><span class="collbar__img"><svg width="20" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 2h8M9 2v5l-4 9a3 3 0 003 4h8a3 3 0 003-4l-4-9V2" stroke="var(--accent-ink)" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span class="collbar__t">Para arrancar</span></a>
+    <a class="collbar__i"><span class="collbar__img"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="12" rx="1.5" stroke="var(--accent-ink)" stroke-width="1.6"/><path d="M4 12h16M12 8v12M12 8S9 4 7 6s2 2 5 2 7 0 5-2-5 2-5 2" stroke="var(--accent-ink)" stroke-width="1.4"/></svg></span><span class="collbar__t">Regalos</span></a>
+  </nav>
+
+  <!-- (tira de confianza eliminada: ya está en la barra de anuncios del header) -->
+
+  <!-- CONTROLES (sticky) -->
+  <div class="controls">
+    <button class="ctrl-btn" onclick="openSheet()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Filtrar <span class="dot" id="fcount" style="display:none">0</span>
+    </button>
+    <span class="ctrl-count" id="rescount">86 resultados</span>
+    <div style="position:relative">
+      <button class="ctrl-btn" onclick="toggleSort(event)">
+        Destacados
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <div class="sortmenu" id="sortmenu">
+        <button class="on">Destacados</button>
+        <button>Menor precio</button>
+        <button>Mayor precio</button>
+        <button>Novedades</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHIPS DE FILTROS ACTIVOS -->
+  <div class="achips" id="achips">
+    <div class="achip">Amaderado <button aria-label="Quitar">✕</button></div>
+    <div class="achip">Árabe <button aria-label="Quitar">✕</button></div>
+  </div>
+
+  <!-- GRILLA -->
+  <div class="grid" id="grid"></div>
+
+  <div class="more">
+    <button>Cargar más</button>
+    <p>Viendo 6 de 86</p>
+  </div>
+
+  <div class="foot-note">
+    Mockup de validación · los frascos son placeholders.<br>El "precio sin impuestos nacionales" se calcula según la figura fiscal (pendiente).
+  </div>
+
+</div>
+
+<!-- FILTERS SHEET -->
+<div class="scrim" id="scrim" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet" role="dialog" aria-label="Filtros">
+  <div class="sheet__grip"></div>
+  <div class="sheet__head">
+    <h3>Filtrar</h3>
+    <button class="sheet__clear" onclick="clearFilters()">Limpiar</button>
+  </div>
+  <div class="sheet__body" id="sheetBody">
+    <!-- Casa (abierto) -->
+    <div class="facet open">
+      <button class="facet__head" onclick="togFacet(this)">Casa <span class="n">3</span><svg class="facet__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="facet__panel"><div class="facet__wrap"><div class="facet__opts">
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Árabe</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Diseñador</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Nicho</button>
+      </div></div></div>
+    </div>
+    <!-- Familia (abierto) -->
+    <div class="facet open">
+      <button class="facet__head" onclick="togFacet(this)">Familia olfativa <span class="n">6</span><svg class="facet__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="facet__panel"><div class="facet__wrap"><div class="facet__opts">
+        <button class="fopt on" onclick="togOpt(this)"><span class="c"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Amaderado</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Ambarado</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Cítrico</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Floral</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Aromático</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Especiado</button>
+      </div></div></div>
+    </div>
+    <!-- Precio (abierto) -->
+    <div class="facet open">
+      <button class="facet__head" onclick="togFacet(this)">Precio<svg class="facet__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="facet__panel"><div class="facet__wrap">
+        <div class="facet__opts" style="padding-bottom:6px">
+          <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Hasta $50.000</button>
+          <button class="fopt" onclick="togOpt(this)"><span class="c"></span>$50.000 – $100.000</button>
+          <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Más de $100.000</button>
+        </div>
+        <div class="price-row">
+          <input class="price-in" placeholder="Mín $" inputmode="numeric">
+          <span style="color:var(--ink-3)">–</span>
+          <input class="price-in" placeholder="Máx $" inputmode="numeric">
+        </div>
+      </div></div>
+    </div>
+    <!-- Marca (colapsado) -->
+    <div class="facet">
+      <button class="facet__head" onclick="togFacet(this)">Marca <span class="n">14</span><svg class="facet__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="facet__panel"><div class="facet__wrap"><div class="facet__opts">
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Lattafa</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Armaf</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Maison Alhambra</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Rasasi</button>
+      </div></div></div>
+    </div>
+    <!-- Género (colapsado) -->
+    <div class="facet">
+      <button class="facet__head" onclick="togFacet(this)">Género <span class="n">3</span><svg class="facet__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="facet__panel"><div class="facet__wrap"><div class="facet__opts">
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Masculino</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Femenino</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Unisex</button>
+      </div></div></div>
+    </div>
+    <!-- Longevidad (colapsado) -->
+    <div class="facet">
+      <button class="facet__head" onclick="togFacet(this)">Longevidad <span class="n">3</span><svg class="facet__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="facet__panel"><div class="facet__wrap"><div class="facet__opts">
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Moderada</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Larga</button>
+        <button class="fopt" onclick="togOpt(this)"><span class="c"></span>Muy larga (8h+)</button>
+      </div></div></div>
+    </div>
+  </div>
+  <div class="sheet__foot">
+    <button class="apply" onclick="applyFilters()">Ver <span id="applyN">86</span> productos</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var nf = function(n){ return '$' + Math.round(n).toLocaleString('es-AR'); };
+  // precio sin impuestos nacionales (demo: quita IVA 21%). Real depende de la figura fiscal.
+  var neto = function(p){ return nf(p/1.21); };
+
+  var products = [
+    {brand:'Maison Aoud', name:'Brasa de Ámbar', fam:'Ambarado', conc:'EDP', price:74900, rating:4.6, reviews:38},
+    {brand:'Lattafa', name:'Asad', fam:'Amaderado', conc:'EDP', price:52900, rating:4.8, reviews:120},
+    {brand:'Atelier Noir', name:'Nuit d\u2019Or', fam:'Amaderado', conc:'EDP', price:128000, rating:4.5, reviews:22, decant:18900},
+    {brand:'Armaf', name:'Club de Nuit Intense', fam:'Aromático', conc:'EDP', price:61500, compare:72000, rating:4.7, reviews:210},
+    {brand:'Séve Privé', name:'Oud Royale', fam:'Ambarado', conc:'Extrait', price:207000, rating:4.9, reviews:54, decant:23900},
+    {brand:'Rivage', name:'Cítrico Mediterráneo', fam:'Cítrico', conc:'EDT', price:48000, rating:0, reviews:0, out:true}
+  ];
+
+  // Presentaciones DISPONIBLES. Default por prioridad: sellado > tester > decant.
+  var presFor = function(p){
+    var arr = [
+      {label:'Frasco', p:p.price, ml:100, kind:'sealed', avail:!p.out},
+      {label:'Tester', p:Math.round(p.price*0.9), ml:100, kind:'tester', avail:true},
+      {label:'Decant 10ml', p:p.decant?Math.round(p.decant*1.75):Math.round(p.price*0.2), ml:10, kind:'decant', avail:true},
+      {label:'Decant 5ml', p:p.decant?p.decant:Math.round(p.price*0.12), ml:5, kind:'decant', avail:true}
+    ];
+    return arr.filter(function(o){ return o.avail; });
+  };
+
+  var grid = document.getElementById('grid');
+  products.forEach(function(p, idx){
+    var card = document.createElement('div');
+    card.className = 'pcard';
+    card.style.animationDelay = (idx*45)+'ms';
+
+    var badge = p.out ? '<span class="pcard__badge pcard__badge--out">Agotado</span>'
+      : (p.compare ? '<span class="pcard__badge pcard__badge--sale">-'+Math.round((p.compare-p.price)/p.compare*100)+'%</span>' : '');
+    var rating = p.reviews>0
+      ? '<div class="pcard__rating"><span class="stars">\u2605</span>'+String(p.rating).replace('.',',')+' <span style="color:var(--ink-3)">('+p.reviews+')</span></div>'
+      : '';
+    var pres = presFor(p);
+    var badges = pres.map(function(o,i){
+      return '<button class="pres__b'+(i===0?' sel':'')+'" data-p="'+o.p+'" data-kind="'+o.kind+'" onclick="selPres(this)">'+o.label+'</button>';
+    }).join('');
+    var defP = p.out ? p.price : pres[0].p;
+    var dec = pres.filter(function(o){ return o.kind==='decant'; });
+    var decantMin = dec.length ? Math.min.apply(null, dec.map(function(o){ return o.p; })) : 0;
+    var showFrom = !p.out && decantMin && p.price > 80000;
+
+    card.innerHTML =
+      '<div class="pcard__media">'+badge+
+        '<button class="pcard__fav" aria-label="Guardar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.5-7-9.5a3.8 3.8 0 017-2 3.8 3.8 0 017 2c0 5-7 9.5-7 9.5z" stroke="var(--ink-3)" stroke-width="1.5" stroke-linejoin="round"/></svg></button>'+
+        '<a href="#" aria-label="Ver '+p.name+'"><svg width="46" height="66" viewBox="0 0 150 210"><rect x="34" y="36" width="82" height="160" rx="12" fill="#B25A3C" fill-opacity="0.22"/><rect x="62" y="6" width="26" height="20" rx="3" fill="#3A2A1E"/><rect x="66" y="24" width="18" height="12" fill="#6B4A33"/></svg></a>'+
+      '</div>'+
+      '<div class="pcard__body">'+
+        '<span class="pcard__brand">'+p.brand+'</span>'+
+        '<a href="#" class="pcard__name">'+p.name+'</a>'+
+        '<span class="pcard__facts"><i></i>'+p.fam+' · '+p.conc+'</span>'+
+        rating+
+        (p.out ? '' : '<div class="pres">'+badges+'</div>')+
+        '<div class="pcard__price">'+nf(defP)+(p.compare?'<s>'+nf(p.compare)+'</s>':'')+'</div>'+
+        '<div class="pcard__net">Precio sin imp. nacionales: '+neto(defP)+'</div>'+
+        (showFrom ? '<div class="pcard__from">Desde '+nf(decantMin)+' en decant</div>' : '')+
+        (p.out ? '' : '<div class="pcard__cuotas">6 cuotas sin interés · CFTA 0%</div>')+
+        '<div class="pcard__spacer"></div>'+
+        (p.out
+          ? '<button class="pcard__add" disabled>Sin stock</button>'
+          : '<button class="pcard__add" onclick="addCard(this)">Agregar <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px"><path d="M6 7h13l-1.2 8.5H7.4L6 7zm0 0L5.4 4.5H3.4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>')+
+      '</div>';
+    grid.appendChild(card);
+  });
+
+  window.selPres = function(b){
+    var card = b.closest('.pcard');
+    card.querySelectorAll('.pres__b').forEach(function(x){ x.classList.remove('sel'); });
+    b.classList.add('sel');
+    var p = +b.dataset.p;
+    card.querySelector('.pcard__price').innerHTML = nf(p);
+    card.querySelector('.pcard__net').textContent = 'Precio sin imp. nacionales: ' + neto(p);
+    var from = card.querySelector('.pcard__from');
+    if(from) from.style.display = (b.dataset.kind==='decant') ? 'none' : '';
+  };
+  window.addCard = function(btn){
+    btn.innerHTML = 'Agregado \u2713'; btn.style.background = 'var(--ok)';
+    setTimeout(function(){ btn.innerHTML = 'Agregar'; btn.style.background = ''; }, 1400);
+  };
+})();
+
+/* ---- sort ---- */
+function toggleSort(e){ e.stopPropagation(); document.getElementById('sortmenu').classList.toggle('show'); }
+document.addEventListener('click', function(){ document.getElementById('sortmenu').classList.remove('show'); });
+Array.prototype.forEach.call(document.querySelectorAll('#sortmenu button'), function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('#sortmenu button').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on');
+    document.querySelector('.controls .ctrl-btn:last-of-type') && (document.querySelectorAll('.controls .ctrl-btn')[1].firstChild.textContent = b.textContent+' ');
+  });
+});
+
+/* ---- predictive ---- */
+var si = document.getElementById('search'), pr = document.getElementById('predict');
+si.addEventListener('input', function(){ pr.classList.toggle('show', si.value.length>0); });
+si.addEventListener('focus', function(){ if(si.value.length>0) pr.classList.add('show'); });
+document.addEventListener('click', function(e){ if(!e.target.closest('.search')) pr.classList.remove('show'); });
+
+/* ---- filters sheet ---- */
+var TOTAL = 86;
+function openSheet(){ document.getElementById('sheet').classList.add('show'); document.getElementById('scrim').classList.add('show'); }
+function closeSheet(){ document.getElementById('sheet').classList.remove('show'); document.getElementById('scrim').classList.remove('show'); }
+function togFacet(btn){ btn.parentElement.classList.toggle('open'); }
+function togOpt(btn){
+  btn.classList.toggle('on');
+  var c = btn.querySelector('.c');
+  c.innerHTML = btn.classList.contains('on') ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+  recount();
+}
+function recount(){
+  var sel = document.querySelectorAll('.fopt.on').length;
+  // demo: cada filtro achica el resultado; solo para mostrar el contador en vivo
+  var n = sel===0 ? TOTAL : Math.max(4, Math.round(TOTAL / (1 + sel*0.6)));
+  document.getElementById('applyN').textContent = n;
+  var fc = document.getElementById('fcount');
+  if(sel>0){ fc.style.display='grid'; fc.textContent=sel; } else { fc.style.display='none'; }
+}
+function clearFilters(){
+  document.querySelectorAll('.fopt.on').forEach(function(b){ b.classList.remove('on'); b.querySelector('.c').innerHTML=''; });
+  recount();
+}
+function applyFilters(){
+  var n = document.getElementById('applyN').textContent;
+  document.getElementById('rescount').textContent = n + ' resultados';
+  closeSheet();
+}
+</script>
+</body>
+</html>

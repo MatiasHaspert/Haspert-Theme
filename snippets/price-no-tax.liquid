@@ -1,0 +1,25 @@
+{%- comment -%}
+  Precio SIN impuestos nacionales (Ley 27.743 / RG 5614). Provisional:
+  neto = precio ÷ (1 + tasa). El cálculo REAL depende de la figura fiscal
+  (RI vs monotributo, pendiente) — por eso la tasa es parametrizable y el
+  cálculo vive ACÁ: cuando se defina, se ajusta este helper sin tocar la card
+  ni la PDP.
+
+  Acepta:
+  - price: {Number} precio en centavos (ej. variant.price). Requerido.
+  - tax_rate: {Number} tasa en porcentaje (ej. 21 o 21.5). Default 21.
+
+  Devuelve: el neto formateado con `money` (el símbolo/formato los pone la
+  tienda; nunca se hardcodea). Si no hay precio, no devuelve nada.
+
+  Uso:
+    {% render 'price-no-tax', price: variant.price, tax_rate: tax_rate %}
+{%- endcomment -%}
+{%- liquid
+  assign rate = tax_rate | default: 21
+  assign divisor = 100 | plus: rate
+  if price and price > 0 and divisor > 0
+    assign net = price | times: 100 | divided_by: divisor | round
+    echo net | money
+  endif
+-%}

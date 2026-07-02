@@ -220,3 +220,72 @@
   height: 2.4rem;
   flex-shrink: 0;
 }
+
+/* — Badges de presentación (Frasco / Tester / Decant Nml) — */
+/* Seleccionan la presentación: actualizan precio + línea fiscal + pista y
+   apuntan el "Agregar" al variante elegido (plp-card.js). Solo se muestran las
+   presentaciones con stock. */
+.product-card-wrapper .card-perfume__pres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0.4rem 0 1rem;
+}
+
+.product-card-wrapper .card-perfume__pres-btn {
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1;
+  color: rgba(var(--color-foreground), 0.7);
+  background: rgb(var(--color-background));
+  border: 0.15rem solid rgba(var(--color-foreground), 0.14);
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--duration-short, 0.16s) ease,
+    color var(--duration-short, 0.16s) ease,
+    background var(--duration-short, 0.16s) ease;
+}
+
+@media (hover: hover) {
+  .product-card-wrapper .card-perfume__pres-btn:hover {
+    border-color: rgba(var(--color-foreground), 0.32);
+  }
+}
+
+.product-card-wrapper .card-perfume__pres-btn.is-selected {
+  border-color: var(--accent);
+  color: var(--accent);
+  /* Tinte cálido del design system (mismo criterio que el marco arena). */
+  background: #fcf9f0;
+}
+
+/* — Línea "precio sin impuestos nacionales" (Ley 27.743) — */
+.product-card-wrapper .card-perfume__net {
+  font-family: var(--font-body-family);
+  font-size: 1rem;
+  line-height: 1.3;
+  color: rgba(var(--color-foreground), 0.55);
+  margin-top: 0.4rem;
+}
+
+/* — Pista "desde $X en decant" (gancho de entrada de bajo ticket) — */
+.product-card-wrapper .card-perfume__from {
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  color: var(--accent);
+  margin-top: 0.5rem;
+}
+
+/* — Nota de cuotas (claim financiero: editable/desactivable por setting) — */
+.product-card-wrapper .card-perfume__cuotas {
+  font-family: var(--font-body-family);
+  font-size: 1.1rem;
+  line-height: 1.3;
+  color: rgba(var(--color-foreground), 0.6);
+  margin-top: 0.5rem;
+}

@@ -129,6 +129,16 @@
       "sku": "SKU",
       "on_sale": "Sale",
       "product_variants": "Product variants",
+      "presentation": {
+        "label": "Presentation",
+        "frasco": "Bottle",
+        "frasco_ml": "{{ ml }}ml",
+        "tester": "Tester",
+        "decant": "Decant {{ ml }}ml",
+        "decant_generic": "Decant"
+      },
+      "from_decant": "From {{ price }} in decant",
+      "installments_note": "6 interest-free installments · CFTA 0%",
       "media": {
         "gallery_viewer": "Gallery Viewer",
         "load_image": "Load image {{ index }} in gallery view",
@@ -172,6 +182,7 @@
       },
       "price": {
         "from_price_html": "From {{ price }}",
+        "no_national_tax": "Price w/o national taxes:",
         "regular_price": "Regular price",
         "sale_price": "Sale price",
         "unit_price": "Unit price"

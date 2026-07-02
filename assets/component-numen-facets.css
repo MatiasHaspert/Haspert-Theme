@@ -1,0 +1,214 @@
+/* ============================================================================
+   FILTROS EN BOTTOM SHEET + ACORDEÓN (drawer) — NUMEN
+   ----------------------------------------------------------------------------
+   Reusa el markup mobile de Sense y facets.js SIN tocarlos. Convierte:
+     · el panel lateral        → hoja inferior (bottom sheet) centrada;
+     · el drill-down           → acordeón inline multi-open (el focus-trap de
+                                 menu-drawer lo neutraliza numen-facets-accordion.js);
+     · las opciones tipo lista → chips.
+   Scope: .facets-container-drawer (no afecta filtros horizontal/vertical).
+   Se carga DESPUÉS de component-facets.css para ganar en empates de especificidad.
+   ========================================================================== */
+
+/* ---- Hoja inferior: panel abajo, centrado, esquinas redondeadas ---- */
+.facets-container-drawer .mobile-facets {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* clickeable para cerrar tocando el scrim (numen-facets-accordion.js) */
+  pointer-events: auto;
+}
+
+.facets-container-drawer .mobile-facets__inner {
+  width: 100%;
+  max-width: 43rem;
+  height: auto;
+  max-height: 86vh;
+  margin: 0;
+  border-width: 0;
+  border-radius: 1.8rem 1.8rem 0 0;
+  overflow: hidden; /* el scroll interno lo maneja __main */
+}
+
+/* Abrir/cerrar en Y (override del deslizamiento lateral de Sense) */
+.js .facets-container-drawer .disclosure-has-popup:not(.menu-opening) .mobile-facets__inner {
+  transform: translateY(100%);
+}
+.facets-container-drawer .menu-opening .mobile-facets__inner {
+  transform: translateY(0);
+}
+
+/* ---- Header: grip + título Bebas + conteo en vivo ---- */
+.facets-container-drawer .mobile-facets__header {
+  position: relative;
+  text-align: left;
+  padding: 2.2rem 2rem 1.2rem;
+  align-items: center;
+}
+.facets-container-drawer .mobile-facets__header::before {
+  content: '';
+  position: absolute;
+  top: 0.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3.8rem;
+  height: 0.4rem;
+  border-radius: 2rem;
+  background: rgba(var(--color-foreground), 0.16);
+}
+.facets-container-drawer .mobile-facets__heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 2.6rem;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+.facets-container-drawer .mobile-facets__count {
+  font-size: 1.2rem;
+  margin-top: 0.4rem;
+}
+
+/* La X flotante de Sense no aplica al bottom sheet: se cierra por scrim/Aplicar/Esc */
+.facets-container-drawer .mobile-facets__close {
+  display: none;
+}
+
+/* ---- Cuerpo scrolleable ---- */
+.facets-container-drawer .mobile-facets__main {
+  padding: 0.4rem 0 0;
+  overflow-y: auto;
+}
+
+/* ---- Acordeón: submenú drill-down → panel inline ---- */
+/* El <details> cerrado oculta el submenú de forma nativa; al abrir, inline. */
+.js .facets-container-drawer .mobile-facets__submenu {
+  position: static;
+  transform: none;
+  visibility: visible;
+}
+/* Sin back-button ni footer por-facet (eran del drill-down) */
+.facets-container-drawer .mobile-facets__close-button,
+.facets-container-drawer .mobile-facets__submenu .mobile-facets__footer {
+  display: none;
+}
+
+/* Cabecera de cada facet (summary) */
+.facets-container-drawer .mobile-facets__summary {
+  padding: 1.5rem 2rem;
+}
+.facets-container-drawer .mobile-facets__summary > div {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.facets-container-drawer .mobile-facets__summary > div > span:first-child {
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+.facets-container-drawer .mobile-facets__opt-count {
+  font-size: 1.1rem;
+  color: rgba(var(--color-foreground), 0.45);
+}
+/* Flecha → convertida en caret de acordeón (abajo cerrado, arriba abierto).
+   margin-left:auto la manda a la derecha en TODOS los facets (con o sin conteo). */
+.facets-container-drawer .mobile-facets__arrow {
+  margin-left: auto;
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+  color: var(--accent);
+}
+.facets-container-drawer .mobile-facets__details[open] .mobile-facets__arrow {
+  transform: rotate(-90deg);
+}
+
+/* ---- Opciones como chips ---- */
+.facets-container-drawer .mobile-facets__submenu ul.mobile-facets__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  padding: 0.2rem 2rem 1.6rem;
+  margin: 0;
+}
+.facets-container-drawer .mobile-facets__item {
+  margin: 0;
+  width: auto;
+}
+.facets-container-drawer .mobile-facets__label {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  min-height: 0;
+  padding: 0.8rem 1.3rem;
+  border: 0.15rem solid rgba(var(--color-foreground), 0.14);
+  border-radius: 999px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: rgba(var(--color-foreground), 0.75);
+  background: rgb(var(--color-background));
+  transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
+}
+.facets-container-drawer .mobile-facets__label.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: #fcf9f0;
+  font-weight: 600;
+}
+.facets-container-drawer .mobile-facets__label:focus-within {
+  outline: 0.2rem solid var(--accent);
+  outline-offset: 0.2rem;
+}
+/* Ocultar el cuadrito/checkmark/resaltado del estilo lista; el chip ya comunica el estado */
+.facets-container-drawer .mobile-facets__label svg,
+.facets-container-drawer .mobile-facets__highlight {
+  display: none;
+}
+/* Checkbox accesible pero invisible (el label es el target del chip) */
+.facets-container-drawer .mobile-facets__label input[type='checkbox'] {
+  position: absolute;
+  width: 0.1rem;
+  height: 0.1rem;
+  opacity: 0;
+  pointer-events: none;
+}
+.facets-container-drawer .facet-checkbox__text {
+  padding: 0;
+}
+
+/* Rango de precio dentro del acordeón */
+.facets-container-drawer .mobile-facets__submenu .facets__price {
+  padding: 0.2rem 2rem 1.6rem;
+}
+
+/* ---- Footer: "Aplicar" prominente + "Limpiar" secundario ---- */
+.facets-container-drawer .mobile-facets__main > .mobile-facets__footer {
+  flex-direction: column-reverse;
+  gap: 0.6rem;
+  padding: 1.4rem 2rem calc(1.4rem + env(safe-area-inset-bottom));
+}
+.facets-container-drawer .mobile-facets__main > .mobile-facets__footer > * {
+  width: 100%;
+  margin: 0;
+}
+.facets-container-drawer .mobile-facets__main > .mobile-facets__footer .button {
+  min-height: 5rem;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  letter-spacing: 0.05em;
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+}
+.facets-container-drawer .mobile-facets__clear {
+  font-size: 1.3rem;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+/* ---- Chips de filtros activos (arriba de la grilla) ---- */
+.facets-container-drawer .active-facets__button-inner {
+  border-radius: 999px;
+  border-color: #e4d6ae;
+  background: #f6efdd;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 1.2rem;
+}
