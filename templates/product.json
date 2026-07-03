@@ -144,7 +144,9 @@
         }
       },
       "block_order": ["qa-1", "qa-2", "qa-3", "qa-4", "qa-5", "qa-6", "qa-7", "qa-8"],
-      "settings": {}
+      "settings": {
+        "emit_schema": false
+      }
     },
     "related_family": {
       "type": "related-by-family",

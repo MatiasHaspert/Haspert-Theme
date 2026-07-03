@@ -82,7 +82,9 @@
         "qa_arrepentimiento",
         "qa_conservar"
       ],
-      "settings": {}
+      "settings": {
+        "emit_schema": true
+      }
     }
   },
   "order": ["main", "faq"]

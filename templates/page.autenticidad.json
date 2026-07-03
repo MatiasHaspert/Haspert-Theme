@@ -120,7 +120,8 @@
       "block_order": ["qa_original", "qa_replica"],
       "settings": {
         "microbadge": "Autenticidad",
-        "heading": "Preguntas sobre autenticidad"
+        "heading": "Preguntas sobre autenticidad",
+        "emit_schema": false
       }
     }
   },
