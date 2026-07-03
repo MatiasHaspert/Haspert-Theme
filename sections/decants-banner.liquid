@@ -1,0 +1,170 @@
+{%- comment -%}
+  Banner de decants (NUMEN, home §3.5) — card editorial con borde dashed:
+  microbadge + título Bebas + texto + hasta 3 chips (blocks) + CTA sólida.
+  Sin lógica de carrito ni producto: solo linkea (p. ej. a la colección de
+  decants). Para la mecánica de kit con selección de productos está kit-decants.
+  100% editable por theme editor; sin precios hardcodeados (los precios salen
+  de Shopify en las PLP/PDP a las que linkea).
+{%- endcomment -%}
+
+{%- liquid
+  # Acento con contraste AA sobre el fondo de la card: oscurece en fondos claros.
+  assign accent = section.settings.accent_color
+  assign card_bg = section.settings.card_background
+  assign bg_bright = card_bg | color_brightness
+  assign accent_ink = accent
+  if card_bg == blank or bg_bright > 140
+    assign accent_ink = accent | color_darken: 22
+  endif
+-%}
+
+<div class="decban color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    <div class="decban__card">
+      {%- if section.settings.microbadge != blank -%}
+        <p class="decban__overline">{{ section.settings.microbadge | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="decban__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="decban__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <ul class="decban__chips" role="list">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.text != blank -%}
+              <li class="decban__chip" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank and section.settings.cta_url != blank -%}
+        <a class="button button--primary decban__cta" href="{{ section.settings.cta_url }}">
+          {{- section.settings.cta_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} {
+    --decban-accent: {{ accent }};
+    --decban-accent-ink: {{ accent_ink }};
+    --decban-bg: {{ card_bg }};
+  }
+{%- endstyle -%}
+
+{% stylesheet %}
+.decban__card {
+  max-width: 60rem;
+  margin: 0 auto;
+  border: 0.1rem dashed var(--decban-accent);
+  border-radius: 1.4rem;
+  background: var(--decban-bg);
+  padding: 2rem;
+}
+.decban__overline {
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--decban-accent-ink);
+  margin: 0;
+}
+.decban__heading {
+  font-size: 3rem;
+  line-height: 0.95;
+  margin: 0.8rem 0;
+}
+.decban__text {
+  font-size: 1.35rem;
+  color: rgba(var(--color-foreground), 0.78);
+  line-height: 1.5;
+  margin: 0 0 1.4rem;
+}
+.decban__text > :first-child { margin-top: 0; }
+.decban__text > :last-child { margin-bottom: 0; }
+.decban__chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 0 0 1.6rem;
+  padding: 0;
+}
+.decban__chip {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--decban-accent-ink);
+  background: rgb(var(--color-background));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.18);
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+}
+.decban__cta {
+  width: 100%;
+  margin: 0;
+}
+@media screen and (min-width: 750px) {
+  .decban__heading { font-size: 3.4rem; }
+  .decban__cta { width: auto; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Banner decants",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 3,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "default": "scheme-1" },
+    { "type": "color", "id": "accent_color", "label": "Color de acento (borde)", "default": "#B25A3C" },
+    { "type": "color", "id": "card_background", "label": "Fondo de la card", "default": "#FCF9F0" },
+    { "type": "text", "id": "microbadge", "label": "Microbadge (overline)", "default": "Para arrancar" },
+    { "type": "text", "id": "heading", "label": "Título", "default": "Probá antes de invertir en el frasco" },
+    { "type": "richtext", "id": "text", "label": "Texto", "default": "<p>Decants de 5 y 10 ml fraccionados a pedido desde frascos originales verificados. Conocé el aroma en tu piel por una fracción del precio.</p>" },
+    { "type": "header", "content": "CTA" },
+    { "type": "text", "id": "cta_label", "label": "Label del botón", "default": "Ver decants" },
+    { "type": "url", "id": "cta_url", "label": "Link del botón" },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding superior", "default": 32 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding inferior", "default": 32 }
+  ],
+  "blocks": [
+    {
+      "type": "chip",
+      "name": "Chip",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Texto del chip", "info": "Corto (ej. \"5 y 10 ml\"). No pongas precios a mano: quedan viejos.", "default": "5 y 10 ml" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner decants",
+      "blocks": [
+        { "type": "chip", "settings": { "text": "5 y 10 ml" } },
+        { "type": "chip", "settings": { "text": "Del frasco original" } },
+        { "type": "chip", "settings": { "text": "Fraccionado a pedido" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
