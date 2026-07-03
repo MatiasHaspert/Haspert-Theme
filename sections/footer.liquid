@@ -55,6 +55,21 @@
     assign show_badges = true
   endif
 
+  # Medios de pago: set nativo de Shopify (SVG, refleja el checkout real) + logos
+  # subidos por blocks (PNG/WebP: el image_picker de Shopify no acepta SVG).
+  assign has_payment_icons = false
+  if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0
+    assign has_payment_icons = true
+  endif
+  assign pay_blocks = section.blocks | where: 'type', 'payment_icon'
+  assign has_custom_pay = false
+  for pay_block in pay_blocks
+    if pay_block.settings.logo != blank
+      assign has_custom_pay = true
+      break
+    endif
+  endfor
+
   assign data_fiscal_label = section.settings.data_fiscal_label | default: 'Data Fiscal'
 -%}
 
@@ -160,6 +175,27 @@
       </div>
     {%- endif -%}
 
+    {%- if has_payment_icons or has_custom_pay -%}
+      <div class="f-pay">
+        <span class="visually-hidden">{{ 'sections.footer.payment' | t }}</span>
+        <ul class="f-pay__list list-unstyled" role="list">
+          {%- if has_payment_icons -%}
+            {%- for type in shop.enabled_payment_types -%}
+              <li class="f-pay__item">{{ type | payment_type_svg_tag: class: 'f-pay__icon' }}</li>
+            {%- endfor -%}
+          {%- endif -%}
+          {%- for pay_block in pay_blocks -%}
+            {%- if pay_block.settings.logo != blank -%}
+              <li class="f-pay__item" {{ pay_block.shopify_attributes }}>
+                {%- assign pay_alt = pay_block.settings.label | default: pay_block.settings.logo.alt -%}
+                {{ pay_block.settings.logo | image_url: height: 96 | image_tag: loading: 'lazy', class: 'f-pay__img', alt: pay_alt }}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+
     {%- if show_badges -%}
       <div class="f-badges">
         {%- if show_payment_badge -%}
@@ -242,6 +278,23 @@
           "info": "El link del menú cuyo título coincida se muestra en negrita (ej: Cómo verificamos autenticidad)."
         }
       ]
+    },
+    {
+      "type": "payment_icon",
+      "name": "Medio de pago (logo)",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo",
+          "info": "PNG o WebP con fondo transparente, altura mínima 96 px (Shopify no acepta SVG acá). Se muestra a 24 px de alto."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Nombre del medio (texto alternativo)"
+        }
+      ]
     }
   ],
   "settings": [
@@ -318,6 +371,13 @@
     {
       "type": "header",
       "content": "Sellos"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Mostrar íconos de medios de pago",
+      "info": "Automático: muestra los medios habilitados en el checkout (Visa, Mastercard, etc.). Para logos extra agregá bloques \"Medio de pago (logo)\".",
+      "default": true
     },
     {
       "type": "checkbox",

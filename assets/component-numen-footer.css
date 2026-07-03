@@ -168,6 +168,32 @@
   color: var(--nf-ink-2);
 }
 
+/* ===== Medios de pago (SVG nativos de Shopify + logos subidos) ===== */
+.f-pay {
+  padding: 1.4rem 0 0.2rem;
+}
+
+.f-pay__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+}
+
+.f-pay__item {
+  display: inline-flex;
+}
+
+.f-pay__icon,
+.f-pay__img {
+  display: block;
+  height: 2.4rem;
+  width: auto;
+  border-radius: 0.3rem;
+}
+
 /* ===== Sellos: pago + Data Fiscal ===== */
 .f-badges {
   display: flex;
