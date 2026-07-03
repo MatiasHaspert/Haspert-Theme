@@ -695,9 +695,9 @@ cart-drawer.is-empty .numen-cart .drawer__footer { display: none; }
 }
 .nc-empty__title {
   margin: 0 0 0.6rem;
-  font-family: var(--font-accent, 'Fraunces', Georgia, serif);
+  font-family: var(--font-accent, var(--font-body-family));
   font-style: italic;
-  font-weight: 400;
+  font-weight: var(--font-accent-weight, 500);
   font-size: 2.3rem;
   line-height: 1.2;
   color: var(--nc-ink);

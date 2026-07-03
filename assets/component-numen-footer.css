@@ -40,6 +40,7 @@
   margin: 0 0 2.2rem;
   font-family: var(--font-accent, var(--font-body-family));
   font-style: italic;
+  font-weight: var(--font-accent-weight, 500);
   font-size: 1.45rem;
   line-height: 1.45;
   color: var(--nf-ink-2);

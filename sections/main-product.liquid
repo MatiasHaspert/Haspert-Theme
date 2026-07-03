@@ -751,6 +751,7 @@
 .perfume-pyramid__notes {
   font-family: var(--font-accent);
   font-style: italic;
+  font-weight: var(--font-accent-weight, 500);
   font-size: 1.6rem;
   line-height: 1.4;
   color: rgb(var(--color-foreground));
@@ -962,10 +963,10 @@
   border: 0.1rem solid rgba(var(--color-foreground), 0.14); border-radius: 0.4rem; padding: 0.6rem 1rem;
 }
 
-/* ---- description (aroma en Fraunces itálica) + inspired ---- */
+/* ---- description (aroma en Montserrat itálica 500, acento) + inspired ---- */
 .perfume-description { margin-top: 2.4rem; }
 .perfume-description p {
-  font-family: var(--font-accent); font-style: italic; font-weight: 400;
+  font-family: var(--font-accent); font-style: italic; font-weight: var(--font-accent-weight, 500);
   font-size: 1.8rem; line-height: 1.5; color: rgb(var(--color-foreground)); margin: 0;
 }
 .perfume-description p + p { margin-top: 1.3rem; }

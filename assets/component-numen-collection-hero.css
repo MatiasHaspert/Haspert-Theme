@@ -2,7 +2,7 @@
    BANNER DE COLECCIÓN POR ÁNGULO — NUMEN
    ----------------------------------------------------------------------------
    Reskin del collection-hero de Sense al mockup: overline + título Bebas +
-   descripción en cursiva (Fraunces) + línea de conteo. Se carga DESPUÉS de
+   descripción en cursiva (Montserrat itálica 500, acento) + línea de conteo. Se carga DESPUÉS de
    component-collection-hero.css. El texto/copy sale de settings y de Shopify
    (título, descripción y conteo de la colección), nada hardcodeado.
    ========================================================================== */
@@ -54,6 +54,7 @@
 .collection-hero__description {
   font-family: var(--font-accent);
   font-style: italic;
+  font-weight: var(--font-accent-weight, 500);
   font-size: 1.6rem;
   line-height: 1.4;
   color: rgba(var(--color-foreground), 0.72);

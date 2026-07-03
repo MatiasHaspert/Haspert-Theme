@@ -85,11 +85,13 @@
   justify-content: flex-end;
 }
 
-/* Estilo editorial (Numen, setting editorial_style): cita centrada en serif
-   itálica + captions como overline; la caption que sigue al texto es la firma. */
+/* Estilo editorial (Numen, setting editorial_style): cita centrada en itálica
+   de acento (Montserrat 500) + captions como overline; la caption que sigue al
+   texto es la firma. */
 .rich-text--editorial .rich-text__text {
-  font-family: var(--font-accent, Georgia, serif);
+  font-family: var(--font-accent, var(--font-body-family));
   font-style: italic;
+  font-weight: var(--font-accent-weight, 500);
   font-size: 2rem;
   line-height: 1.5;
   max-width: 34ch;
