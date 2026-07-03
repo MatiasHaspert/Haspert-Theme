@@ -110,10 +110,10 @@
     "brand_headline": "",
     "brand_description": "<p></p>",
     "brand_image_width": 100,
-    "social_facebook_link": "",
-    "social_instagram_link": "",
+    "social_facebook_link": "https://www.facebook.com/ejemplo",
+    "social_instagram_link": "https://www.instagram.com/ejemplo",
     "social_youtube_link": "",
-    "social_tiktok_link": "",
+    "social_tiktok_link": "https://tiktok.com/@ejemplo",
     "social_twitter_link": "",
     "social_snapchat_link": "",
     "social_pinterest_link": "",
@@ -134,6 +134,7 @@
     "installments_enabled": true,
     "installments_no_interest": true,
     "installments_count": 6,
+    "whatsapp_number": "5493406460624",
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
