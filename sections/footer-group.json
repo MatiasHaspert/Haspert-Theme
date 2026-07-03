@@ -1,33 +1,40 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
     "footer": {
       "type": "footer",
-      "settings": {
-        "color_scheme": "scheme-2",
-        "footer_tagline": "Perfumería curada. Originales importados, verificables frasco por frasco.",
-        "contact_heading": "¿Dudas? Escribinos:",
-        "show_social": true,
-        "fiscal_note": "Despachos desde Rosario, Santa Fe.",
-        "show_payment_badge": true,
-        "payment_badge_text": "Mercado Pago",
-        "data_fiscal_label": "Data Fiscal",
-        "bottom_note": "Hecho en Argentina"
-      },
       "blocks": {
+        "payment_icon_9p8aWH": {
+          "type": "payment_icon",
+          "settings": {
+            "logo": "shopify://shop_images/MP_CMYK_HANDSHAKE_color_horizontal.png",
+            "label": ""
+          }
+        },
         "tienda": {
           "type": "link_list",
           "settings": {
             "heading": "Tienda",
-            "menu": "footer-tienda"
+            "menu": "footer-tienda",
+            "strong_link_title": ""
           }
         },
         "ayuda": {
           "type": "link_list",
           "settings": {
             "heading": "Ayuda",
-            "menu": "footer-ayuda"
+            "menu": "footer-ayuda",
+            "strong_link_title": ""
           }
         },
         "legal": {
@@ -35,15 +42,35 @@
           "settings": {
             "heading": "Confianza y legales",
             "menu": "footer-legal",
-            "strong_link_title": "Cómo verificamos autenticidad"
+            "strong_link_title": ""
           }
         }
       },
       "block_order": [
+        "payment_icon_9p8aWH",
         "tienda",
         "ayuda",
         "legal"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "footer_tagline": "Perfumería curada. Originales importados, verificables frasco por frasco.",
+        "contact_heading": "¿Dudas? Escribinos:",
+        "contact_wa_display": "",
+        "footer_email": "",
+        "show_social": true,
+        "razon_social": "",
+        "cuit": "",
+        "domicilio": "",
+        "fiscal_note": "Despachos desde Rosario, Santa Fe.",
+        "show_payment_icons": true,
+        "show_payment_badge": false,
+        "payment_badge_text": "Mercado Pago",
+        "data_fiscal_url": "",
+        "data_fiscal_label": "Data Fiscal",
+        "arrepentimiento_url": "",
+        "bottom_note": "Hecho en Argentina"
+      }
     }
   },
   "order": [
