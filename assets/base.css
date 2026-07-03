@@ -3651,6 +3651,15 @@ button[type="submit"] {
 .button--secondary::after {
   display: none !important;
 }
+/* Los .button sin modificador (y los de cuenta/challenge) conservan el anillo de Sense,
+   pero su radio nace de --buttons-radius (2px en settings) y no sigue la curva de 14px
+   forzada arriba: en las esquinas el anillo sobresale del relleno como un doble marco.
+   Se alinea a la curva de marca (−1px porque el ::after va inset por el border-width). */
+.button::after,
+.shopify-challenge__button::after,
+.customer button::after {
+  border-radius: calc(var(--brand-radius) - var(--buttons-border-width));
+}
 
 /* Judge.me · botón "Escribir una reseña" a la paleta (el verde queda reservado al
    beneficio de transferencia). La clase la inyecta la app en runtime: confirmá con
