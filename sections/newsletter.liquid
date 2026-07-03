@@ -17,6 +17,9 @@
 
 <div class="newsletter center {% if section.settings.full_width == false %}newsletter--narrow page-width{% endif %}">
   <div class="newsletter__wrapper color-{{ section.settings.color_scheme }} gradient content-container isolate{% if section.settings.full_width %} content-container--full-width{% endif %} section-{{ section.id }}-padding">
+    {%- if section.settings.overline != blank -%}
+      <p class="newsletter__overline">{{ section.settings.overline | escape }}</p>
+    {%- endif -%}
     {%- for block in section.blocks -%}
       {%- case block.type -%}
         {%- when '@app' -%}
@@ -54,41 +57,55 @@
                   style="--animation-order: {{ forloop.index }};"
                 {% endif %}
               >
-                <div class="field">
-                  <input
-                    id="NewsletterForm--{{ section.id }}"
-                    type="email"
-                    name="contact[email]"
-                    class="field__input"
-                    value="{{ form.email }}"
-                    aria-required="true"
-                    autocorrect="off"
-                    autocapitalize="off"
-                    autocomplete="email"
-                    {% if form.errors %}
-                      autofocus
-                      aria-invalid="true"
-                      aria-describedby="Newsletter-error--{{ section.id }}"
-                    {% elsif form.posted_successfully? %}
-                      aria-describedby="Newsletter-success--{{ section.id }}"
-                    {% endif %}
-                    placeholder="{{ 'newsletter.label' | t }}"
-                    required
-                  >
-                  <label class="field__label" for="NewsletterForm--{{ section.id }}">
-                    {{ 'newsletter.label' | t }}
-                  </label>
-                  <button
-                    type="submit"
-                    class="newsletter-form__button field__button"
-                    name="commit"
-                    id="Subscribe"
-                    aria-label="{{ 'newsletter.button_label' | t }}"
-                  >
-                    <span class="svg-wrapper">
-                      {{- 'icon-arrow.svg' | inline_asset_content -}}
-                    </span>
-                  </button>
+                <div class="newsletter-form__row{% if block.settings.button_label != blank %} newsletter-form__row--inline{% endif %}">
+                  <div class="field">
+                    <input
+                      id="NewsletterForm--{{ section.id }}"
+                      type="email"
+                      name="contact[email]"
+                      class="field__input"
+                      value="{{ form.email }}"
+                      aria-required="true"
+                      autocorrect="off"
+                      autocapitalize="off"
+                      autocomplete="email"
+                      {% if form.errors %}
+                        autofocus
+                        aria-invalid="true"
+                        aria-describedby="Newsletter-error--{{ section.id }}"
+                      {% elsif form.posted_successfully? %}
+                        aria-describedby="Newsletter-success--{{ section.id }}"
+                      {% endif %}
+                      placeholder="{{ 'newsletter.label' | t }}"
+                      required
+                    >
+                    <label class="field__label" for="NewsletterForm--{{ section.id }}">
+                      {{ 'newsletter.label' | t }}
+                    </label>
+                    {%- if block.settings.button_label == blank -%}
+                      <button
+                        type="submit"
+                        class="newsletter-form__button field__button"
+                        name="commit"
+                        id="Subscribe"
+                        aria-label="{{ 'newsletter.button_label' | t }}"
+                      >
+                        <span class="svg-wrapper">
+                          {{- 'icon-arrow.svg' | inline_asset_content -}}
+                        </span>
+                      </button>
+                    {%- endif -%}
+                  </div>
+                  {%- if block.settings.button_label != blank -%}
+                    <button
+                      type="submit"
+                      class="button newsletter-form__submit"
+                      name="commit"
+                      id="Subscribe"
+                    >
+                      {{- block.settings.button_label | escape -}}
+                    </button>
+                  {%- endif -%}
                 </div>
                 {%- if form.errors -%}
                   <small class="newsletter-form__message form__message" id="Newsletter-error--{{ section.id }}">
@@ -117,6 +134,9 @@
           </div>
       {%- endcase -%}
     {%- endfor -%}
+    {%- if section.settings.note != blank -%}
+      <p class="newsletter__note">{{ section.settings.note | escape }}</p>
+    {%- endif -%}
   </div>
 </div>
 
@@ -132,6 +152,17 @@
     {
       "type": "paragraph",
       "content": "t:sections.newsletter.settings.paragraph.content"
+    },
+    {
+      "type": "text",
+      "id": "overline",
+      "label": "Overline (texto chico arriba del título)"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Microcopy (debajo del form)",
+      "info": "Ej. nota anti-spam. Vacío = no se muestra."
     },
     {
       "type": "color_scheme",
@@ -228,7 +259,15 @@
     {
       "type": "email_form",
       "name": "t:sections.newsletter.blocks.email_form.name",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Label del botón (texto)",
+          "info": "Con label se muestra un botón de texto al lado del input; vacío = flecha clásica dentro del campo."
+        }
+      ]
     },
     {
       "type": "@app"
