@@ -84,3 +84,31 @@
 .rich-text__blocks.right .rich-text__buttons {
   justify-content: flex-end;
 }
+
+/* Estilo editorial (Numen, setting editorial_style): cita centrada en serif
+   itálica + captions como overline; la caption que sigue al texto es la firma. */
+.rich-text--editorial .rich-text__text {
+  font-family: var(--font-accent, Georgia, serif);
+  font-style: italic;
+  font-size: 2rem;
+  line-height: 1.5;
+  max-width: 34ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+.rich-text--editorial .rich-text__caption {
+  font-family: var(--font-body-family);
+  font-style: normal;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-ink, rgba(var(--color-foreground), 0.75));
+}
+.rich-text--editorial .rich-text__text + .rich-text__caption {
+  color: rgba(var(--color-foreground), 0.6);
+  letter-spacing: 0.12em;
+}
+.rich-text--editorial .rich-text__blocks > * + * {
+  margin-top: 1.4rem;
+}
