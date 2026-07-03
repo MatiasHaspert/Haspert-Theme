@@ -1,3 +1,11 @@
+{%- comment -%}
+  Testimonios (NUMEN, patrón tcard del mockup de la home §3.7):
+  cita en serif itálica + avatar de iniciales (o foto) + nombre · ciudad +
+  tick "compra verificada" (solo informativo, no CTA).
+
+  ⚠ SOLO CONTENIDO REAL: la instancia de la home queda OCULTA desde el theme
+  editor hasta que haya testimonios verdaderos. No publicar citas inventadas.
+{%- endcomment -%}
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
@@ -12,49 +20,6 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
-
-  /* Estilos para la card de testimonio */
-  .testimonial-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centra todo */
-    text-align: center;
-    padding: 1.5rem;
-  }
-
-  .testimonial-card__person-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%; /* Imagen redonda */
-    object-fit: cover;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  }
-
-  .testimonial-card__name {
-    font-weight: 600;
-    font-size: 1.6rem;
-    margin: 0;
-  }
-
-  .testimonial-card__rating-image {
-    width: 100px; /* Ancho fijo para las 5 estrellas */
-    height: auto;
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .testimonial-card__text {
-    font-size: 1.5rem;
-    line-height: 1.5;
-    font-style: italic;
-    color: rgba(var(--color-foreground), 0.75);
-    margin: 0;
-  }
-
-  .testimonial-card__text p {
-    margin: 0;
-  }
 {%- endstyle -%}
 
 {%- liquid
@@ -67,46 +32,69 @@
 
 <div class="color-{{ section.settings.color_scheme }} gradient">
   <div class="page-width section-{{ section.id }}-padding isolate">
-    
-    {%- unless section.settings.title == blank -%}
-      <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin center">
-        <h2 class="title {{ section.settings.heading_size }}">{{ section.settings.title }}</h2>
+    {%- if section.settings.overline != blank or section.settings.title != blank -%}
+      <div class="testi__head">
+        {%- if section.settings.overline != blank -%}
+          <p class="testi__overline">{{ section.settings.overline | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="title {{ section.settings.heading_size }} testi__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
       </div>
-    {%- endunless -%}
+    {%- endif -%}
 
     <slider-component class="slider-mobile-gutter">
       <ul
-        class="grid grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop{% if show_mobile_slider %} slider slider--tablet grid--peek{% endif %}"
+        class="testi__grid grid grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop{% if show_mobile_slider %} slider slider--tablet grid--peek{% endif %}"
         id="Slider-{{ section.id }}"
         role="list"
       >
         {%- for block in section.blocks -%}
+          {%- liquid
+            assign who_name = block.settings.name | strip
+            assign name_parts = who_name | split: ' '
+            assign initials = name_parts[0] | slice: 0
+            if name_parts.size > 1
+              assign second_initial = name_parts[1] | slice: 0
+              assign initials = initials | append: second_initial
+            endif
+            assign initials = initials | upcase
+          -%}
           <li
             id="Slide-{{ section.id }}-{{ forloop.index }}"
-            class="grid__item{% if section.settings.swipe_on_mobile %} slider__slide{% endif %} center"
+            class="grid__item{% if section.settings.swipe_on_mobile %} slider__slide{% endif %}"
             {{ block.shopify_attributes }}
           >
-            <div class="testimonial-card">
-              {%- if block.settings.person_image != blank -%}
-                {{ block.settings.person_image | image_url: width: 200 | image_tag: class: 'testimonial-card__person-image', widths: '100, 200', alt: block.settings.name | escape }}
-              {%- endif -%}
-
-              {%- if block.settings.name != blank -%}
-                <p class="testimonial-card__name">{{ block.settings.name | escape }}</p>
-              {%- endif -%}
-
-              {%- if block.settings.rating_image != blank -%}
-                {{ block.settings.rating_image | image_url: width: 200 | image_tag: class: 'testimonial-card__rating-image', widths: '100, 200', alt: 'Calificación' }}
-              {%- endif -%}
-              
+            <figure class="testi-card">
               {%- if block.settings.testimonial_text != blank -%}
-                <div class="testimonial-card__text rte">{{ block.settings.testimonial_text }}</div>
+                <blockquote class="testi-card__quote rte">{{ block.settings.testimonial_text }}</blockquote>
               {%- endif -%}
-            </div>
+              <figcaption class="testi-card__who">
+                <span class="testi-card__avatar" aria-hidden="true">
+                  {%- if block.settings.person_image != blank -%}
+                    {{ block.settings.person_image | image_url: width: 104 | image_tag: class: 'testi-card__avatar-img', widths: '52, 104', alt: '', loading: 'lazy' }}
+                  {%- else -%}
+                    {{ initials }}
+                  {%- endif -%}
+                </span>
+                {%- if who_name != blank -%}
+                  <span class="testi-card__name">
+                    {{- who_name | escape -}}
+                    {%- if block.settings.city != blank %} · {{ block.settings.city | escape }}{% endif -%}
+                  </span>
+                {%- endif -%}
+                {%- if block.settings.verified and section.settings.verified_label != blank -%}
+                  <span class="testi-card__verified">
+                    <svg viewBox="0 0 24 24" fill="none" width="12" height="12" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {{ section.settings.verified_label | escape }}
+                  </span>
+                {%- endif -%}
+              </figcaption>
+            </figure>
           </li>
         {%- endfor -%}
       </ul>
-      
+
       {%- if show_mobile_slider -%}
         <div class="slider-buttons large-up-hide">
           <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}">
@@ -124,13 +112,94 @@
         </div>
       {%- endif -%}
     </slider-component>
-
   </div>
 </div>
 
+{% stylesheet %}
+.testi__head {
+  margin-bottom: 0.6rem;
+}
+.testi__overline {
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin: 0 0 0.4rem;
+}
+.testi__title {
+  margin: 0 0 1rem;
+}
+.testi__grid {
+  row-gap: 1.2rem;
+}
+.testi-card {
+  --testi-ok: #246a45;
+  height: 100%;
+  margin: 0;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.14);
+  border-radius: 0.8rem;
+  background: rgba(var(--color-foreground), 0.04);
+  padding: 1.4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.testi-card__quote {
+  font-family: var(--font-accent, Georgia, serif);
+  font-style: italic;
+  font-size: 1.45rem;
+  line-height: 1.5;
+  color: rgb(var(--color-foreground));
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+.testi-card__quote > :first-child { margin-top: 0; }
+.testi-card__quote > :last-child { margin-bottom: 0; }
+.testi-card__who {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  font-size: 1.15rem;
+  color: rgba(var(--color-foreground), 0.65);
+}
+.testi-card__avatar {
+  flex: none;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  color: var(--accent-ink);
+  background: rgba(var(--color-foreground), 0.08);
+  background: color-mix(in srgb, var(--accent, #b25a3c) 16%, rgb(var(--color-background)));
+}
+.testi-card__avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.testi-card__verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--testi-ok);
+}
+{% endstylesheet %}
+
 {% schema %}
 {
-  "name": "Testimonios (Personal)",
+  "name": "Testimonios",
   "tag": "section",
   "class": "section",
   "disabled_on": {
@@ -138,10 +207,20 @@
   },
   "settings": [
     {
+      "type": "paragraph",
+      "content": "Solo testimonios REALES. Mantené la sección oculta hasta tener contenido verdadero; el tick de \"compra verificada\" se marca por testimonio."
+    },
+    {
+      "type": "text",
+      "id": "overline",
+      "label": "Overline",
+      "default": "Clientes"
+    },
+    {
       "type": "text",
       "id": "title",
       "label": "Título de la sección",
-      "default": "Ellos ya lo probaron"
+      "default": "Los que ya compraron"
     },
     {
       "type": "select",
@@ -155,12 +234,19 @@
       "label": "Tamaño del Título"
     },
     {
+      "type": "text",
+      "id": "verified_label",
+      "label": "Texto del tick de verificación",
+      "info": "Se muestra solo en los testimonios marcados como compra verificada.",
+      "default": "Compra verificada"
+    },
+    {
       "type": "range",
       "id": "columns_desktop",
       "min": 2,
       "max": 4,
       "step": 1,
-      "default": 3,
+      "default": 2,
       "label": "Columnas en desktop"
     },
     {
@@ -176,7 +262,7 @@
     {
       "type": "checkbox",
       "id": "swipe_on_mobile",
-      "default": true,
+      "default": false,
       "label": "Activar slider en mobile"
     },
     {
@@ -216,35 +302,43 @@
       "name": "Testimonio",
       "settings": [
         {
-          "type": "image_picker",
-          "id": "person_image",
-          "label": "Foto de la Persona"
+          "type": "richtext",
+          "id": "testimonial_text",
+          "label": "Cita (testimonio real)",
+          "default": "<p>Escribí acá el testimonio real. Nada inventado.</p>"
         },
         {
           "type": "text",
           "id": "name",
-          "label": "Nombre/Título",
-          "default": "Nombre de la Persona"
+          "label": "Nombre",
+          "info": "Ej.: Martín F. Las iniciales del avatar salen de acá.",
+          "default": "Nombre A."
+        },
+        {
+          "type": "text",
+          "id": "city",
+          "label": "Ciudad"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Compra verificada",
+          "info": "Marcalo solo si podés respaldarlo con una orden real.",
+          "default": false
         },
         {
           "type": "image_picker",
-          "id": "rating_image",
-          "label": "Imagen de Calificación (ej. 5 estrellas)"
-        },
-        {
-          "type": "richtext",
-          "id": "testimonial_text",
-          "label": "Texto del Testimonio",
-          "default": "<p>¡Escribe aquí el testimonio! Es increíble.</p>"
+          "id": "person_image",
+          "label": "Foto (opcional)",
+          "info": "Si no hay foto, se muestran las iniciales."
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Testimonios (Personal)",
+      "name": "Testimonios",
       "blocks": [
-        { "type": "testimonial" },
         { "type": "testimonial" },
         { "type": "testimonial" }
       ]
