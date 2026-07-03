@@ -2,6 +2,11 @@
   Autenticidad ampliada (§4.7): foto del lote + 3 pasos (blocks) + CTA WhatsApp + link original-vs-réplica.
   OS 2.0, editable por theme editor. El número de WhatsApp es global (settings.whatsapp_number);
   el mensaje se arma con el producto actual. Nada hardcodeado.
+
+  ⚠ MULTI-INSTANCIA: vive en la PDP (templates/product.json), en la home
+  (templates/index.json) y en /pages/autenticidad. Cualquier cambio acá impacta
+  las tres. La home usa: sin foto (show_photo off), título H2 y la fila de dos
+  links; la PDP usa la foto del lote y el link-card "Original vs. réplica".
 {%- endcomment -%}
 
 {%- liquid
@@ -29,8 +34,12 @@
     {%- if section.settings.heading != blank -%}
       <p class="auth__overline">{{ section.settings.heading }}</p>
     {%- endif -%}
+    {%- if section.settings.title != blank -%}
+      <h2 class="auth__title">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
 
-    <div class="auth__card">
+    <div class="auth__card{% unless section.settings.show_photo %} auth__card--no-photo{% endunless %}">
+      {%- if section.settings.show_photo -%}
       <div class="auth__photo">
         {%- if section.settings.lote_image != blank -%}
           {{
@@ -48,6 +57,7 @@
           </span>
         {%- endif -%}
       </div>
+      {%- endif -%}
 
       <div class="auth__body">
         {%- if section.blocks.size > 0 -%}
@@ -78,6 +88,27 @@
             </span>
             <svg viewBox="0 0 24 24" fill="none" width="18" height="18" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
+        {%- endif -%}
+
+        {%- liquid
+          assign has_link_1 = false
+          if section.settings.link_1_label != blank and section.settings.link_1_url != blank
+            assign has_link_1 = true
+          endif
+          assign has_link_2 = false
+          if section.settings.link_2_label != blank and section.settings.link_2_url != blank
+            assign has_link_2 = true
+          endif
+        -%}
+        {%- if has_link_1 or has_link_2 -%}
+          <div class="auth__links">
+            {%- if has_link_1 -%}
+              <a class="auth__links-item" href="{{ section.settings.link_1_url }}">{{ section.settings.link_1_label | escape }}</a>
+            {%- endif -%}
+            {%- if has_link_2 -%}
+              <a class="auth__links-item" href="{{ section.settings.link_2_url }}">{{ section.settings.link_2_label | escape }}</a>
+            {%- endif -%}
+          </div>
         {%- endif -%}
       </div>
     </div>
@@ -117,6 +148,11 @@
   color: rgba(var(--color-foreground), 0.6);
   max-width: 60rem; margin: 0 auto 1.4rem;
 }
+.auth__title {
+  max-width: 60rem;
+  margin: 0 auto 1.8rem;
+}
+.auth__overline + .auth__title { margin-top: -0.6rem; }
 .auth__card {
   max-width: 60rem; margin: 0 auto;
   border: 0.1rem solid rgba(var(--color-foreground), 0.14);
@@ -173,8 +209,17 @@
 .auth__compare-body b { display: block; font-size: 1.3rem; color: rgb(var(--color-foreground)); }
 .auth__compare-body span { display: block; font-size: 1.2rem; color: rgba(var(--color-foreground), 0.62); margin-top: 0.2rem; }
 .auth__compare svg { flex: none; color: rgba(var(--color-foreground), 0.5); }
+.auth__links {
+  display: flex; flex-wrap: wrap; gap: 0.8rem 1.8rem;
+  justify-content: center; margin-top: 1.4rem;
+}
+.auth__links-item {
+  font-size: 1.2rem; font-weight: 600; color: var(--auth-accent-ink);
+  text-decoration: underline; text-underline-offset: 0.3rem;
+}
 .auth__wa:focus-visible,
-.auth__compare:focus-visible { outline: 0.2rem solid var(--auth-accent, #B25A3C); outline-offset: 0.2rem; }
+.auth__compare:focus-visible,
+.auth__links-item:focus-visible { outline: 0.2rem solid var(--auth-accent, #B25A3C); outline-offset: 0.2rem; }
 @media (prefers-reduced-motion: reduce) {
   .auth__wa, .auth__compare { transition: none; }
   .auth__wa:active { transform: none; }
@@ -189,8 +234,10 @@
   "settings": [
     { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "default": "scheme-1" },
     { "type": "color", "id": "accent_color", "label": "Color de acento", "default": "#B25A3C" },
-    { "type": "text", "id": "heading", "label": "Título (overline)", "default": "Cómo verificás que es original" },
+    { "type": "text", "id": "heading", "label": "Overline (texto chico arriba)", "default": "Cómo verificás que es original" },
+    { "type": "text", "id": "title", "label": "Título (H2, opcional)", "info": "Usado en la home: overline + título grande. En la PDP puede quedar vacío." },
     { "type": "header", "content": "Foto del lote" },
+    { "type": "checkbox", "id": "show_photo", "label": "Mostrar foto del lote", "info": "En la home se apaga (la sección queda solo con pasos + WhatsApp + links).", "default": true },
     { "type": "image_picker", "id": "lote_image", "label": "Foto del lote / batch code" },
     { "type": "text", "id": "lote_badge", "label": "Etiqueta sobre la foto", "default": "Foto real del lote" },
     { "type": "header", "content": "WhatsApp" },
@@ -198,10 +245,16 @@
     { "type": "text", "id": "whatsapp_label", "label": "Texto del botón", "default": "Pedir video del lote por WhatsApp" },
     { "type": "text", "id": "whatsapp_message", "label": "Mensaje pre-armado", "default": "Hola! Quiero ver el video del lote de {product} antes de comprar." },
     { "type": "text", "id": "whatsapp_fallback_name", "label": "Nombre si no hay producto", "default": "este perfume" },
-    { "type": "header", "content": "Original vs. réplica (link)" },
+    { "type": "header", "content": "Original vs. réplica (link-card, estilo PDP)" },
     { "type": "url", "id": "compare_link", "label": "Link a la guía original vs. réplica" },
     { "type": "text", "id": "compare_title", "label": "Título del link", "default": "Original vs. réplica: cómo notar la diferencia" },
     { "type": "text", "id": "compare_text", "label": "Subtítulo del link", "default": "Guía con las señales que mira nuestro equipo." },
+    { "type": "header", "content": "Fila de links (estilo home)" },
+    { "type": "paragraph", "content": "Dos links chicos subrayados al pie de la card. Se muestran solo si tienen label y URL." },
+    { "type": "text", "id": "link_1_label", "label": "Link 1 · label" },
+    { "type": "url", "id": "link_1_url", "label": "Link 1 · URL" },
+    { "type": "text", "id": "link_2_label", "label": "Link 2 · label" },
+    { "type": "url", "id": "link_2_url", "label": "Link 2 · URL" },
     { "type": "header", "content": "Espaciado" },
     { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding superior", "default": 48 },
     { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding inferior", "default": 48 }
