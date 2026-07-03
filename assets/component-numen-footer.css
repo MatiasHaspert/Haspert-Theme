@@ -1,0 +1,311 @@
+/*
+ * component-numen-footer.css — Footer NUMEN.
+ * -----------------------------------------------------------------------------
+ * Diseño: numen-menu-footer-mockup.html (sección FOOTER). Las superficies y el
+ * texto salen del color scheme de la sección (color-{{ scheme }} → scheme-2 =
+ * tono panel #ece8df de la paleta activa); el acento usa --accent / --accent-ink
+ * (globales de theme.liquid). Blanco fijo sólo en los sellos (superficie de
+ * badge, como el marco de las cards).
+ *
+ * Mobile-first: columnas como acordeón <details> (server-side abiertas; el
+ * script inline de sections/footer.liquid colapsa en <750px). En >=750px las
+ * columnas quedan abiertas y el summary pasa a título estático (pointer-events
+ * none + chevron oculto).
+ */
+
+.numen-footer {
+  border-top: 0.1rem solid rgba(var(--color-foreground), 0.12);
+
+  --nf-line: rgba(var(--color-foreground), 0.12);
+  --nf-ink-2: rgba(var(--color-foreground), 0.72);
+  --nf-ink-3: rgba(var(--color-foreground), 0.55);
+  --nf-ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.numen-footer .f-inner {
+  padding: 3rem 2rem 2.2rem;
+}
+
+/* ===== Marca ===== */
+.f-brand {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-display, var(--font-heading-family));
+  font-size: 3rem;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  color: rgb(var(--color-foreground));
+}
+
+.f-tag {
+  margin: 0 0 2.2rem;
+  font-family: var(--font-accent, var(--font-body-family));
+  font-style: italic;
+  font-size: 1.45rem;
+  line-height: 1.45;
+  color: var(--nf-ink-2);
+}
+
+/* ===== Columnas de links (acordeón mobile) ===== */
+.f-col {
+  border-top: 0.1rem solid var(--nf-line);
+}
+
+.f-col__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0.2rem;
+  font-family: var(--font-body-family);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  list-style: none;
+}
+
+.f-col__head::-webkit-details-marker {
+  display: none;
+}
+
+.f-col__chev {
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  color: var(--accent-ink);
+  transition: transform 0.24s var(--nf-ease);
+}
+
+.f-col[open] .f-col__chev {
+  transform: rotate(180deg);
+}
+
+.f-col__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0 0 1.4rem;
+}
+
+.f-link {
+  display: flex;
+  align-items: center;
+  min-height: 3.8rem;
+  font-size: 1.35rem;
+  color: var(--nf-ink-2);
+  text-decoration: none;
+  transition: color 0.18s var(--nf-ease);
+}
+
+.f-link:active {
+  color: var(--accent-ink);
+}
+
+@media (hover: hover) {
+  .f-link:hover {
+    color: var(--accent-ink);
+  }
+}
+
+.f-link--strong {
+  font-weight: 600;
+  color: rgb(var(--color-foreground));
+}
+
+.f-link--arrep {
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+/* ===== Contacto + datos fiscales ===== */
+.f-contact {
+  border-top: 0.1rem solid var(--nf-line);
+  padding: 1.6rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+  font-size: 1.3rem;
+  color: var(--nf-ink-2);
+}
+
+.f-contact a {
+  font-weight: 600;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+}
+
+.f-contact a:active {
+  color: var(--accent-ink);
+}
+
+@media (hover: hover) {
+  .f-contact a:hover {
+    color: var(--accent-ink);
+  }
+}
+
+/* Redes (reusa component-list-social.css de Dawn) */
+.numen-footer .list-social {
+  justify-content: flex-start;
+  margin-left: -1.3rem;
+}
+
+.f-datos {
+  border-top: 0.1rem solid var(--nf-line);
+  padding: 1.6rem 0 0.4rem;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--nf-ink-3);
+}
+
+.f-datos b {
+  font-weight: 600;
+  color: var(--nf-ink-2);
+}
+
+/* ===== Sellos: pago + Data Fiscal ===== */
+.f-badges {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  padding: 1.4rem 0 0.6rem;
+}
+
+.f-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  height: 3.4rem;
+  padding: 0 1.1rem;
+  border: 0.1rem solid var(--nf-line);
+  border-radius: 0.4rem;
+  background: #ffffff; /* superficie de sello, como el marco de las cards */
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--nf-ink-2);
+}
+
+.f-badge svg {
+  flex: none;
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--accent-ink);
+}
+
+.f-qr {
+  flex: none;
+  display: block;
+  width: 4.4rem;
+  height: 4.4rem;
+}
+
+.f-qr img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 0.1rem solid var(--nf-line);
+  border-radius: 0.4rem;
+  background: #ffffff;
+}
+
+.f-qr__label {
+  font-size: 1rem;
+  color: var(--nf-ink-3);
+}
+
+/* ===== Barra final ===== */
+.f-bottom {
+  border-top: 0.1rem solid var(--nf-line);
+  padding: 1.4rem 0 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1.05rem;
+  color: var(--nf-ink-3);
+}
+
+/* ===== Desktop: columnas abiertas, summary estático ===== */
+@media screen and (min-width: 750px) {
+  .numen-footer .f-inner {
+    padding: 5rem 5rem 2.6rem;
+  }
+
+  .f-top {
+    display: grid;
+    grid-template-columns: minmax(22rem, 30rem) 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin-bottom: 3rem;
+  }
+
+  .f-tag {
+    margin-bottom: 0;
+  }
+
+  .f-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 2.4rem 3rem;
+  }
+
+  .f-col {
+    border-top: 0;
+  }
+
+  .f-col__head {
+    padding: 0 0 1rem;
+    pointer-events: none;
+  }
+
+  .f-col__chev {
+    display: none;
+  }
+
+  .f-col__links {
+    padding-bottom: 0;
+  }
+
+  .f-link {
+    min-height: 3.2rem;
+  }
+
+  .f-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.4rem 4rem;
+    border-top: 0.1rem solid var(--nf-line);
+  }
+
+  .f-meta .f-contact,
+  .f-meta .f-datos {
+    border-top: 0;
+  }
+
+  .f-badges {
+    padding: 2rem 0 0.6rem;
+  }
+}
+
+/* ===== Foco visible (AA) ===== */
+.f-col__head:focus-visible,
+.f-link:focus-visible,
+.f-contact a:focus-visible,
+.f-qr:focus-visible {
+  outline: 0.2rem solid var(--accent);
+  outline-offset: 0.2rem;
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .f-col__chev,
+  .f-link {
+    transition: none;
+  }
+}

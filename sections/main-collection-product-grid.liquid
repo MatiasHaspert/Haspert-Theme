@@ -237,6 +237,24 @@
   {%- endif -%}
 </div>
 
+{%- comment -%} BLOQUE F · ritmo vertical + gap de grilla parejos en mobile. {%- endcomment -%}
+{% stylesheet %}
+@media screen and (max-width: 749px) {
+  #product-grid.product-grid {
+    gap: 1.4rem 1.2rem;
+    column-gap: 1.2rem;
+    row-gap: 1.4rem;
+  }
+  .facets-container-drawer .active-facets-mobile {
+    margin: 1.2rem 0 0.4rem;
+    padding: 0 1.5rem;
+  }
+  .product-grid-container {
+    margin-top: 0.4rem;
+  }
+}
+{% endstylesheet %}
+
 {% schema %}
 {
   "name": "t:sections.main-collection-product-grid.name",

@@ -130,6 +130,7 @@
       },
       "from_decant": "Desde {{ price }} en decant",
       "installments_note": "6 cuotas sin interés · CFTA 0%",
+      "added": "¡Agregado!",
       "quantity": {
         "label": "Cantidad",
         "input_label": "Cantidad para {{ product }}",

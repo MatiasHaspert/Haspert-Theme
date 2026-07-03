@@ -1,325 +1,216 @@
-{% comment %}theme-check-disable UndefinedObject{% endcomment %}
-{{ 'section-footer.css' | asset_url | stylesheet_tag }}
-{{ 'component-newsletter.css' | asset_url | stylesheet_tag }}
-{{ 'component-list-menu.css' | asset_url | stylesheet_tag }}
-{{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
-{{ 'component-list-social.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Footer NUMEN — diseño validado en numen-menu-footer-mockup.html (sección FOOTER).
 
-{%- style -%}
-  .footer {
-    margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
-  }
+  Estructura: marca + tagline, columnas de links (blocks link_list → menús de
+  Admin → Navegación), contacto (WhatsApp global + email), datos fiscales
+  condicionales, sellos (Mercado Pago + QR Data Fiscal) y barra final.
 
-  .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
-  }
+  Acordeón mobile / columnas desktop: las columnas son <details> nativos que se
+  renderizan ABIERTOS server-side (sin JS y para crawlers todo el contenido queda
+  visible). El script inline del final colapsa en <750px (la primera columna queda
+  abierta, como el mockup) y reabre todo en desktop.
 
-  @media screen and (min-width: 750px) {
-    .footer {
-      margin-top: {{ section.settings.margin_top }}px;
-    }
+  Datos fiscales (razón social / CUIT / domicilio) quedan ocultos hasta que se
+  carguen en settings: la definición fiscal está pendiente de los socios.
+{% endcomment %}
 
-    .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top }}px;
-      padding-bottom: {{ section.settings.padding_bottom }}px;
-    }
-  }
-{%- endstyle -%}
+<link rel="stylesheet" href="{{ 'component-numen-footer.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'component-numen-footer.css' | asset_url | stylesheet_tag }}</noscript>
+{%- if section.settings.show_social -%}
+  {{ 'component-list-social.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
 
-<footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
-  {%- liquid
-    assign has_social_icons = true
-    if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
-      assign has_social_icons = false
-    endif
+{%- liquid
+  # WhatsApp global: ignorar el placeholder con X para no generar un link roto (mismo gate que el drawer).
+  assign wa_num = settings.whatsapp_number
+  if wa_num contains 'X' or wa_num contains 'x'
+    assign wa_num = ''
+  endif
 
-    if settings.brand_image == blank and settings.brand_headline == blank and settings.brand_description == blank
-      assign brand_empty = true
-    endif
+  assign has_social_icons = true
+  if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
+    assign has_social_icons = false
+  endif
+  assign show_social_row = false
+  if section.settings.show_social and has_social_icons
+    assign show_social_row = true
+  endif
 
-    if section.blocks.size == 1 and section.blocks[0].type == 'brand_information' and brand_empty and has_social_icons == false and section.settings.newsletter_enable == false and section.settings.enable_follow_on_shop == false
-      assign only_empty_brand = true
-    endif
-  -%}
-  {%- if section.blocks.size > 0
-    or section.settings.newsletter_enable
-    or section.settings.show_social
-    and has_social_icons == true
-    or section.settings.enable_follow_on_shop
-  -%}
-    {%- unless only_empty_brand -%}
-      <div class="footer__content-top page-width">
-        {%- if section.blocks.size > 0 -%}
-          {%- liquid
-            if section.blocks.size == 9
-              assign footer_grid_class = 'grid--3-col-tablet'
-            elsif section.blocks.size > 6
-              assign footer_grid_class = 'grid--4-col-desktop'
-            elsif section.blocks.size > 4
-              assign footer_grid_class = 'grid--3-col-tablet'
-            endif
-          -%}
-          <div
-            class="footer__blocks-wrapper grid grid--1-col grid--2-col grid--4-col-tablet {{ footer_grid_class }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-            {% if settings.animations_reveal_on_scroll %}
-              data-cascade
-            {% endif %}
-          >
-            {%- for block in section.blocks -%}
-              <div
-                class="footer-block grid__item{% if block.type == 'link_list' %} footer-block--menu{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-                {{ block.shopify_attributes }}
-                {% if settings.animations_reveal_on_scroll %}
-                  data-cascade
-                  style="--animation-order: {{ forloop.index }};"
-                {% endif %}
-              >
-                {%- if block.settings.heading != blank -%}
-                  <h2 class="footer-block__heading inline-richtext">{{- block.settings.heading -}}</h2>
-                {%- endif -%}
+  assign show_contact = false
+  if wa_num != blank or section.settings.footer_email != blank or show_social_row
+    assign show_contact = true
+  endif
 
-                {%- case block.type -%}
-                  {%- when '@app' -%}
-                    {% render block %}
-                  {%- when 'text' -%}
-                    <div class="footer-block__details-content rte">
-                      {{ block.settings.subtext }}
-                    </div>
-                  {%- when 'link_list' -%}
-                    {%- if block.settings.menu != blank -%}
-                      <ul class="footer-block__details-content list-unstyled">
-                        {%- for link in block.settings.menu.links -%}
-                          <li>
-                            <a
-                              href="{{ link.url }}"
-                              class="link link--text list-menu__item list-menu__item--link{% if link.active %} list-menu__item--active{% endif %}"
-                            >
-                              {{ link.title | escape }}
-                            </a>
-                          </li>
-                        {%- endfor -%}
-                      </ul>
-                    {%- endif -%}
-                  {%- when 'brand_information' -%}
-                    <div class="footer-block__brand-info">
-                      {%- if settings.brand_image != blank -%}
-                        {%- assign brand_image_height = settings.brand_image_width
-                          | divided_by: settings.brand_image.aspect_ratio
-                        -%}
-                        <div
-                          class="footer-block__image-wrapper"
-                          style="max-width: min(100%, {{ settings.brand_image_width }}px);"
-                        >
-                          {{
-                            settings.brand_image
-                            | image_url: width: 1100
-                            | image_tag:
-                              loading: 'lazy',
-                              widths: '50, 100, 150, 200, 300, 400, 550, 800, 1100',
-                              height: brand_image_height,
-                              width: settings.brand_image_width
-                          }}
-                        </div>
-                      {%- endif -%}
-                      {%- if settings.brand_headline != blank -%}
-                        <h2 class="footer-block__heading rte">{{ settings.brand_headline }}</h2>
-                      {%- endif -%}
-                      {%- if settings.brand_description != blank -%}
-                        <div class="rte">{{ settings.brand_description }}</div>
-                      {%- endif -%}
-                      {%- if block.settings.show_social and has_social_icons -%}
-                        {%- render 'social-icons', class: 'footer__list-social' -%}
-                      {%- endif -%}
-                    </div>
-                  {%- when 'image' -%}
-                    <div class="footer-block__details-content footer-block-image {{ block.settings.alignment }}">
-                      {%- if block.settings.image != blank -%}
-                        {%- assign image_size_2x = block.settings.image_width | times: 2 | at_most: 5760 -%}
-                        <div
-                          class="footer-block__image-wrapper"
-                          style="max-width: min(100%, {{ block.settings.image_width }}px);"
-                        >
-                          <img
-                            srcset="{{ block.settings.image | image_url: width: block.settings.image_width }}, {{ block.settings.image | image_url: width: image_size_2x }} 2x"
-                            src="{{ block.settings.image | image_url: width: 760 }}"
-                            alt="{{ block.settings.image.alt | escape }}"
-                            loading="lazy"
-                            width="{{ block.settings.image.width }}"
-                            height="{{ block.settings.image.height }}"
-                          >
-                        </div>
-                      {%- else -%}
-                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
-                      {%- endif -%}
-                    </div>
-                {%- endcase -%}
-              </div>
-            {%- endfor -%}
-          </div>
+  assign show_fiscal = false
+  if section.settings.razon_social != blank or section.settings.cuit != blank or section.settings.domicilio != blank or section.settings.fiscal_note != blank
+    assign show_fiscal = true
+  endif
+
+  assign show_payment_badge = false
+  if section.settings.show_payment_badge and section.settings.payment_badge_text != blank
+    assign show_payment_badge = true
+  endif
+  assign show_badges = false
+  if show_payment_badge or section.settings.data_fiscal_qr != blank
+    assign show_badges = true
+  endif
+
+  assign data_fiscal_label = section.settings.data_fiscal_label | default: 'Data Fiscal'
+-%}
+
+<footer class="numen-footer color-{{ section.settings.color_scheme }} gradient">
+  <div class="f-inner page-width">
+    <div class="f-top">
+      <div class="f-head">
+        <p class="f-brand">{{ shop.name }}</p>
+        {%- if section.settings.footer_tagline != blank -%}
+          <p class="f-tag">{{ section.settings.footer_tagline }}</p>
         {%- endif -%}
+      </div>
 
-        <div
-          class="footer-block--newsletter{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {% if settings.animations_reveal_on_scroll %}
-            data-cascade
-          {% endif %}
-        >
-          {%- if section.settings.newsletter_enable -%}
-            <div class="footer-block__newsletter">
-              {%- if section.settings.newsletter_heading != blank -%}
-                <h2 class="footer-block__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
-              {%- endif -%}
-              {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
-                <input type="hidden" name="contact[tags]" value="newsletter">
-                <div class="newsletter-form__field-wrapper">
-                  <div class="field">
-                    <input
-                      id="NewsletterForm--{{ section.id }}"
-                      type="email"
-                      name="contact[email]"
-                      class="field__input"
-                      value="{{ form.email }}"
-                      aria-required="true"
-                      autocorrect="off"
-                      autocapitalize="off"
-                      autocomplete="email"
-                      {% if form.errors %}
-                        autofocus
-                        aria-invalid="true"
-                        aria-describedby="ContactFooter-error"
-                      {% elsif form.posted_successfully? %}
-                        aria-describedby="ContactFooter-success"
-                      {% endif %}
-                      placeholder="{{ 'newsletter.label' | t }}"
-                      required
-                    >
-                    <label class="field__label" for="NewsletterForm--{{ section.id }}">
-                      {{ 'newsletter.label' | t }}
-                    </label>
-                    <button
-                      type="submit"
-                      class="newsletter-form__button field__button"
-                      name="commit"
-                      id="Subscribe"
-                      aria-label="{{ 'newsletter.button_label' | t }}"
-                    >
-                      <span class="svg-wrapper">
-                        {{- 'icon-arrow.svg' | inline_asset_content -}}
-                      </span>
-                    </button>
-                  </div>
-                  {%- if form.errors -%}
-                    <small class="newsletter-form__message form__message" id="ContactFooter-error">
-                      <span class="svg-wrapper">
-                        {{- 'icon-error.svg' | inline_asset_content -}}
-                      </span>
-                      {{- form.errors.translated_fields.email | capitalize }}
-                      {{ form.errors.messages.email -}}
-                    </small>
-                  {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <div class="f-cols">
+          {%- assign col_idx = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when '@app' -%}
+                <div class="f-col f-col--app" {{ block.shopify_attributes }}>
+                  {%- render block -%}
                 </div>
-                {%- if form.posted_successfully? -%}
-                  <h3
-                    class="newsletter-form__message newsletter-form__message--success form__message"
-                    id="ContactFooter-success"
-                    tabindex="-1"
-                    autofocus
-                  >
-                    <span class="svg-wrapper">
-                      {{- 'icon-success.svg' | inline_asset_content -}}
-                    </span>
-                    {{- 'newsletter.success' | t }}
-                  </h3>
+              {%- when 'link_list' -%}
+                {%- if block.settings.menu != blank and block.settings.menu.links.size > 0 -%}
+                  {%- assign col_idx = col_idx | plus: 1 -%}
+                  <details class="f-col" open{% if col_idx == 1 %} data-f-open{% endif %} {{ block.shopify_attributes }}>
+                    <summary class="f-col__head">
+                      <span>
+                        {%- if block.settings.heading != blank -%}
+                          {{- block.settings.heading -}}
+                        {%- else -%}
+                          {{- block.settings.menu.title | escape -}}
+                        {%- endif -%}
+                      </span>
+                      <svg class="f-col__chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </summary>
+                    <div class="f-col__links">
+                      {%- for link in block.settings.menu.links -%}
+                        {%- liquid
+                          assign link_class = 'f-link'
+                          if block.settings.strong_link_title != blank and link.title == block.settings.strong_link_title
+                            assign link_class = link_class | append: ' f-link--strong'
+                          endif
+                          if section.settings.arrepentimiento_url != blank and link.url == section.settings.arrepentimiento_url
+                            assign link_class = link_class | append: ' f-link--arrep'
+                          endif
+                        -%}
+                        <a href="{{ link.url }}" class="{{ link_class }}"{% if link.current %} aria-current="page"{% endif %}>
+                          {{- link.title | escape -}}
+                        </a>
+                      {%- endfor -%}
+                    </div>
+                  </details>
                 {%- endif -%}
-              {%- endform -%}
-            </div>
-          {%- endif -%}
-
-          {%- if shop.features.follow_on_shop? and section.settings.enable_follow_on_shop -%}
-            <div class="footer__follow-on-shop">
-              {{ shop | login_button: action: 'follow' }}
-            </div>
-          {%- endif -%}
-
-          {%- if section.settings.show_social and has_social_icons -%}
-            {%- render 'social-icons', class: 'footer__list-social' -%}
-          {%- endif -%}
+            {%- endcase -%}
+          {%- endfor -%}
         </div>
-      </div>
-    {%- endunless -%}
-  {%- endif -%}
+      {%- endif -%}
+    </div>
 
-  <div
-    class="footer__content-bottom{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-    {% if settings.animations_reveal_on_scroll %}
-      data-cascade
-    {% endif %}
-  >
-    <div class="footer__content-bottom-wrapper page-width">
-      <div class="footer__column footer__localization isolate">
-        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
-          <localization-form>
-            {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
-              <div>
-                <h2 class="caption-large text-body" id="FooterCountryLabel">{{ 'localization.country_label' | t }}</h2>
-                {%- render 'country-localization', localPosition: 'FooterCountry' -%}
-              </div>
-            {%- endform -%}
-          </localization-form>
+    {%- if show_contact or show_fiscal -%}
+      <div class="f-meta">
+        {%- if show_contact -%}
+          <div class="f-contact">
+            {%- if section.settings.contact_heading != blank -%}
+              <span class="f-contact__label">{{ section.settings.contact_heading }}</span>
+            {%- endif -%}
+            {%- if wa_num != blank -%}
+              <a href="https://wa.me/{{ wa_num }}" target="_blank" rel="noopener">
+                {%- if section.settings.contact_wa_display != blank -%}
+                  {{- section.settings.contact_wa_display -}}
+                {%- else -%}
+                  WhatsApp +{{ wa_num }}
+                {%- endif -%}
+              </a>
+            {%- endif -%}
+            {%- if section.settings.footer_email != blank -%}
+              <a href="mailto:{{ section.settings.footer_email }}">{{ section.settings.footer_email }}</a>
+            {%- endif -%}
+            {%- if show_social_row -%}
+              {%- render 'social-icons', class: 'footer__list-social' -%}
+            {%- endif -%}
+          </div>
         {%- endif -%}
 
-        {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
-          <localization-form>
-            {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
-              <div>
-                <h2 class="caption-large text-body" id="FooterLanguageLabel">
-                  {{ 'localization.language_label' | t }}
-                </h2>
-                {%- render 'language-localization', localPosition: 'FooterLanguage' -%}
-              </div>
-            {%- endform -%}
-          </localization-form>
-        {%- endif -%}
-      </div>
-      <div class="footer__column footer__column--info">
-        {%- if section.settings.payment_enable -%}
-          <div class="footer__payment">
-            <span class="visually-hidden">{{ 'sections.footer.payment' | t }}</span>
-            <ul class="list list-payment" role="list">
-              {%- for type in shop.enabled_payment_types -%}
-                <li class="list-payment__item">
-                  {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
-                </li>
-              {%- endfor -%}
-            </ul>
+        {%- if show_fiscal -%}
+          <div class="f-datos">
+            {%- if section.settings.razon_social != blank -%}
+              <b>{{ section.settings.razon_social }}</b><br>
+            {%- endif -%}
+            {%- if section.settings.cuit != blank or section.settings.domicilio != blank -%}
+              {%- if section.settings.cuit != blank -%}CUIT {{ section.settings.cuit }}{%- endif -%}
+              {%- if section.settings.cuit != blank and section.settings.domicilio != blank %} · {% endif -%}
+              {{- section.settings.domicilio -}}<br>
+            {%- endif -%}
+            {%- if section.settings.fiscal_note != blank -%}
+              {{ section.settings.fiscal_note }}
+            {%- endif -%}
           </div>
         {%- endif -%}
       </div>
-    </div>
-    <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">
-      <div class="footer__copyright caption">
-        <small class="copyright__content"
-          >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
-        </small>
-        <small class="copyright__content">{{ powered_by_link }}</small>
-        {%- if section.settings.show_policy -%}
-          <ul class="policies list-unstyled">
-            {%- for policy in shop.policies -%}
-              {%- if policy != blank -%}
-                <li>
-                  <small class="copyright__content"
-                    ><a href="{{ policy.url }}">{{ policy.title | escape }}</a></small
-                  >
-                </li>
-              {%- endif -%}
-            {%- endfor -%}
-          </ul>
+    {%- endif -%}
+
+    {%- if show_badges -%}
+      <div class="f-badges">
+        {%- if show_payment_badge -%}
+          <span class="f-badge">
+            {%- render 'icon-line', icon: 'card' -%}
+            {{ section.settings.payment_badge_text }}
+          </span>
+        {%- endif -%}
+        {%- if section.settings.data_fiscal_qr != blank -%}
+          {%- if section.settings.data_fiscal_url != blank -%}
+            <a class="f-qr" href="{{ section.settings.data_fiscal_url }}" target="_blank" rel="noopener">
+              {{ section.settings.data_fiscal_qr | image_url: width: 88 | image_tag: loading: 'lazy', widths: '44, 88', sizes: '44px', alt: data_fiscal_label }}
+            </a>
+          {%- else -%}
+            <span class="f-qr">
+              {{ section.settings.data_fiscal_qr | image_url: width: 88 | image_tag: loading: 'lazy', widths: '44, 88', sizes: '44px', alt: data_fiscal_label }}
+            </span>
+          {%- endif -%}
+          <span class="f-qr__label">{{ data_fiscal_label }}</span>
         {%- endif -%}
       </div>
+    {%- endif -%}
+
+    <div class="f-bottom">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
+      {%- if section.settings.bottom_note != blank -%}
+        <span>{{ section.settings.bottom_note }}</span>
+      {%- endif -%}
     </div>
   </div>
 </footer>
+
+<script>
+  // Acordeón sólo en mobile: server-side todo abierto (SEO / sin JS). Acá se
+  // colapsa <750px dejando la primera columna abierta ([data-f-open], como el
+  // mockup) y se reabre todo al pasar a desktop.
+  (function () {
+    var footer = document.querySelector('.numen-footer');
+    if (!footer) return;
+    var mq = window.matchMedia('(min-width: 750px)');
+    function apply() {
+      footer.querySelectorAll('details.f-col').forEach(function (col) {
+        if (mq.matches || col.hasAttribute('data-f-open')) col.setAttribute('open', '');
+        else col.removeAttribute('open');
+      });
+    }
+    apply();
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+    else mq.addListener(apply);
+  })();
+</script>
 
 {% schema %}
 {
@@ -343,82 +234,12 @@
           "id": "menu",
           "default": "footer",
           "label": "t:sections.footer.blocks.link_list.settings.menu.label"
-        }
-      ]
-    },
-    {
-      "type": "brand_information",
-      "name": "t:sections.footer.blocks.brand_information.name",
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "t:sections.footer.blocks.brand_information.settings.paragraph.content"
         },
         {
-          "type": "checkbox",
-          "id": "show_social",
-          "default": true,
-          "label": "t:sections.footer.blocks.brand_information.settings.show_social.label",
-          "info": "t:sections.footer.blocks.brand_information.settings.show_social.info"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "name": "t:sections.footer.blocks.text.name",
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "heading",
-          "default": "t:sections.footer.blocks.text.settings.heading.default",
-          "label": "t:sections.footer.blocks.text.settings.heading.label"
-        },
-        {
-          "type": "richtext",
-          "id": "subtext",
-          "default": "t:sections.footer.blocks.text.settings.subtext.default",
-          "label": "t:sections.footer.blocks.text.settings.subtext.label"
-        }
-      ]
-    },
-    {
-      "type": "image",
-      "name": "Image",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "range",
-          "id": "image_width",
-          "min": 50,
-          "max": 550,
-          "step": 5,
-          "unit": "px",
-          "label": "Width",
-          "default": 100
-        },
-        {
-          "type": "select",
-          "id": "alignment",
-          "label": "Alignment",
-          "options": [
-            {
-              "value": "",
-              "label": "Left"
-            },
-            {
-              "value": "center",
-              "label": "Center"
-            },
-            {
-              "value": "right",
-              "label": "Right"
-            }
-          ],
-          "default": "center"
+          "type": "text",
+          "id": "strong_link_title",
+          "label": "Link destacado (título exacto)",
+          "info": "El link del menú cuyo título coincida se muestra en negrita (ej: Cómo verificamos autenticidad)."
         }
       ]
     }
@@ -428,118 +249,122 @@
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
-      "default": "scheme-1"
+      "default": "scheme-2"
     },
     {
       "type": "header",
-      "content": "t:sections.footer.settings.header__1.content",
-      "info": "t:sections.footer.settings.header__1.info"
+      "content": "Marca"
     },
     {
-      "type": "checkbox",
-      "id": "newsletter_enable",
-      "default": true,
-      "label": "t:sections.footer.settings.newsletter_enable.label"
-    },
-    {
-      "type": "inline_richtext",
-      "id": "newsletter_heading",
-      "default": "t:sections.footer.settings.newsletter_heading.default",
-      "label": "t:sections.footer.settings.newsletter_heading.label"
+      "type": "text",
+      "id": "footer_tagline",
+      "label": "Tagline",
+      "default": "Perfumería curada. Originales importados, verificables frasco por frasco."
     },
     {
       "type": "header",
-      "content": "t:sections.footer.settings.header__9.content"
+      "content": "Contacto"
     },
     {
-      "type": "checkbox",
-      "id": "enable_follow_on_shop",
-      "default": true,
-      "label": "t:sections.footer.settings.enable_follow_on_shop.label",
-      "info": "t:sections.footer.settings.enable_follow_on_shop.info"
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Título de contacto",
+      "default": "¿Dudas? Escribinos:"
+    },
+    {
+      "type": "text",
+      "id": "contact_wa_display",
+      "label": "Número de WhatsApp visible",
+      "info": "Sólo cómo se muestra (ej: WhatsApp +54 9 341 555-1234). El link usa el número de WhatsApp de la configuración general del tema; si ese número está vacío o con X, el link no aparece."
+    },
+    {
+      "type": "text",
+      "id": "footer_email",
+      "label": "Email de contacto"
     },
     {
       "type": "checkbox",
       "id": "show_social",
-      "default": true,
-      "label": "t:sections.footer.settings.show_social.label",
-      "info": "t:sections.footer.settings.show_social.info"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_country_selector",
-      "default": true,
-      "label": "t:sections.footer.settings.enable_country_selector.label",
-      "info": "t:sections.footer.settings.enable_country_selector.info"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_language_selector",
-      "default": true,
-      "label": "t:sections.footer.settings.enable_language_selector.label",
-      "info": "t:sections.footer.settings.enable_language_selector.info"
-    },
-    {
-      "type": "checkbox",
-      "id": "payment_enable",
-      "default": true,
-      "label": "t:sections.footer.settings.payment_enable.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_policy",
-      "default": true,
-      "label": "t:sections.footer.settings.show_policy.label",
-      "info": "t:sections.footer.settings.show_policy.info"
+      "label": "Mostrar redes sociales",
+      "info": "Usa los links de redes de la configuración general del tema.",
+      "default": true
     },
     {
       "type": "header",
-      "content": "t:sections.all.spacing"
+      "content": "Datos fiscales",
+      "info": "El bloque queda oculto hasta cargar al menos un dato."
     },
     {
-      "type": "range",
-      "id": "margin_top",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.footer.settings.margin_top.label",
-      "default": 0
+      "type": "text",
+      "id": "razon_social",
+      "label": "Razón social / nombre"
+    },
+    {
+      "type": "text",
+      "id": "cuit",
+      "label": "CUIT"
+    },
+    {
+      "type": "text",
+      "id": "domicilio",
+      "label": "Domicilio fiscal"
+    },
+    {
+      "type": "text",
+      "id": "fiscal_note",
+      "label": "Nota adicional",
+      "default": "Despachos desde Rosario, Santa Fe."
     },
     {
       "type": "header",
-      "content": "t:sections.all.padding.section_padding_heading"
+      "content": "Sellos"
     },
     {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_top",
-      "default": 36
+      "type": "checkbox",
+      "id": "show_payment_badge",
+      "label": "Mostrar sello de pago",
+      "default": true
     },
     {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_bottom",
-      "default": 36
+      "type": "text",
+      "id": "payment_badge_text",
+      "label": "Texto del sello de pago",
+      "default": "Mercado Pago"
+    },
+    {
+      "type": "image_picker",
+      "id": "data_fiscal_qr",
+      "label": "QR Data Fiscal (ARCA)",
+      "info": "Imagen del QR de Data Fiscal. Si está vacío, no se muestra."
+    },
+    {
+      "type": "url",
+      "id": "data_fiscal_url",
+      "label": "Link del QR Data Fiscal",
+      "info": "URL de la constancia en ARCA a la que apunta el QR."
+    },
+    {
+      "type": "text",
+      "id": "data_fiscal_label",
+      "label": "Texto del sello Data Fiscal",
+      "default": "Data Fiscal"
+    },
+    {
+      "type": "header",
+      "content": "Legales"
+    },
+    {
+      "type": "url",
+      "id": "arrepentimiento_url",
+      "label": "URL del botón de arrepentimiento",
+      "info": "El link del menú que apunte a esta URL se resalta en terracota (requisito AR: link destacado)."
+    },
+    {
+      "type": "text",
+      "id": "bottom_note",
+      "label": "Texto de cierre",
+      "default": "Hecho en Argentina"
     }
-  ],
-  "default": {
-    "blocks": [
-      {
-        "type": "link_list"
-      },
-      {
-        "type": "text"
-      }
-    ]
-  }
+  ]
 }
 {% endschema %}

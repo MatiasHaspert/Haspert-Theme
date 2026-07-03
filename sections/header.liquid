@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-header-search-bar.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-numen-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-cart-notification.css' | asset_url }}" media="print" onload="this.media='all'">
 
 {%- if settings.predictive_search_enabled -%}
@@ -155,6 +156,7 @@
 {%- endstyle -%}
 
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'numen-drawer-accordion.js' | asset_url }}" defer="defer"></script>
 
 {%- liquid
   for block in section.blocks
@@ -610,6 +612,52 @@
       "id": "show_line_separator",
       "default": true,
       "label": "t:sections.header.settings.show_line_separator.label"
+    },
+    {
+      "type": "header",
+      "content": "Drawer del menú (mobile)"
+    },
+    {
+      "type": "text",
+      "id": "highlight_link_title",
+      "label": "Ítem destacado (título exacto)",
+      "info": "El ítem del menú cuyo título coincida se renderiza como fila destacada con escudo. Debe ser un link directo (sin hijos).",
+      "default": "Autenticidad"
+    },
+    {
+      "type": "text",
+      "id": "highlight_link_badge",
+      "label": "Badge del ítem destacado",
+      "default": "Cómo lo verificamos"
+    },
+    {
+      "type": "text",
+      "id": "drawer_wa_label",
+      "label": "Texto CTA WhatsApp",
+      "info": "El número sale de Configuración del tema → WhatsApp / Contacto. Si está vacío o sin cargar, el botón no se muestra.",
+      "default": "Escribinos por WhatsApp"
+    },
+    {
+      "type": "url",
+      "id": "drawer_legal_1",
+      "label": "Link legal 1 (arrepentimiento)"
+    },
+    {
+      "type": "text",
+      "id": "drawer_legal_1_label",
+      "label": "Texto link legal 1",
+      "default": "Botón de arrepentimiento"
+    },
+    {
+      "type": "url",
+      "id": "drawer_legal_2",
+      "label": "Link legal 2 (términos)"
+    },
+    {
+      "type": "text",
+      "id": "drawer_legal_2_label",
+      "label": "Texto link legal 2",
+      "default": "Términos"
     },
     {
       "type": "header",

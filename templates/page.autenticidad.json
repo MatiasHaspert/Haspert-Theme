@@ -1,0 +1,128 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "auth": {
+      "type": "autenticidad-perfume",
+      "blocks": {
+        "paso_1": {
+          "type": "paso",
+          "settings": {
+            "text": "<p>Cada frasco sellado tiene un <strong>código de lote (batch code)</strong> impreso. Te mostramos el real en las fotos del producto.</p>"
+          }
+        },
+        "paso_2": {
+          "type": "paso",
+          "settings": {
+            "text": "<p>Podés cruzar ese código en verificadores públicos de batch para confirmar fabricante y fecha.</p>"
+          }
+        },
+        "paso_3": {
+          "type": "paso",
+          "settings": {
+            "text": "<p>¿Querés verlo en vivo? Te enviamos <strong>foto y video del lote por WhatsApp</strong> antes de comprar.</p>"
+          }
+        }
+      },
+      "block_order": ["paso_1", "paso_2", "paso_3"],
+      "settings": {}
+    },
+    "compare": {
+      "type": "original-vs-replica",
+      "blocks": {
+        "row_procedencia": {
+          "type": "row",
+          "settings": {
+            "icon": "truck",
+            "feature": "Procedencia",
+            "ours": "Importado, marca auténtica con lote/serial verificable",
+            "replica": "Origen dudoso, sin respaldo"
+          }
+        },
+        "row_concentracion": {
+          "type": "row",
+          "settings": {
+            "icon": "bottle",
+            "feature": "Concentración",
+            "ours": "Declarada (EDP/EDT), rinde y dura como el oficial",
+            "replica": "Diluido, se va en pocas horas"
+          }
+        },
+        "row_lote": {
+          "type": "row",
+          "settings": {
+            "icon": "lock",
+            "feature": "Frasco y lote",
+            "ours": "Sellado de fábrica, lote/serial verificable",
+            "replica": "Serial falso o ausente"
+          }
+        },
+        "row_aroma": {
+          "type": "row",
+          "settings": {
+            "icon": "sparkle",
+            "feature": "Aroma",
+            "ours": "Fiel al lanzamiento oficial",
+            "replica": "Aroma alterado o desviado"
+          }
+        },
+        "row_garantia": {
+          "type": "row",
+          "settings": {
+            "icon": "shield",
+            "feature": "Garantía",
+            "ours": "Garantía de originalidad: si no es original, te devolvemos el 100% + el envío (hasta 30 días)",
+            "replica": "Sin garantía"
+          }
+        },
+        "row_postventa": {
+          "type": "row",
+          "settings": {
+            "icon": "return",
+            "feature": "Postventa",
+            "ours": "WhatsApp + cambios/devolución",
+            "replica": "Nula"
+          }
+        }
+      },
+      "block_order": [
+        "row_procedencia",
+        "row_concentracion",
+        "row_lote",
+        "row_aroma",
+        "row_garantia",
+        "row_postventa"
+      ],
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq-perfume",
+      "blocks": {
+        "qa_original": {
+          "type": "qa",
+          "settings": {
+            "icon": "shield",
+            "question": "¿Los perfumes son 100% originales?",
+            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>"
+          }
+        },
+        "qa_replica": {
+          "type": "qa",
+          "settings": {
+            "icon": "lock",
+            "question": "¿Cómo sé que no es una réplica?",
+            "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. Si querés, te mandamos el unboxing por WhatsApp antes de comprar.</p>"
+          }
+        }
+      },
+      "block_order": ["qa_original", "qa_replica"],
+      "settings": {
+        "microbadge": "Autenticidad",
+        "heading": "Preguntas sobre autenticidad"
+      }
+    }
+  },
+  "order": ["main", "auth", "compare", "faq"]
+}

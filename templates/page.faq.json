@@ -1,0 +1,89 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq-perfume",
+      "blocks": {
+        "qa_original": {
+          "type": "qa",
+          "settings": {
+            "icon": "shield",
+            "question": "¿Los perfumes son 100% originales?",
+            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>"
+          }
+        },
+        "qa_replica": {
+          "type": "qa",
+          "settings": {
+            "icon": "lock",
+            "question": "¿Cómo sé que no es una réplica?",
+            "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. Si querés, te mandamos el unboxing por WhatsApp antes de comprar. Y si algo no cierra: garantía de originalidad, te devolvemos el 100%.</p>"
+          }
+        },
+        "qa_decant": {
+          "type": "qa",
+          "settings": {
+            "icon": "bottle",
+            "question": "¿Qué es un \"decant\"? ¿Es el mismo perfume?",
+            "answer": "<p>Sí, es el mismo jugo fraccionado del frasco original en un atomizador. Ideal para probar el aroma antes de comprar el frasco completo, o para llevar en la cartera.</p>"
+          }
+        },
+        "qa_tester": {
+          "type": "qa",
+          "settings": {
+            "icon": "bottle",
+            "question": "¿Y el \"tester\"? ¿En qué se diferencia del original?",
+            "answer": "<p>Es exactamente el mismo perfume, en packaging de prueba (caja blanca o sin tapa premium). Por eso es más económico — pero el jugo es idéntico.</p>"
+          }
+        },
+        "qa_envios": {
+          "type": "qa",
+          "settings": {
+            "icon": "truck",
+            "question": "¿Hacen envíos a todo el país?",
+            "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 4–7 días hábiles. Envío gratis en compras desde $200.000.</p>"
+          }
+        },
+        "qa_cuotas": {
+          "type": "qa",
+          "settings": {
+            "icon": "card",
+            "question": "¿Puedo pagar en cuotas?",
+            "answer": "<p>Sí, con Mercado Pago: hasta <strong>6 cuotas sin interés</strong> y hasta <strong>12 con interés</strong>. Además, <strong>20% de descuento</strong> pagando contado o por transferencia.</p>"
+          }
+        },
+        "qa_arrepentimiento": {
+          "type": "qa",
+          "settings": {
+            "icon": "return",
+            "question": "¿Qué pasa si me arrepiento o no me gusta?",
+            "answer": "<p>Tenés 10 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido y de naturaleza no devolvible — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>"
+          }
+        },
+        "qa_conservar": {
+          "type": "qa",
+          "settings": {
+            "icon": "sparkle",
+            "question": "¿Cómo conservo el perfume para que dure?",
+            "answer": "<p>Lejos del calor, la luz directa y la humedad. Guardalo en su caja, idealmente entre 15–20°C.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "qa_original",
+        "qa_replica",
+        "qa_decant",
+        "qa_tester",
+        "qa_envios",
+        "qa_cuotas",
+        "qa_arrepentimiento",
+        "qa_conservar"
+      ],
+      "settings": {}
+    }
+  },
+  "order": ["main", "faq"]
+}

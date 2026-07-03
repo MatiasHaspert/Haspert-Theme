@@ -3,11 +3,38 @@
    ----------------------------------------------------------------------------
    Fila horizontal scrolleable de chips (imagen circular + label). Va entre el
    banner y los controles de la grilla. Chip activo = colección actual.
-   Tokens: variables de esquema de Sense (--color-*) + --accent.
+   Tokens: variables de esquema de Sense (--color-*) + --accent + --perfume-*.
    ========================================================================== */
 
+/* BLOQUE A · tokens de motion (misma familia que la PDP; scopeados por raíz) */
+.product-card-wrapper,
+.collnav,
+.facets-container-drawer,
+.collection-hero {
+  --perfume-accent: var(--accent, #b25a3c);
+  --perfume-accent-ink: #8f4329;
+  --perfume-ease-select: cubic-bezier(0.23, 1, 0.32, 1);
+  --perfume-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --perfume-dur-select: 200ms;
+  --perfume-dur-tap: 140ms;
+  --perfume-dur-sheet: 300ms;
+  --perfume-dur-accordion: 240ms;
+}
+
+/* Fade de borde derecho: el carrusel "sigue". Va sobre .collnav (relativo). */
 .collnav {
+  position: relative;
   border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
+}
+.collnav::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 3.4rem;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(var(--color-background), 0), rgb(var(--color-background)));
 }
 
 .collnav__track {
@@ -50,7 +77,9 @@
   place-items: center;
   background: rgb(var(--color-background));
   border: 0.1rem solid rgba(var(--color-foreground), 0.14);
-  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.12s ease;
+  transition: border-color var(--perfume-dur-select) var(--perfume-ease-select),
+    box-shadow var(--perfume-dur-select) var(--perfume-ease-select),
+    transform var(--perfume-dur-tap) var(--perfume-ease-select);
 }
 
 .collnav__thumb img {
@@ -65,7 +94,7 @@
   font-size: 2.4rem;
   line-height: 1;
   letter-spacing: 0.02em;
-  color: var(--accent);
+  color: var(--perfume-accent);
 }
 
 .collnav__label {
@@ -79,17 +108,26 @@
   transform: scale(0.94);
 }
 
-/* Chip activo: colección actual */
+/* Chip activo: anillo terracota + label terracota-ink (AA). */
 .collnav__link.is-active .collnav__thumb {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 0.2rem #f3e2da; /* accent-soft del design system */
+  border-color: var(--perfume-accent);
+  box-shadow: 0 0 0 0.3rem var(--accent-soft, #f3e2da);
 }
 .collnav__link.is-active .collnav__label {
-  color: var(--accent);
+  color: var(--perfume-accent-ink);
 }
 
 @media (hover: hover) {
   .collnav__link:hover .collnav__thumb {
-    border-color: var(--accent);
+    border-color: var(--perfume-accent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collnav__thumb {
+    transition: none;
+  }
+  .collnav__link:active .collnav__thumb {
+    transform: none;
   }
 }

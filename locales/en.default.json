@@ -139,6 +139,7 @@
       },
       "from_decant": "From {{ price }} in decant",
       "installments_note": "6 interest-free installments · CFTA 0%",
+      "added": "Added",
       "media": {
         "gallery_viewer": "Gallery Viewer",
         "load_image": "Load image {{ index }} in gallery view",

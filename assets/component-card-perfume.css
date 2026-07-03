@@ -1,43 +1,50 @@
 /* ============================================================================
-   CARD DE PRODUCTO — PERFUMERÍA (NUMEN)
+   CARD DE PRODUCTO — PERFUMERÍA (NUMEN)  ·  + capa de pulido (BLOQUE B/B-bis)
    ----------------------------------------------------------------------------
    Adapta la card de Sense (.product-card-wrapper) al sistema de perfumería:
-   packshot sobre blanco (sin recortar), jerarquía marca → título → ficha →
-   precio → cuotas. El precio mostrado es el de la presentación SELLADA
-   (variante "Frasco"), resuelto en card-product.liquid. Todo dinámico (precio
-   y compare_at desde Shopify; ficha desde metafields).
-
-   Scope: .product-card-wrapper (sólo tarjetas de producto; no toca blog /
-   collection cards). Usa las variables de esquema de color de Sense
-   (--color-foreground/-background) para respetar la paleta del editor.
+   packshot sobre blanco, jerarquía marca → título → ficha → PRECIO (Bebas manda)
+   → cuotas. "Agregar" terracota sólido. Motion con las curvas del sistema
+   (--perfume-*). Todo dinámico (precio/compare desde Shopify; ficha metafields).
+   Scope: .product-card-wrapper. Usa las variables de esquema de color de Sense.
    ========================================================================== */
 
-/* La ficha de perfume se lee mejor alineada a la izquierda (nombres largos,
-   precio ancla, cuotas) que centrada. */
+/* BLOQUE A · tokens de motion (misma familia que la PDP; scopeados por raíz) */
+.product-card-wrapper,
+.collnav,
+.facets-container-drawer,
+.collection-hero {
+  --perfume-accent: var(--accent, #b25a3c);
+  --perfume-accent-ink: #8f4329;
+  --perfume-ease-select: cubic-bezier(0.23, 1, 0.32, 1);
+  --perfume-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --perfume-dur-select: 200ms;
+  --perfume-dur-tap: 140ms;
+  --perfume-dur-sheet: 300ms;
+  --perfume-dur-accordion: 240ms;
+}
+
+/* La ficha de perfume se lee mejor alineada a la izquierda. */
 .product-card-wrapper {
   --text-alignment: left;
-  /* Marco del design system (NUMEN): contorno arena, esquinas, fondo blanco */
   --card-frame-border: #e0dbd0;
   --card-frame-radius: 1.2rem;
   --card-frame-bg: #ffffff;
 }
 
-/* — Marco de la tarjeta: contorno arena + radius + fondo, en toda la tienda — */
+/* — Marco de la tarjeta: contorno arena + radius + fondo. Curva real en la elevación. — */
 .product-card-wrapper .card {
   background-color: var(--card-frame-bg);
   border: 0.1rem solid var(--card-frame-border);
   border-radius: var(--card-frame-radius);
   overflow: hidden;
-  transition: transform var(--duration-default, 0.25s) ease,
-    box-shadow var(--duration-default, 0.25s) ease;
+  transition: transform var(--perfume-dur-select) var(--perfume-ease-select),
+    box-shadow var(--perfume-dur-select) var(--perfume-ease-select);
 }
 
-/* El inner no vuelve a pintar fondo (lo maneja .card) para evitar dobles capas */
 .product-card-wrapper .card__inner {
   background: transparent;
 }
 
-/* Elevación sutil al pasar el mouse (coherente con la multicolumna) */
 @media (hover: hover) {
   .product-card-wrapper:hover .card {
     transform: translateY(-4px);
@@ -57,7 +64,6 @@
   padding: 1.2rem;
 }
 
-/* Línea divisoria entre la imagen y los datos (siempre que haya packshot) */
 .product-card-wrapper .card--media > .card__inner {
   border-bottom: 0.1rem solid var(--card-frame-border);
 }
@@ -95,7 +101,7 @@
   margin-top: 0.4rem;
 }
 
-/* — Precio de la presentación sellada (Frasco) — */
+/* — Precio de la presentación por defecto — */
 .product-card-wrapper .card-perfume__pricing {
   margin-top: 0.6rem;
 }
@@ -107,6 +113,7 @@
   flex-wrap: wrap;
 }
 
+/* El de lista (Bebas 2.8rem tabular) MANDA: es el ancla visual de la card. */
 .product-card-wrapper .card-perfume__price-now {
   font-family: var(--font-display);
   font-size: 2.8rem;
@@ -116,18 +123,17 @@
   color: rgb(var(--color-foreground));
 }
 
+/* El tachado NO compite: Montserrat chico y gris (era Bebas grande). */
 .product-card-wrapper .card-perfume__price-was {
-  font-family: var(--font-display);
-  font-size: 1.8rem;
+  font-family: var(--font-body-family);
+  font-size: 1.3rem;
   line-height: 1;
-  letter-spacing: 0.02em;
-  font-variant-numeric: tabular-nums;
-  color: rgba(var(--color-foreground), 0.5);
+  letter-spacing: 0;
+  color: rgba(var(--color-foreground), 0.45);
   text-decoration: line-through;
 }
 
-/* — Badges sobre el packshot (−% OFF / Agotado) — */
-/* Reemplazan al badge nativo de Sense, que ocultamos. */
+/* — Badges sobre el packshot (−% OFF / Agotado): reemplazan el badge nativo — */
 .product-card-wrapper .card__badge {
   display: none;
 }
@@ -152,16 +158,14 @@
   line-height: 1;
 }
 
-/* −% OFF: sólo aparece si hay compare_at real (precio anterior). Acento sólido. */
 .product-card-wrapper .card-perfume__badge--sale {
   font-family: var(--font-display);
   font-size: 1.5rem;
   letter-spacing: 0.05em;
   color: #fff;
-  background: var(--accent);
+  background: var(--perfume-accent);
 }
 
-/* Agotado: neutro, sólo cuando NINGUNA presentación está disponible. */
 .product-card-wrapper .card-perfume__badge--out {
   font-family: var(--font-body-family);
   font-weight: 600;
@@ -173,9 +177,10 @@
   border: 0.1rem solid rgba(var(--color-foreground), 0.15);
 }
 
-/* — CTA "Agregar al carrito" (agrega la presentación sellada) — */
+/* — CTA "Agregar": terracota sólido (acción #1 de la card) + feedback con curva — */
 .product-card-wrapper .card-perfume__add {
   position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -185,34 +190,68 @@
   font-family: var(--font-display);
   font-size: 2.2rem;
   letter-spacing: 0.06em;
-  color: rgb(var(--color-background));
-  background: rgb(var(--color-foreground));
-  border: 0.15rem solid rgb(var(--color-foreground));
+  color: #fff;
+  background: var(--perfume-accent);
+  border: 0.15rem solid var(--perfume-accent);
   border-radius: var(--border-radius, 0.8rem);
   cursor: pointer;
   text-decoration: none;
-  transition: opacity var(--duration-short, 0.16s) ease;
+  transition: background-color var(--perfume-dur-select) var(--perfume-ease-select),
+    transform var(--perfume-dur-tap) var(--perfume-ease-select),
+    box-shadow var(--perfume-dur-select) var(--perfume-ease-select);
+}
+@media (hover: hover) {
+  .product-card-wrapper .card-perfume__add:hover:not([disabled]) {
+    background: var(--perfume-accent-ink);
+    border-color: var(--perfume-accent-ink);
+    opacity: 1;
+  }
+}
+.product-card-wrapper .card-perfume__add:active:not([disabled]) {
+  transform: scale(0.97);
 }
 
-.product-card-wrapper .card-perfume__add:hover:not([disabled]) {
-  opacity: 0.9;
+/* Estado "Agregado ✓". */
+.product-card-wrapper .card-perfume__add.is-added {
+  background: var(--perfume-accent-ink);
+  border-color: var(--perfume-accent-ink);
 }
 
-.product-card-wrapper .card-perfume__add[disabled] {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-/* Variante "Seleccionar opciones" (frasco agotado, hay decants): contorno. */
+/* Variante "Seleccionar opciones" (frasco agotado, hay decants): contorno tinta. */
 .product-card-wrapper .card-perfume__add--link {
   color: rgb(var(--color-foreground));
   background: transparent;
+  border-color: rgb(var(--color-foreground));
 }
 
-.product-card-wrapper .card-perfume__add-label {
+/* Botón deshabilitado (sin stock): superficie + tinta muteada + línea (sin gris sucio). */
+.product-card-wrapper .card-perfume__add[disabled] {
+  opacity: 1;
+  color: rgba(var(--color-foreground), 0.5);
+  background: rgb(var(--color-background));
+  border-color: rgba(var(--color-foreground), 0.14);
+  cursor: not-allowed;
+}
+
+/* Swap de etiqueta "Agregar" → "Agregado ✓" (B-bis). */
+.product-card-wrapper .card-perfume__add-label,
+.product-card-wrapper .card-perfume__add-done {
   display: inline-flex;
   align-items: center;
   gap: 1rem;
+  transition: transform var(--perfume-dur-select) var(--perfume-ease-select);
+}
+.product-card-wrapper .card-perfume__add-done {
+  position: absolute;
+  inset: 0;
+  justify-content: center;
+  transform: translateY(120%);
+}
+.product-card-wrapper .card-perfume__add.is-added .card-perfume__add-label {
+  transform: translateY(-120%);
+}
+.product-card-wrapper .card-perfume__add.is-added .card-perfume__add-done {
+  transform: translateY(0);
 }
 
 .product-card-wrapper .card-perfume__add svg {
@@ -220,11 +259,20 @@
   height: 2.4rem;
   flex-shrink: 0;
 }
+/* icon-check.svg trae stroke="#111" hardcodeado (no currentColor); en el botón
+   terracota el ✓ tiene que ir blanco → forzamos el color del botón. */
+.product-card-wrapper .card-perfume__add-done svg {
+  stroke: currentColor;
+}
 
-/* — Badges de presentación (Frasco / Tester / Decant Nml) — */
-/* Seleccionan la presentación: actualizan precio + línea fiscal + pista y
-   apuntan el "Agregar" al variante elegido (plp-card.js). Solo se muestran las
-   presentaciones con stock. */
+/* — Card agotada: foto atenuada con dignidad (~62%) — */
+.product-card-wrapper:has(.card-perfume__badge--out) .card__media .media img {
+  opacity: 0.62;
+  filter: saturate(0.9);
+  transition: opacity var(--perfume-dur-select) var(--perfume-ease-select);
+}
+
+/* — Badges de presentación: la selección se lee al instante — */
 .product-card-wrapper .card-perfume__pres {
   display: flex;
   flex-wrap: wrap;
@@ -244,9 +292,13 @@
   padding: 0.6rem 1.1rem;
   cursor: pointer;
   white-space: nowrap;
-  transition: border-color var(--duration-short, 0.16s) ease,
-    color var(--duration-short, 0.16s) ease,
-    background var(--duration-short, 0.16s) ease;
+  transition: border-color var(--perfume-dur-select) var(--perfume-ease-select),
+    color var(--perfume-dur-select) var(--perfume-ease-select),
+    background var(--perfume-dur-select) var(--perfume-ease-select),
+    transform var(--perfume-dur-tap) var(--perfume-ease-select);
+}
+.product-card-wrapper .card-perfume__pres-btn:active {
+  transform: scale(0.97);
 }
 
 @media (hover: hover) {
@@ -255,44 +307,62 @@
   }
 }
 
-/* Foco visible por teclado (a11y): los badges son operables con Tab + Enter/Espacio */
+/* Foco visible por teclado (a11y): badges operables con Tab + Enter/Espacio. */
 .product-card-wrapper .card-perfume__pres-btn:focus-visible {
-  outline: 0.2rem solid var(--accent);
+  outline: 0.2rem solid var(--perfume-accent);
   outline-offset: 0.2rem;
 }
 
+/* Seleccionado: borde terracota + fondo cálido + texto terracota-ink (AA). */
 .product-card-wrapper .card-perfume__pres-btn.is-selected {
-  border-color: var(--accent);
-  color: var(--accent);
-  /* Tinte cálido del design system (mismo criterio que el marco arena). */
+  border-color: var(--perfume-accent);
+  color: var(--perfume-accent-ink);
   background: #fcf9f0;
+  box-shadow: 0 0.1rem 0 rgba(143, 67, 41, 0.05);
 }
 
-/* — Línea "precio sin impuestos nacionales" (Ley 27.743) — */
+/* — Línea fiscal "sin impuestos nacionales": letra mínima gris — */
 .product-card-wrapper .card-perfume__net {
   font-family: var(--font-body-family);
   font-size: 1rem;
   line-height: 1.3;
-  /* 0.68: sube el contraste de la letra chica para acercarse a AA (verificar con tool) */
-  color: rgba(var(--color-foreground), 0.68);
+  color: rgba(var(--color-foreground), 0.6);
   margin-top: 0.4rem;
 }
 
-/* — Pista "desde $X en decant" (gancho de entrada de bajo ticket) — */
+/* — Pista "desde $X en decant": visible pero SECUNDARIA (terracota-ink, chica) — */
 .product-card-wrapper .card-perfume__from {
   font-family: var(--font-body-family);
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   line-height: 1.3;
-  color: var(--accent);
+  color: var(--perfume-accent-ink);
+  margin-top: 0.5rem;
+}
+.product-card-wrapper .card-perfume__from[hidden] {
+  display: none;
+}
+
+/* — Nota de cuotas: gris discreto — */
+.product-card-wrapper .card-perfume__cuotas {
+  font-family: var(--font-body-family);
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: rgba(var(--color-foreground), 0.6);
   margin-top: 0.5rem;
 }
 
-/* — Nota de cuotas (claim financiero: editable/desactivable por setting) — */
-.product-card-wrapper .card-perfume__cuotas {
-  font-family: var(--font-body-family);
-  font-size: 1.1rem;
-  line-height: 1.3;
-  color: rgba(var(--color-foreground), 0.68);
-  margin-top: 0.5rem;
+/* Reduced-motion (card): sin transforms ni transiciones. */
+@media (prefers-reduced-motion: reduce) {
+  .product-card-wrapper .card,
+  .product-card-wrapper .card-perfume__pres-btn,
+  .product-card-wrapper .card-perfume__add,
+  .product-card-wrapper .card-perfume__add-label,
+  .product-card-wrapper .card-perfume__add-done {
+    transition: none;
+  }
+  .product-card-wrapper .card-perfume__pres-btn:active,
+  .product-card-wrapper .card-perfume__add:active {
+    transform: none;
+  }
 }

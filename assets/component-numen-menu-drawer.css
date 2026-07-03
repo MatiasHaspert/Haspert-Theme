@@ -1,0 +1,375 @@
+/*
+ * component-numen-menu-drawer.css — Drawer del menú NUMEN (acordeón).
+ * -----------------------------------------------------------------------------
+ * Reestiliza el header drawer de Sense/Dawn al diseño validado
+ * (numen-menu-footer-mockup.html) SIN tocar global.js. El acordeón lo habilita
+ * assets/numen-drawer-accordion.js (mata el drill-down); acá va sólo presentación.
+ *
+ * Superficies y texto salen del color scheme del drawer (color-{{ menu_color_scheme }}):
+ * NADA hardcodeado, se adapta a la paleta del editor. El acento y los íconos usan
+ * --accent / --accent-ink (globales, definidos en theme.liquid).
+ *
+ * Convención de clases: markup nuevo con prefijo .mdrawer / .mgroup / .mlink /
+ * .mdirect (no reusa .menu-drawer__menu-item de Dawn, para no pelear su CSS de
+ * drill-down). Se conservan .menu-drawer, .menu-drawer__navigation-container y
+ * .menu-drawer__navigation porque global.js y el scope del acordeón dependen de ellas.
+ */
+
+/* Tokens compartidos por scrim + panel (ambos hijos del <details> contenedor). */
+.menu-drawer-container {
+  --nmd-ease-select: cubic-bezier(0.23, 1, 0.32, 1);
+  --nmd-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ===== Scrim (botón: lo cierra el onCloseButtonClick nativo de Dawn) ===== */
+.mdrawer__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(var(--color-foreground), 0.42);
+  opacity: 0;
+  visibility: hidden;
+  cursor: default;
+  transition: opacity 0.3s var(--nmd-ease-drawer), visibility 0.3s var(--nmd-ease-drawer);
+}
+
+.menu-drawer-container[open] .mdrawer__scrim {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ===== Panel: parcial, fijo desde arriba (el transform lo maneja Dawn) ===== */
+#menu-drawer.menu-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh;
+  height: 100dvh;
+  width: min(88%, 38rem);
+  max-width: 38rem;
+  z-index: 101;
+  padding: 0;
+  transition: transform 0.32s var(--nmd-ease-drawer), visibility 0.32s var(--nmd-ease-drawer);
+}
+
+/* ===== Contenedor interno: flex column (head / body scroll / foot) ===== */
+.menu-drawer__navigation-container.mdrawer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  --nmd-line: rgba(var(--color-foreground), 0.12);
+  --nmd-ink-2: rgba(var(--color-foreground), 0.72);
+  --nmd-ink-3: rgba(var(--color-foreground), 0.55);
+}
+
+/* ---- Head: marca + cerrar ---- */
+.mdrawer__head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.4rem 0.8rem 1.2rem 2rem;
+  border-bottom: 0.1rem solid var(--nmd-line);
+}
+
+.mdrawer__brand {
+  font-family: var(--font-display, var(--font-heading-family));
+  font-size: 2.4rem;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  color: rgb(var(--color-foreground));
+}
+
+.mdrawer__close {
+  flex: none;
+  width: 4.4rem;
+  height: 4.4rem;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: none;
+  color: rgb(var(--color-foreground));
+  border-radius: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.18s var(--nmd-ease-select);
+}
+
+.mdrawer__close svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+@media (hover: hover) {
+  .mdrawer__close:hover {
+    background: rgba(var(--color-foreground), 0.06);
+  }
+}
+
+/* ---- Body: nav scrolleable ---- */
+.menu-drawer__navigation.mdrawer__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.6rem 0 1.4rem;
+}
+
+/* ===== Grupos acordeón ===== */
+.mgroup {
+  border-bottom: 0.1rem solid var(--nmd-line);
+}
+
+.mgroup__head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.6rem 2rem;
+  font-family: var(--font-display, var(--font-heading-family));
+  font-size: 2.1rem;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  list-style: none;
+}
+
+.mgroup__head::-webkit-details-marker {
+  display: none;
+}
+
+.mgroup__head:active {
+  background: rgba(var(--color-foreground), 0.04);
+}
+
+.mgroup__chev {
+  flex: none;
+  width: 1.8rem;
+  height: 1.8rem;
+  color: var(--accent-ink);
+  transition: transform 0.24s var(--nmd-ease-select);
+}
+
+.mgroup[open] .mgroup__chev {
+  transform: rotate(180deg);
+}
+
+.mgroup__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.26s var(--nmd-ease-select);
+}
+
+.mgroup[open] .mgroup__panel {
+  grid-template-rows: 1fr;
+}
+
+.mgroup__wrap {
+  overflow: hidden;
+}
+
+.mgroup__links {
+  padding: 0 2rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Links hijos ===== */
+.mlink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 4.2rem;
+  padding: 0.8rem 0.2rem 0.8rem 1.2rem;
+  font-family: var(--font-body-family);
+  font-size: 1.45rem;
+  font-weight: 500;
+  color: var(--nmd-ink-2);
+  text-decoration: none;
+  border-left: 0.2rem solid var(--nmd-line);
+  transition: color 0.18s var(--nmd-ease-select), border-color 0.18s var(--nmd-ease-select);
+}
+
+.mlink--all {
+  font-weight: 600;
+  color: rgb(var(--color-foreground));
+}
+
+.mlink:active {
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+
+@media (hover: hover) {
+  .mlink:hover {
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
+}
+
+.mlink__n {
+  flex: none;
+  font-family: var(--font-body-family);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--nmd-ink-3);
+}
+
+/* ===== Fila directa / destacada (ej. Autenticidad) ===== */
+.mdirect {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.6rem 2rem;
+  font-family: var(--font-display, var(--font-heading-family));
+  font-size: 2.1rem;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+  border-bottom: 0.1rem solid var(--nmd-line);
+}
+
+.mdirect:active {
+  background: rgba(var(--color-foreground), 0.04);
+}
+
+.mdirect__icon {
+  flex: none;
+  display: inline-flex;
+  color: var(--accent-ink);
+}
+
+.mdirect__icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.mdirect__badge {
+  margin-left: auto;
+  font-family: var(--font-body-family);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-ink), 0.08);
+  border: 0.1rem solid rgba(var(--accent-ink), 0.28);
+  border-radius: 0.4rem;
+  padding: 0.3rem 0.7rem;
+}
+
+/* ===== Foot: WhatsApp + legales (+ cuenta si aplica) ===== */
+.mdrawer__foot {
+  flex: none;
+  border-top: 0.1rem solid var(--nmd-line);
+  padding: 1.4rem 2rem calc(1.6rem + env(safe-area-inset-bottom));
+  background: rgb(var(--color-background));
+}
+
+.mdrawer__wa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  width: 100%;
+  min-height: 4.8rem;
+  padding: 0 1.6rem;
+  border: 0.15rem solid #128c7e;
+  border-radius: 0.8rem;
+  background: rgb(var(--color-background));
+  color: #0c5b51;
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.4rem;
+  text-decoration: none;
+  transition: background-color 0.18s var(--nmd-ease-select), transform 0.14s var(--nmd-ease-select);
+}
+
+.mdrawer__wa svg {
+  flex: none;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.mdrawer__wa:active {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) {
+  .mdrawer__wa:hover {
+    background: rgba(18, 140, 126, 0.06);
+  }
+}
+
+.mdrawer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.4rem;
+  justify-content: center;
+  margin-top: 1.2rem;
+}
+
+.mdrawer__legal a {
+  font-family: var(--font-body-family);
+  font-size: 1.1rem;
+  color: var(--nmd-ink-3);
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.mdrawer__account {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+  font-family: var(--font-body-family);
+  font-size: 1.3rem;
+  color: var(--nmd-ink-2);
+  text-decoration: none;
+}
+
+.mdrawer__account svg {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+/* ===== Foco visible (AA) ===== */
+.mgroup__head:focus-visible,
+.mlink:focus-visible,
+.mdirect:focus-visible,
+.mdrawer__close:focus-visible,
+.mdrawer__wa:focus-visible,
+.mdrawer__legal a:focus-visible,
+.mdrawer__account:focus-visible {
+  outline: 0.2rem solid var(--accent);
+  outline-offset: 0.2rem;
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  #menu-drawer.menu-drawer,
+  .mdrawer__scrim,
+  .mgroup__chev,
+  .mgroup__panel,
+  .mlink,
+  .mdrawer__close,
+  .mdrawer__wa {
+    transition: none;
+  }
+  .mdrawer__wa:active {
+    transform: none;
+  }
+}

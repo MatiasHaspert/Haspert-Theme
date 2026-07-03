@@ -1,9 +1,40 @@
 {% comment %}
-  Renders a header drawer menu for mobile and desktop.
+  Renders the header drawer menu (NUMEN) — acordeón mobile-first.
+
+  Conserva el custom element <header-drawer> y el <details>/<summary> de la
+  hamburguesa (global.js abre/cierra la hoja). El drill-down de Dawn se reemplaza
+  por acordeón vía assets/numen-drawer-accordion.js (mata onSummaryClick en los
+  summaries del nav). Presentación en assets/component-numen-menu-drawer.css.
+
+  Contenido: el menú vive en Admin → Navegación (section.settings.menu). Contadores
+  reales por colección (link.object.products_count). Ítem destacado (Autenticidad)
+  y textos por settings de sección — nada hardcodeado.
 
   Usage:
   {% render 'header-drawer' %}
 {% endcomment %}
+
+{%- liquid
+  # WhatsApp global: ignorar el placeholder con X para no generar un link roto.
+  assign wa_num = settings.whatsapp_number
+  if wa_num contains 'X' or wa_num contains 'x'
+    assign wa_num = ''
+  endif
+  assign highlight_title = section.settings.highlight_link_title
+
+  assign show_wa = false
+  if wa_num != blank and section.settings.drawer_wa_label != blank
+    assign show_wa = true
+  endif
+  assign show_legal = false
+  if section.settings.drawer_legal_1 != blank or section.settings.drawer_legal_2 != blank
+    assign show_legal = true
+  endif
+  assign show_foot = false
+  if show_wa or show_legal or shop.customer_accounts_enabled
+    assign show_foot = true
+  endif
+-%}
 
 <header-drawer data-breakpoint="{% if section.settings.menu_type_desktop == 'drawer' %}desktop{% else %}tablet{% endif %}">
   <details id="Details-menu-drawer-container" class="menu-drawer-container">
@@ -16,278 +47,107 @@
         {{- 'icon-close.svg' | inline_asset_content -}}
       </span>
     </summary>
+
+    {%- comment -%} Scrim: es <button> → lo cierra el onCloseButtonClick nativo de Dawn. {%- endcomment -%}
+    <button type="button" class="mdrawer__scrim" aria-label="{{ 'accessibility.close' | t }}" tabindex="-1"></button>
+
     <div id="menu-drawer" class="gradient menu-drawer motion-reduce color-{{ section.settings.menu_color_scheme }}">
       <div class="menu-drawer__inner-container">
-        <div class="menu-drawer__navigation-container">
-          <nav class="menu-drawer__navigation">
-            <ul class="menu-drawer__menu has-submenu list-menu" role="list">
-              {%- for link in section.settings.menu.links -%}
-                <li>
-                  {%- if link.links != blank -%}
-                    <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
-                      <summary
-                        id="HeaderDrawer-{{ link.handle }}"
-                        class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
-                      >
-                        {{ link.title | escape }}
-                        <span class="svg-wrapper">
-                          {{- 'icon-arrow.svg' | inline_asset_content -}}
-                        </span>
-                        <span class="svg-wrapper">
-                          {{- 'icon-caret.svg' | inline_asset_content -}}
-                        </span>
-                      </summary>
-                      <div
-                        id="link-{{ link.handle | escape }}"
-                        class="menu-drawer__submenu has-submenu gradient motion-reduce"
-                        tabindex="-1"
-                      >
-                        <div class="menu-drawer__inner-submenu">
-                          <button class="menu-drawer__close-button link link--text focus-inset" aria-expanded="true">
-                            <span class="svg-wrapper">
-                              {{- 'icon-arrow.svg' | inline_asset_content -}}
-                            </span>
-                            {{ link.title | escape }}
-                          </button>
-                          <ul class="menu-drawer__menu list-menu" role="list" tabindex="-1">
-                            {%- for childlink in link.links -%}
-                              <li>
-                                {%- if childlink.links == blank -%}
-                                  <a
-                                    id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
-                                    href="{{ childlink.url }}"
-                                    class="menu-drawer__menu-item link link--text list-menu__item focus-inset{% if childlink.current %} menu-drawer__menu-item--active{% endif %}"
-                                    {% if childlink.current %}
-                                      aria-current="page"
-                                    {% endif %}
-                                  >
-                                    {{ childlink.title | escape }}
-                                  </a>
-                                {%- else -%}
-                                  <details id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}">
-                                    <summary
-                                      id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
-                                      class="menu-drawer__menu-item link link--text list-menu__item focus-inset"
-                                    >
-                                      {{ childlink.title | escape }}
-                                      <span class="svg-wrapper">
-                                        {{- 'icon-arrow.svg' | inline_asset_content -}}
-                                      </span>
-                                      <span class="svg-wrapper">
-                                        {{- 'icon-caret.svg' | inline_asset_content -}}
-                                      </span>
-                                    </summary>
-                                    <div
-                                      id="childlink-{{ childlink.handle | escape }}"
-                                      class="menu-drawer__submenu has-submenu gradient motion-reduce"
-                                    >
-                                      <button
-                                        class="menu-drawer__close-button link link--text focus-inset"
-                                        aria-expanded="true"
-                                      >
-                                        <span class="svg-wrapper">
-                                          {{- 'icon-arrow.svg' | inline_asset_content -}}
-                                        </span>
-                                        {{ childlink.title | escape }}
-                                      </button>
-                                      <ul
-                                        class="menu-drawer__menu list-menu"
-                                        role="list"
-                                        tabindex="-1"
-                                      >
-                                        {%- for grandchildlink in childlink.links -%}
-                                          <li>
-                                            <a
-                                              id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
-                                              href="{{ grandchildlink.url }}"
-                                              class="menu-drawer__menu-item link link--text list-menu__item focus-inset{% if grandchildlink.current %} menu-drawer__menu-item--active{% endif %}"
-                                              {% if grandchildlink.current %}
-                                                aria-current="page"
-                                              {% endif %}
-                                            >
-                                              {{ grandchildlink.title | escape }}
-                                            </a>
-                                          </li>
-                                        {%- endfor -%}
-                                      </ul>
-                                    </div>
-                                  </details>
-                                {%- endif -%}
-                              </li>
-                            {%- endfor -%}
-                          </ul>
-                        </div>
+        <div class="menu-drawer__navigation-container mdrawer">
+          {%- comment -%} Head: marca + cerrar {%- endcomment -%}
+          <div class="mdrawer__head">
+            <span class="mdrawer__brand">{{ shop.name }}</span>
+            <button type="button" class="mdrawer__close" aria-label="{{ 'accessibility.close' | t }}">
+              {{- 'icon-close.svg' | inline_asset_content -}}
+            </button>
+          </div>
+
+          {%- comment -%} Body: grupos acordeón + links directos {%- endcomment -%}
+          <nav class="menu-drawer__navigation mdrawer__body" aria-label="{{ 'sections.header.menu' | t }}">
+            {%- assign group_idx = 0 -%}
+            {%- for link in section.settings.menu.links -%}
+              {%- if link.links != blank -%}
+                {%- assign group_idx = group_idx | plus: 1 -%}
+                <details class="mgroup"{% if group_idx == 1 %} open data-numen-open{% endif %}>
+                  <summary
+                    class="mgroup__head"
+                    aria-expanded="{% if group_idx == 1 %}true{% else %}false{% endif %}"
+                  >
+                    <span class="mgroup__title">{{ link.title | escape }}</span>
+                    <svg class="mgroup__chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </summary>
+                  <div class="mgroup__panel">
+                    <div class="mgroup__wrap">
+                      <div class="mgroup__links">
+                        {%- for childlink in link.links -%}
+                          <a
+                            href="{{ childlink.url }}"
+                            class="mlink{% if childlink.url == link.url %} mlink--all{% endif %}"
+                            {% if childlink.current %}aria-current="page"{% endif %}
+                          >
+                            <span class="mlink__t">{{ childlink.title | escape }}</span>
+                            {%- if childlink.type == 'collection_link' -%}
+                              <span class="mlink__n">{{ childlink.object.products_count }}</span>
+                            {%- endif -%}
+                          </a>
+                        {%- endfor -%}
                       </div>
-                    </details>
-                  {%- else -%}
-                    <a
-                      id="HeaderDrawer-{{ link.handle }}"
-                      href="{{ link.url }}"
-                      class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.current %} menu-drawer__menu-item--active{% endif %}"
-                      {% if link.current %}
-                        aria-current="page"
-                      {% endif %}
-                    >
-                      {{ link.title | escape }}
-                    </a>
-                  {%- endif -%}
-                </li>
-              {%- endfor -%}
-            </ul>
-          </nav>
-          <div class="menu-drawer__utility-links">
-            {%- if shop.customer_accounts_enabled -%}
-              <a
-                href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
-                class="menu-drawer__account link focus-inset h5 medium-hide large-up-hide"
-                rel="nofollow"
-              >
-                {%- if section.settings.enable_customer_avatar -%}
-                  <account-icon>
-                    {%- if customer and customer.has_avatar? -%}
-                      {{ customer | avatar }}
-                    {%- else -%}
-                      <span class="svg-wrapper">
-                        {{- 'icon-account.svg' | inline_asset_content -}}
-                      </span>
+                    </div>
+                  </div>
+                </details>
+              {%- else -%}
+                {%- if highlight_title != blank and link.title == highlight_title -%}
+                  <a href="{{ link.url }}" class="mdirect"{% if link.current %} aria-current="page"{% endif %}>
+                    <span class="mdirect__icon">{%- render 'icon-line', icon: 'shield' -%}</span>
+                    <span class="mdirect__title">{{ link.title | escape }}</span>
+                    {%- if section.settings.highlight_link_badge != blank -%}
+                      <span class="mdirect__badge">{{ section.settings.highlight_link_badge }}</span>
                     {%- endif -%}
-                  </account-icon>
+                  </a>
                 {%- else -%}
-                  <span class="svg-wrapper">
-                    {{- 'icon-account.svg' | inline_asset_content -}}
-                  </span>
+                  <a href="{{ link.url }}" class="mdirect"{% if link.current %} aria-current="page"{% endif %}>
+                    <span class="mdirect__title">{{ link.title | escape }}</span>
+                  </a>
                 {%- endif -%}
-                {%- liquid
-                  if customer
-                    echo 'customer.account_fallback' | t
-                  else
-                    echo 'customer.log_in' | t
-                  endif
-                -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </nav>
+
+          {%- comment -%} Foot: WhatsApp + cuenta (si aplica) + legales {%- endcomment -%}
+          {%- if show_foot -%}
+          <div class="mdrawer__foot">
+            {%- if show_wa -%}
+              <a class="mdrawer__wa" href="https://wa.me/{{ wa_num }}" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.4A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1112 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8.9-.3.2-.5 0a6.5 6.5 0 01-1.9-1.2 7 7 0 01-1.3-1.6c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.7-1.7c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 00-.7.3 2.8 2.8 0 00-.9 2.1c0 1.2.9 2.4 1 2.6s1.8 2.8 4.4 3.9c1.6.7 2.2.7 3 .6.5 0 1.4-.6 1.6-1.1s.2-1 .1-1.1l-.4-.2z"/></svg>
+                {{ section.settings.drawer_wa_label }}
               </a>
             {%- endif -%}
-            {%- if localization.available_countries or localization.available_languages -%}
-              <div class="menu-drawer__localization header-localization">
-                {%- if localization.available_countries and localization.available_countries.size > 1 -%}
-                  <localization-form>
-                    {%- form 'localization', id: 'HeaderCountryMobileForm', class: 'localization-form' -%}
-                      <div>
-                        <h2 class="visually-hidden" id="HeaderCountryMobileLabel">
-                          {{ 'localization.country_label' | t }}
-                        </h2>
-                        {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
-                      </div>
-                    {%- endform -%}
-                  </localization-form>
-                {% endif %}
 
-                {%- if localization.available_languages and localization.available_languages.size > 1 -%}
-                  <localization-form>
-                    {%- form 'localization', id: 'HeaderLanguageMobileForm', class: 'localization-form' -%}
-                      <div>
-                        <h2 class="visually-hidden" id="HeaderLanguageMobileLabel">
-                          {{ 'localization.language_label' | t }}
-                        </h2>
-                        {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
-                      </div>
-                    {%- endform -%}
-                  </localization-form>
+            {%- if shop.customer_accounts_enabled -%}
+              <a
+                href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+                class="mdrawer__account"
+                rel="nofollow"
+              >
+                {{- 'icon-account.svg' | inline_asset_content -}}
+                {%- if customer -%}{{ 'customer.account_fallback' | t }}{%- else -%}{{ 'customer.log_in' | t }}{%- endif -%}
+              </a>
+            {%- endif -%}
+
+            {%- if show_legal -%}
+              <div class="mdrawer__legal">
+                {%- if section.settings.drawer_legal_1 != blank -%}
+                  <a href="{{ section.settings.drawer_legal_1 }}">{{ section.settings.drawer_legal_1_label | default: 'Botón de arrepentimiento' }}</a>
+                {%- endif -%}
+                {%- if section.settings.drawer_legal_2 != blank -%}
+                  <a href="{{ section.settings.drawer_legal_2 }}">{{ section.settings.drawer_legal_2_label | default: 'Términos' }}</a>
                 {%- endif -%}
               </div>
             {%- endif -%}
-            <ul class="list list-social list-unstyled" role="list">
-              {%- if settings.social_twitter_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_twitter_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-twitter.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.twitter' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_facebook_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_facebook_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-facebook.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.facebook' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_pinterest_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_pinterest_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-pinterest.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.pinterest' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_instagram_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_instagram_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-instagram.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.instagram' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_tiktok_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_tiktok_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-tiktok.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.tiktok' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_tumblr_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_tumblr_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-tumblr.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.tumblr' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_snapchat_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_snapchat_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-snapchat.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.snapchat' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_youtube_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_youtube_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-youtube.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.youtube' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-              {%- if settings.social_vimeo_link != blank -%}
-                <li class="list-social__item">
-                  <a href="{{ settings.social_vimeo_link }}" class="list-social__link link">
-                    <span class="svg-wrapper">
-                      {{- 'icon-vimeo.svg' | inline_asset_content -}}
-                    </span>
-                    <span class="visually-hidden">{{ 'general.social.links.vimeo' | t }}</span>
-                  </a>
-                </li>
-              {%- endif -%}
-            </ul>
           </div>
+          {%- endif -%}
         </div>
       </div>
     </div>

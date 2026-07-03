@@ -7,6 +7,21 @@
    (título, descripción y conteo de la colección), nada hardcodeado.
    ========================================================================== */
 
+/* BLOQUE A · tokens de motion (misma familia que la PDP; scopeados por raíz) */
+.product-card-wrapper,
+.collnav,
+.facets-container-drawer,
+.collection-hero {
+  --perfume-accent: var(--accent, #b25a3c);
+  --perfume-accent-ink: #8f4329;
+  --perfume-ease-select: cubic-bezier(0.23, 1, 0.32, 1);
+  --perfume-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --perfume-dur-select: 200ms;
+  --perfume-dur-tap: 140ms;
+  --perfume-dur-sheet: 300ms;
+  --perfume-dur-accordion: 240ms;
+}
+
 .collection-hero__text-wrapper {
   max-width: 62rem;
 }
@@ -17,7 +32,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--perfume-accent);
   margin: 0 0 0.6rem;
 }
 
@@ -50,4 +65,22 @@
   font-size: 1.2rem;
   color: rgba(var(--color-foreground), 0.55);
   margin: 1.2rem 0 0;
+}
+
+/* BLOQUE E · altura contenida en mobile: banner + barra + controles caben y la
+   grilla asoma en el 1er scroll (~380px). Ritmo parejo hacia el resto. */
+@media screen and (max-width: 749px) {
+  .collection-hero .collection-hero__inner {
+    padding-top: 1.6rem;
+    padding-bottom: 1.2rem;
+  }
+  .collection-hero__title {
+    margin: 0 0 0.8rem;
+  }
+  .collection-hero__title + .collection-hero__description {
+    margin: 0.4rem 0 0;
+  }
+  .collection-hero__count {
+    margin-top: 0.9rem;
+  }
 }

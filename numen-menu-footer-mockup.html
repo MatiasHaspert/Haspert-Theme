@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NUMEN · Menú + Footer (mockup hi-fi mobile)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#B25A3C; --accent-soft:#F3E2DA; --accent-ink:#8F4329;
+  --bg:#F4F2ED; --surface:#FFFFFF; --panel:#ECE8DF; --line:#E0DBD0;
+  --ink:#1F1B16; --ink-2:#57514A; --ink-3:#6B6157;
+  --font-display:'Bebas Neue',sans-serif;
+  --font-body:'Montserrat',system-ui,sans-serif;
+  --font-accent:'Fraunces',Georgia,serif;
+  --r-sm:4px; --r-md:8px; --r-lg:14px; --r-pill:999px; --tap:44px;
+  --ease-select:cubic-bezier(.23,1,.32,1);
+  --ease-drawer:cubic-bezier(.32,.72,0,1);
+}
+*{box-sizing:border-box}
+body{margin:0; background:#E7E2D8; color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; line-height:1.5}
+.phone{max-width:430px; margin:0 auto; background:var(--bg); min-height:100vh; position:relative; box-shadow:0 0 60px rgba(27,21,16,.12); overflow-x:hidden}
+button{font-family:inherit; cursor:pointer; border:none; background:none}
+a{color:inherit; text-decoration:none}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.overline{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:0}
+
+/* announcement + header */
+.ann{background:var(--accent-ink); color:#FBF6EE; font-size:12px; font-weight:600; text-align:center; padding:8px 14px; letter-spacing:.02em}
+.hdr{position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:rgba(244,242,237,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+.hdr__icon{width:var(--tap); height:var(--tap); display:grid; place-items:center; color:var(--ink); border-radius:var(--r-md); transition:background .18s var(--ease-select)}
+.hdr__brand{font-family:var(--font-display); font-size:26px; letter-spacing:.16em}
+.hint{padding:30px 20px; color:var(--ink-3); font-size:13px; text-align:center}
+
+/* ===== MENU DRAWER ===== */
+.scrim{position:fixed; inset:0; background:rgba(27,21,16,.42); opacity:0; visibility:hidden; transition:opacity .3s var(--ease-drawer), visibility .3s; z-index:60}
+.scrim.show{opacity:1; visibility:visible}
+.menu{position:fixed; top:0; bottom:0; left:0; width:min(88%,380px); background:var(--bg); z-index:61; transform:translateX(-102%); transition:transform .32s var(--ease-drawer); display:flex; flex-direction:column; box-shadow:14px 0 44px rgba(31,27,22,.16)}
+.menu.show{transform:none}
+.menu__head{display:flex; align-items:center; justify-content:space-between; padding:14px 8px 12px 20px; border-bottom:1px solid var(--line)}
+.menu__brand{font-family:var(--font-display); font-size:24px; letter-spacing:.16em}
+.menu__body{flex:1; overflow-y:auto; padding:6px 0 14px}
+
+.mgroup{border-bottom:1px solid var(--line)}
+.mgroup__head{width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:16px 20px; font-family:var(--font-display); font-size:21px; letter-spacing:.05em; color:var(--ink)}
+.mgroup__head:active{background:#EFEBE2}
+.mgroup__chev{color:var(--accent-ink); transition:transform .24s var(--ease-select)}
+.mgroup.open .mgroup__chev{transform:rotate(180deg)}
+.mgroup__panel{display:grid; grid-template-rows:0fr; transition:grid-template-rows .26s var(--ease-select)}
+.mgroup.open .mgroup__panel{grid-template-rows:1fr}
+.mgroup__wrap{overflow:hidden}
+.mgroup__links{padding:0 20px 14px; display:flex; flex-direction:column}
+.mlink{display:flex; align-items:center; justify-content:space-between; min-height:42px; padding:8px 2px 8px 12px; font-size:14.5px; font-weight:500; color:var(--ink-2); border-left:2px solid var(--line); transition:color .18s var(--ease-select), border-color .18s var(--ease-select)}
+.mlink:active{color:var(--accent-ink); border-color:var(--accent)}
+.mlink--all{font-weight:600; color:var(--ink)}
+.mlink__n{font-size:11px; color:var(--ink-3)}
+
+/* link directo (Autenticidad) */
+.mdirect{display:flex; align-items:center; gap:12px; padding:16px 20px; font-family:var(--font-display); font-size:21px; letter-spacing:.05em; color:var(--ink); border-bottom:1px solid var(--line)}
+.mdirect:active{background:#EFEBE2}
+.mdirect svg{color:var(--accent-ink); flex:none}
+.mdirect__badge{margin-left:auto; font-family:var(--font-body); font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-ink); background:#F6EFDD; border:1px solid #E4D6AE; border-radius:var(--r-sm); padding:3px 7px}
+
+.menu__foot{border-top:1px solid var(--line); padding:14px 20px calc(16px + env(safe-area-inset-bottom)); background:var(--bg)}
+.wa{width:100%; min-height:48px; border:1.5px solid #128C7E; border-radius:var(--r-md); background:var(--surface); color:#0c5b51; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; gap:9px; transition:transform .14s var(--ease-select), background .18s}
+.wa:active{transform:scale(.98)}
+.menu__legal{display:flex; gap:14px; justify-content:center; margin-top:12px; font-size:11px; color:var(--ink-3)}
+.menu__legal a{text-decoration:underline; text-underline-offset:2px}
+
+/* ===== FOOTER ===== */
+.footer{background:#EFEBE2; border-top:1px solid var(--line); margin-top:40px}
+.f-inner{padding:30px 20px 22px}
+.f-brand{font-family:var(--font-display); font-size:30px; letter-spacing:.16em; margin:0 0 6px}
+.f-tag{font-family:var(--font-accent); font-style:italic; font-size:14.5px; color:var(--ink-2); margin:0 0 22px; line-height:1.45}
+.f-col{border-top:1px solid var(--line)}
+.f-col__head{width:100%; display:flex; align-items:center; justify-content:space-between; padding:15px 2px; font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink)}
+.f-col__chev{color:var(--accent-ink); transition:transform .24s var(--ease-select)}
+.f-col.open .f-col__chev{transform:rotate(180deg)}
+.f-col__panel{display:grid; grid-template-rows:0fr; transition:grid-template-rows .26s var(--ease-select)}
+.f-col.open .f-col__panel{grid-template-rows:1fr}
+.f-col__wrap{overflow:hidden}
+.f-col__links{padding:0 0 14px; display:flex; flex-direction:column; gap:2px}
+.f-link{min-height:38px; display:flex; align-items:center; font-size:13.5px; color:var(--ink-2)}
+.f-link:active{color:var(--accent-ink)}
+.f-link--strong{font-weight:600; color:var(--ink)}
+.f-link--arrep{font-weight:600; color:var(--accent-ink); text-decoration:underline; text-underline-offset:3px}
+
+.f-contact{border-top:1px solid var(--line); padding:16px 0; display:flex; flex-direction:column; gap:8px; font-size:13px; color:var(--ink-2)}
+.f-contact a{font-weight:600; color:var(--ink)}
+.f-datos{border-top:1px solid var(--line); padding:16px 0 4px; font-size:11px; color:var(--ink-3); line-height:1.7}
+.f-datos b{color:var(--ink-2); font-weight:600}
+.f-badges{display:flex; align-items:center; gap:14px; padding:14px 0 6px}
+.f-badge{height:34px; display:flex; align-items:center; gap:7px; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-sm); padding:0 11px; font-size:10.5px; font-weight:600; color:var(--ink-2)}
+.f-qr{width:44px; height:44px; border:1px solid var(--line); border-radius:var(--r-sm); background:
+  repeating-linear-gradient(0deg,#1F1B16 0 3px,transparent 3px 6px),
+  repeating-linear-gradient(90deg,#1F1B16 0 3px,#fff 3px 6px);
+  opacity:.75}
+.f-bottom{border-top:1px solid var(--line); padding:14px 0 4px; display:flex; justify-content:space-between; align-items:center; font-size:10.5px; color:var(--ink-3)}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.001ms!important; animation:none!important}
+  .menu,.scrim{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="ann">Originalidad garantizada · Envíos a todo el país</div>
+  <header class="hdr">
+    <button class="hdr__icon" aria-label="Abrir menú" onclick="openMenu()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+    </button>
+    <span class="hdr__brand">NUMEN</span>
+    <button class="hdr__icon" aria-label="Carrito">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 7h13l-1.2 9.5a2 2 0 01-2 1.75H9.2a2 2 0 01-2-1.75L6 7zm0 0L5 3.5H3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </header>
+
+  <p class="hint">Tocá la hamburguesa para abrir el menú.<br>Scrolleá para ver el footer. ↓</p>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="f-inner">
+      <p class="f-brand">NUMEN</p>
+      <p class="f-tag">Perfumería curada. Originales importados, verificables frasco por frasco.</p>
+
+      <div class="f-col open">
+        <button class="f-col__head" onclick="tog(this)">Tienda<svg class="f-col__chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        <div class="f-col__panel"><div class="f-col__wrap"><div class="f-col__links">
+          <a class="f-link" href="#">Todos los perfumes</a>
+          <a class="f-link" href="#">Árabes</a>
+          <a class="f-link" href="#">Diseñador</a>
+          <a class="f-link" href="#">Nicho</a>
+          <a class="f-link" href="#">Los más elegidos</a>
+          <a class="f-link" href="#">Marcas</a>
+          <a class="f-link" href="#">Para arrancar: decants</a>
+        </div></div></div>
+      </div>
+
+      <div class="f-col">
+        <button class="f-col__head" onclick="tog(this)">Ayuda<svg class="f-col__chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        <div class="f-col__panel"><div class="f-col__wrap"><div class="f-col__links">
+          <a class="f-link" href="#">Envíos</a>
+          <a class="f-link" href="#">Cambios y devoluciones</a>
+          <a class="f-link" href="#">Preguntas frecuentes</a>
+          <a class="f-link" href="#">Contacto</a>
+        </div></div></div>
+      </div>
+
+      <div class="f-col">
+        <button class="f-col__head" onclick="tog(this)">Confianza y legales<svg class="f-col__chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        <div class="f-col__panel"><div class="f-col__wrap"><div class="f-col__links">
+          <a class="f-link f-link--strong" href="#">Cómo verificamos autenticidad</a>
+          <a class="f-link f-link--arrep" href="#">Botón de arrepentimiento</a>
+          <a class="f-link" href="#">Términos y condiciones</a>
+          <a class="f-link" href="#">Política de privacidad</a>
+          <a class="f-link" href="#">Defensa del consumidor</a>
+        </div></div></div>
+      </div>
+
+      <div class="f-contact">
+        <span>¿Dudas? Escribinos:</span>
+        <a href="#">WhatsApp +54 9 341 XXX-XXXX</a>
+        <a href="#">hola@numen.com.ar</a>
+      </div>
+
+      <div class="f-datos">
+        <b>[RAZÓN SOCIAL / NOMBRE — pendiente definición fiscal]</b><br>
+        CUIT [XX-XXXXXXXX-X] · [Domicilio fiscal, ciudad, provincia]<br>
+        Despachos desde Rosario, Santa Fe.
+      </div>
+
+      <div class="f-badges">
+        <span class="f-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.5"/></svg>
+          Mercado Pago
+        </span>
+        <span class="f-qr" role="img" aria-label="Data Fiscal (QR ARCA)"></span>
+        <span style="font-size:10px; color:var(--ink-3)">Data Fiscal</span>
+      </div>
+
+      <div class="f-bottom">
+        <span>© 2026 NUMEN</span>
+        <span>Hecho en Argentina</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ===== MENU DRAWER ===== -->
+<div class="scrim" id="scrim" onclick="closeMenu()"></div>
+<nav class="menu" id="menu" aria-label="Menú principal">
+  <div class="menu__head">
+    <span class="menu__brand">NUMEN</span>
+    <button class="hdr__icon" aria-label="Cerrar" onclick="closeMenu()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <div class="menu__body">
+    <div class="mgroup open">
+      <button class="mgroup__head" onclick="togGroup(this)">Perfumes<svg class="mgroup__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="mgroup__panel"><div class="mgroup__wrap"><div class="mgroup__links">
+        <a class="mlink mlink--all" href="#">Ver todos</a>
+        <a class="mlink" href="#">Árabes <span class="mlink__n">42</span></a>
+        <a class="mlink" href="#">Diseñador <span class="mlink__n">28</span></a>
+        <a class="mlink" href="#">Nicho <span class="mlink__n">16</span></a>
+      </div></div></div>
+    </div>
+
+    <div class="mgroup">
+      <button class="mgroup__head" onclick="togGroup(this)">Familias<svg class="mgroup__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="mgroup__panel"><div class="mgroup__wrap"><div class="mgroup__links">
+        <a class="mlink" href="#">Amaderados</a>
+        <a class="mlink" href="#">Ambarados</a>
+        <a class="mlink" href="#">Cítricos</a>
+        <a class="mlink" href="#">Florales</a>
+        <a class="mlink" href="#">Aromáticos</a>
+        <a class="mlink" href="#">Especiados</a>
+      </div></div></div>
+    </div>
+
+    <div class="mgroup">
+      <button class="mgroup__head" onclick="togGroup(this)">Marcas<svg class="mgroup__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="mgroup__panel"><div class="mgroup__wrap"><div class="mgroup__links">
+        <a class="mlink" href="#">Lattafa <span class="mlink__n">18</span></a>
+        <a class="mlink" href="#">Armaf <span class="mlink__n">12</span></a>
+        <a class="mlink" href="#">Maison Alhambra <span class="mlink__n">9</span></a>
+        <a class="mlink" href="#">Rasasi <span class="mlink__n">7</span></a>
+        <a class="mlink" href="#">Dior <span class="mlink__n">6</span></a>
+        <a class="mlink" href="#">Azzaro <span class="mlink__n">5</span></a>
+        <a class="mlink mlink--all" href="#">Ver todas las marcas</a>
+      </div></div></div>
+    </div>
+
+    <div class="mgroup">
+      <button class="mgroup__head" onclick="togGroup(this)">Descubrí<svg class="mgroup__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="mgroup__panel"><div class="mgroup__wrap"><div class="mgroup__links">
+        <a class="mlink" href="#">Los más elegidos</a>
+        <a class="mlink" href="#">Para la noche</a>
+        <a class="mlink" href="#">Frescos para el verano</a>
+        <a class="mlink" href="#">Para arrancar: decants</a>
+        <a class="mlink" href="#">Regalos</a>
+      </div></div></div>
+    </div>
+
+    <a class="mdirect" href="#">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 9-4-.8-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Autenticidad
+      <span class="mdirect__badge">Cómo lo verificamos</span>
+    </a>
+
+    <div class="mgroup">
+      <button class="mgroup__head" onclick="togGroup(this)">Ayuda<svg class="mgroup__chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <div class="mgroup__panel"><div class="mgroup__wrap"><div class="mgroup__links">
+        <a class="mlink" href="#">Envíos</a>
+        <a class="mlink" href="#">Cambios y devoluciones</a>
+        <a class="mlink" href="#">Preguntas frecuentes</a>
+        <a class="mlink" href="#">Contacto</a>
+      </div></div></div>
+    </div>
+  </div>
+
+  <div class="menu__foot">
+    <button class="wa">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#128C7E"><path d="M12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.4A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1112 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8.9-.3.2-.5 0a6.5 6.5 0 01-1.9-1.2 7 7 0 01-1.3-1.6c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.7-1.7c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 00-.7.3 2.8 2.8 0 00-.9 2.1c0 1.2.9 2.4 1 2.6s1.8 2.8 4.4 3.9c1.6.7 2.2.7 3 .6.5 0 1.4-.6 1.6-1.1s.2-1 .1-1.1l-.4-.2z"/></svg>
+      Escribinos por WhatsApp
+    </button>
+    <div class="menu__legal">
+      <a href="#">Botón de arrepentimiento</a>
+      <a href="#">Términos</a>
+    </div>
+  </div>
+</nav>
+
+<script>
+function openMenu(){ document.getElementById('menu').classList.add('show'); document.getElementById('scrim').classList.add('show'); }
+function closeMenu(){ document.getElementById('menu').classList.remove('show'); document.getElementById('scrim').classList.remove('show'); }
+function togGroup(b){ b.parentElement.classList.toggle('open'); }
+function tog(b){ b.parentElement.classList.toggle('open'); }
+</script>
+</body>
+</html>
