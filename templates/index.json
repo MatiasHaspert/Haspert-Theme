@@ -13,161 +13,89 @@
       "type": "hero-home",
       "settings": {
         "color_scheme": "scheme-1",
-        "eyebrow": "100% originales · garantía",
-        "heading": "Importados originales, sin pagar de más",
-        "subheading": "Diseñador, nicho y árabes — sellados y verificables.",
-        "cta1_label": "Ver catálogo",
+        "eyebrow": "Perfumería curada",
+        "heading": "Originales que podés verificar frasco por frasco",
+        "subheading": "Importados árabes, de diseñador y nicho. Lote visible, video del frasco antes de comprar.",
+        "cta1_label": "Ver perfumes",
         "cta1_link": "shopify://collections/all",
-        "cta2_label": "Probá con un decant",
-        "cta2_link": "shopify://collections/all",
+        "cta2_label": "Cómo verificamos originalidad",
+        "cta2_link": "shopify://pages/autenticidad",
         "image": "shopify://shop_images/naxos.jpg",
-        "microcopy": "Garantía de originalidad · Devolución sin vueltas",
+        "microcopy": "",
         "padding_top": 64,
-        "padding_bottom": 56
+        "padding_bottom": 40
       }
     },
-    "trust": {
-      "type": "multicolumn",
+    "nav_bar": {
+      "type": "collection-nav-bar",
       "blocks": {
-        "c1": {
-          "type": "column",
+        "angle_elegidos": {
+          "type": "angle",
           "settings": {
-            "icon": "shield",
-            "title": "Originalidad garantizada",
-            "text": "<p>Marca auténtica, sellada de fábrica y con lote verificable.</p>",
-            "badge_1_text": "",
-            "badge_2_text": "",
-            "micro_copy_text": "",
-            "offer_text": "",
-            "button_label": "",
-            "price_text": "",
-            "button_link": ""
+            "collection": "los-mas-elegidos",
+            "label": "Más elegidos",
+            "image": "shopify://shop_images/edt-intense-2.webp",
+            "link": ""
           }
         },
-        "c2": {
-          "type": "column",
+        "angle_arabes": {
+          "type": "angle",
           "settings": {
-            "icon": "bottle",
-            "title": "Probá con un decant",
-            "text": "<p>Conocé el aroma desde un 5ml antes de ir por el frasco.</p>",
-            "badge_1_text": "",
-            "badge_2_text": "",
-            "micro_copy_text": "",
-            "offer_text": "",
-            "button_label": "",
-            "price_text": "",
-            "button_link": ""
+            "collection": "arabes",
+            "label": "Árabes",
+            "image": "shopify://shop_images/lataffaasad2.webp",
+            "link": ""
           }
         },
-        "c3": {
-          "type": "column",
+        "angle_disenador": {
+          "type": "angle",
           "settings": {
-            "icon": "truck",
-            "title": "Envíos a todo el país",
-            "text": "<p>Correo Argentino. En Rosario, envío en el día.</p>",
-            "badge_1_text": "",
-            "badge_2_text": "",
-            "micro_copy_text": "",
-            "offer_text": "",
-            "button_label": "",
-            "price_text": "",
-            "button_link": ""
+            "collection": "disenador",
+            "label": "Diseñador",
+            "image": "shopify://shop_images/savage-edp-2.webp",
+            "link": ""
           }
         },
-        "c4": {
-          "type": "column",
+        "angle_noche": {
+          "type": "angle",
           "settings": {
-            "icon": "card",
-            "title": "Hasta 6 cuotas sin interés",
-            "text": "<p>Con Mercado Pago. 20% off pagando en efectivo o transferencia.</p>",
-            "badge_1_text": "",
-            "badge_2_text": "",
-            "micro_copy_text": "",
-            "offer_text": "",
-            "button_label": "",
-            "price_text": "",
-            "button_link": ""
+            "collection": "para-la-noche",
+            "label": "Para la noche",
+            "link": ""
+          }
+        },
+        "angle_decants": {
+          "type": "angle",
+          "settings": {
+            "collection": "decants",
+            "label": "Decants",
+            "link": ""
           }
         }
       },
       "block_order": [
-        "c1",
-        "c2",
-        "c3",
-        "c4"
+        "angle_elegidos",
+        "angle_arabes",
+        "angle_disenador",
+        "angle_noche",
+        "angle_decants"
       ],
       "settings": {
-        "title": "",
-        "heading_size": "h2",
-        "image_width": "full",
-        "image_ratio": "adapt",
-        "centered_text": "",
-        "icon_color": "#8f4329",
-        "icon_background": true,
-        "columns_desktop": 4,
-        "column_alignment": "center",
-        "background_style": "none",
+        "aria_label": "Colecciones",
+        "hide_empty_collections": true,
         "color_scheme": "scheme-1",
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 40,
-        "padding_bottom": 28
-      }
-    },
-    "familias": {
-      "type": "collection-list",
-      "blocks": {
-        "f1": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": ""
-          }
-        },
-        "f2": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": ""
-          }
-        },
-        "f3": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": ""
-          }
-        },
-        "f4": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": ""
-          }
-        }
-      },
-      "block_order": [
-        "f1",
-        "f2",
-        "f3",
-        "f4"
-      ],
-      "settings": {
-        "title": "Elegí por familia olfativa",
-        "heading_size": "h2",
-        "image_ratio": "square",
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
-        "show_view_all": true,
-        "columns_mobile": "2",
-        "swipe_on_mobile": true,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "padding_top": 14,
+        "padding_bottom": 8
       }
     },
     "featured": {
       "type": "featured-collection",
       "settings": {
-        "collection": "all",
+        "collection": "los-mas-elegidos",
         "products_to_show": 8,
-        "title": "Más vendidos",
-        "heading_size": "h2",
+        "overline": "Los más elegidos",
+        "title": "Con los que no fallás",
+        "heading_size": "h1",
         "description": "",
         "show_description": false,
         "description_style": "body",
@@ -175,227 +103,207 @@
         "enable_desktop_slider": false,
         "full_width": false,
         "show_view_all": true,
-        "view_all_style": "outline",
+        "view_all_style": "link",
         "color_scheme": "scheme-1",
-        "image_ratio": "square",
+        "image_ratio": "adapt",
         "image_shape": "default",
         "show_secondary_image": false,
         "show_vendor": true,
         "show_rating": false,
-        "quick_add": "standard",
+        "quick_add": "none",
         "columns_mobile": "2",
         "swipe_on_mobile": true,
-        "padding_top": 36,
+        "padding_top": 28,
         "padding_bottom": 36
       }
     },
-    "kit": {
-      "type": "kit-decants",
+    "autenticidad": {
+      "type": "autenticidad-perfume",
+      "blocks": {
+        "paso_1": {
+          "type": "paso",
+          "settings": {
+            "text": "<p>Cada frasco sellado tiene su <strong>código de lote</strong> visible. Lo mostramos en las fotos reales del producto.</p>"
+          }
+        },
+        "paso_2": {
+          "type": "paso",
+          "settings": {
+            "text": "<p>Podés cruzar ese código en verificadores públicos de batch para confirmar fabricante y fecha.</p>"
+          }
+        },
+        "paso_3": {
+          "type": "paso",
+          "settings": {
+            "text": "<p>¿Querés verlo antes de pagar? Te mandamos <strong>foto y video del lote por WhatsApp</strong>, a pedido.</p>"
+          }
+        }
+      },
+      "block_order": ["paso_1", "paso_2", "paso_3"],
       "settings": {
-        "color_scheme": "scheme-2",
-        "accent_color": "#b25a3c",
-        "icon": "bottle",
-        "microbadge": "Armá tu kit",
-        "heading": "¿No sabés cuál elegir?",
-        "subheading": "Elegí varios decants para probar y ahorrá llevándolos juntos.",
-        "collection": "",
-        "kit_size": 3,
-        "decant_size": "Decant 5ml",
-        "discount_text": "Elegí 3 y llevate 10% OFF en tu kit",
-        "button_label": "Agregar kit al carrito",
-        "onboarding_text": "Elegí una colección de decants en la configuración de la sección.",
+        "color_scheme": "scheme-4",
+        "accent_color": "#B25A3C",
+        "heading": "Nuestra promesa",
+        "title": "Cómo verificás que es original",
+        "show_photo": false,
+        "whatsapp_label": "Pedir video del lote por WhatsApp",
+        "whatsapp_message": "¡Hola! Quiero ver el video del lote de un perfume antes de comprar.",
+        "whatsapp_fallback_name": "un perfume",
+        "compare_link": "",
+        "compare_title": "",
+        "compare_text": "",
+        "link_1_label": "Cómo lo verificamos, en detalle",
+        "link_1_url": "shopify://pages/autenticidad",
+        "link_2_label": "Original vs. réplica",
+        "link_2_url": "shopify://pages/autenticidad",
         "padding_top": 48,
         "padding_bottom": 48
       }
     },
-    "autenticidad": {
-      "type": "original-vs-replica",
+    "decants_banner": {
+      "type": "decants-banner",
       "blocks": {
-        "r1": {
-          "type": "row",
+        "chip_ml": {
+          "type": "chip",
+          "settings": { "text": "5 y 10 ml" }
+        },
+        "chip_original": {
+          "type": "chip",
+          "settings": { "text": "Del frasco original" }
+        },
+        "chip_pedido": {
+          "type": "chip",
+          "settings": { "text": "Fraccionado a pedido" }
+        }
+      },
+      "block_order": ["chip_ml", "chip_original", "chip_pedido"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "accent_color": "#B25A3C",
+        "card_background": "#FCF9F0",
+        "microbadge": "Para arrancar",
+        "heading": "Probá antes de invertir en el frasco",
+        "text": "<p>Decants de 5 y 10 ml fraccionados a pedido desde frascos originales verificados. Conocé el aroma en tu piel por una fracción del precio.</p>",
+        "cta_label": "Ver decants",
+        "cta_url": "shopify://collections/decants",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "editorial": {
+      "type": "rich-text",
+      "blocks": {
+        "overline": {
+          "type": "caption",
           "settings": {
-            "icon": "truck",
-            "feature": "Procedencia",
-            "ours": "Importado, marca auténtica con lote/serial verificable",
-            "replica": "Origen dudoso, sin respaldo"
+            "caption": "Por qué Numen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "small"
           }
         },
-        "r2": {
-          "type": "row",
+        "texto": {
+          "type": "text",
           "settings": {
-            "icon": "bottle",
-            "feature": "Concentración",
-            "ours": "Declarada (EDP/EDT), rinde y dura como el oficial",
-            "replica": "Diluido, se va en pocas horas"
+            "text": "<p>No vendemos todo lo que existe. Elegimos pocos perfumes que valen lo que cuestan — árabes con carácter, diseñador probado, nicho que sorprende — y los respaldamos frasco por frasco.</p>"
           }
         },
-        "r3": {
-          "type": "row",
+        "firma": {
+          "type": "caption",
           "settings": {
-            "icon": "lock",
-            "feature": "Frasco y lote",
-            "ours": "Sellado de fábrica, lote/serial verificable",
-            "replica": "Serial falso o ausente"
-          }
-        },
-        "r4": {
-          "type": "row",
-          "settings": {
-            "icon": "sparkle",
-            "feature": "Aroma",
-            "ours": "Fiel al lanzamiento oficial",
-            "replica": "Aroma alterado o desviado"
-          }
-        },
-        "r5": {
-          "type": "row",
-          "settings": {
-            "icon": "shield",
-            "feature": "Garantía",
-            "ours": "Si no es original, te devolvemos el 100% + el envío (hasta 30 días)",
-            "replica": "Sin garantía"
+            "caption": "— Numen, perfumería curada",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "small"
           }
         }
       },
-      "block_order": [
-        "r1",
-        "r2",
-        "r3",
-        "r4",
-        "r5"
-      ],
+      "block_order": ["overline", "texto", "firma"],
       "settings": {
-        "color_scheme": "scheme-3",
-        "accent_color": "#f3e2da",
-        "microbadge": "Cómo reconocer un original",
-        "heading": "No todos los importados son iguales",
-        "subheading": "Trabajamos solo con originales. Mirá la diferencia con una réplica.",
-        "col_feature_label": "Característica",
-        "col_ours_label": "En Numen",
-        "col_replica_label": "Réplica",
-        "closing": "Por eso cada compra incluye garantía de originalidad y devolución sin vueltas.",
-        "show_button": true,
-        "button_label": "Ver catálogo",
-        "button_link": "shopify://collections/all",
-        "padding_top": 56,
-        "padding_bottom": 56
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "editorial_style": true,
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 40
       }
     },
-    "resenas": {
-      "type": "custom-testimonialsv2",
+    "testimonios": {
+      "type": "custom-testimonials",
+      "disabled": true,
       "blocks": {
         "t1": {
-          "type": "testimonial_chat",
+          "type": "testimonial",
           "settings": {
-            "align": "left",
-            "name": "Nombre de la persona",
-            "text": "¡Escribí acá el testimonio!"
+            "testimonial_text": "<p>Escribí acá el testimonio real. Nada inventado.</p>",
+            "name": "Nombre A.",
+            "city": "",
+            "verified": false
           }
         },
         "t2": {
-          "type": "testimonial_chat",
+          "type": "testimonial",
           "settings": {
-            "align": "right",
-            "name": "Nombre de la persona",
-            "text": "¡Escribí acá el testimonio!"
-          }
-        },
-        "t3": {
-          "type": "testimonial_chat",
-          "settings": {
-            "align": "left",
-            "name": "Nombre de la persona",
-            "text": "¡Escribí acá el testimonio!"
+            "testimonial_text": "<p>Escribí acá el testimonio real. Nada inventado.</p>",
+            "name": "Nombre B.",
+            "city": "",
+            "verified": false
           }
         }
       },
-      "block_order": [
-        "t1",
-        "t2",
-        "t3"
-      ],
+      "block_order": ["t1", "t2"],
       "settings": {
-        "title": "Lo que dicen nuestros clientes",
-        "icon": "quote"
+        "overline": "Clientes",
+        "title": "Los que ya compraron",
+        "heading_size": "h1",
+        "verified_label": "Compra verificada",
+        "columns_desktop": 2,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "color_scheme": "scheme-4",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "faq": {
       "type": "faq-perfume",
       "blocks": {
-        "q1": {
+        "q_original": {
           "type": "qa",
           "settings": {
             "icon": "shield",
-            "question": "¿Los perfumes son 100% originales?",
-            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>"
+            "question": "¿Es 100% original?",
+            "answer": "<p>Sí. Solo importados originales, con lote verificable y video por WhatsApp a pedido. Si no es original, te devolvemos el 100%.</p>"
           }
         },
-        "q2": {
-          "type": "qa",
-          "settings": {
-            "icon": "lock",
-            "question": "¿Cómo sé que no es una réplica?",
-            "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible. Si querés, te mandamos el unboxing por WhatsApp antes de comprar. Y si algo no cierra: garantía de originalidad, te devolvemos el 100%.</p>"
-          }
-        },
-        "q3": {
-          "type": "qa",
-          "settings": {
-            "icon": "bottle",
-            "question": "¿Qué es un \"decant\"? ¿Es el mismo perfume?",
-            "answer": "<p>Sí, es el mismo jugo fraccionado del frasco original en un atomizador. Ideal para probar el aroma antes de comprar el frasco completo, o para llevar en la cartera.</p>"
-          }
-        },
-        "q4": {
-          "type": "qa",
-          "settings": {
-            "icon": "bottle",
-            "question": "¿Y el \"tester\"? ¿En qué se diferencia del original?",
-            "answer": "<p>Es exactamente el mismo perfume, en packaging de prueba (caja blanca o sin tapa premium). Por eso es más económico — pero el jugo es idéntico.</p>"
-          }
-        },
-        "q5": {
+        "q_envio": {
           "type": "qa",
           "settings": {
             "icon": "truck",
-            "question": "¿Hacen envíos a todo el país?",
-            "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 4–7 días hábiles. Envío gratis en compras desde $200.000.</p>"
+            "question": "¿Cuándo llega?",
+            "answer": "<p>Rosario: en el día (antes de las 16 hs). Resto del país: Correo Argentino, 3–6 días hábiles. Gratis desde $200.000.</p>"
           }
         },
-        "q6": {
-          "type": "qa",
-          "settings": {
-            "icon": "card",
-            "question": "¿Puedo pagar en cuotas?",
-            "answer": "<p>Sí, con Mercado Pago: hasta <strong>6 cuotas sin interés</strong> y hasta <strong>12 con interés</strong>. Además, <strong>20% de descuento</strong> pagando contado o por transferencia.</p>"
-          }
-        },
-        "q7": {
+        "q_devolucion": {
           "type": "qa",
           "settings": {
             "icon": "return",
-            "question": "¿Qué pasa si me arrepiento o no me gusta?",
-            "answer": "<p>Tenés 10 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>"
+            "question": "¿Puedo devolver?",
+            "answer": "<p>Tenés 10 días para arrepentirte (frasco sellado y tester). Los decants abiertos quedan excluidos por ley.</p>"
           }
         }
       },
-      "block_order": [
-        "q1",
-        "q2",
-        "q3",
-        "q4",
-        "q5",
-        "q6",
-        "q7"
-      ],
+      "block_order": ["q_original", "q_envio", "q_devolucion"],
       "settings": {
         "color_scheme": "scheme-1",
         "accent_color": "#b25a3c",
-        "microbadge": "Preguntas frecuentes",
-        "heading": "Todo lo que querés saber antes de comprar",
-        "legal_text": "<p><strong>Derecho de arrepentimiento.</strong> Tenés 10 días corridos desde la recepción para revocar la compra sin costo (art. 34, Ley 24.240; Disposición 954/2025, que deroga la Res. 424/2020). El botón de arrepentimiento está en el inicio del sitio. Excepción: los decants abiertos quedan excluidos (art. 1.116 CCyC).</p>",
-        "padding_top": 48,
-        "padding_bottom": 48
+        "microbadge": "Dudas rápidas",
+        "heading": "",
+        "more_label": "Todas las preguntas →",
+        "more_url": "shopify://pages/preguntas-frecuentes",
+        "emit_schema": false,
+        "legal_text": "",
+        "padding_top": 40,
+        "padding_bottom": 40
       }
     },
     "newsletter": {
@@ -404,19 +312,21 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Sumate y enterate de los lanzamientos",
-            "heading_size": "h2"
+            "heading": "Enterate antes que nadie",
+            "heading_size": "h1"
           }
         },
         "paragraph": {
           "type": "paragraph",
           "settings": {
-            "text": "<p>Novedades, reposiciones y ofertas reales. Sin spam.</p>"
+            "text": "<p>Novedades e ingresos nuevos, sin spam.</p>"
           }
         },
         "email": {
           "type": "email_form",
-          "settings": {}
+          "settings": {
+            "button_label": "Suscribirme"
+          }
         }
       },
       "block_order": [
@@ -425,6 +335,8 @@
         "email"
       ],
       "settings": {
+        "overline": "Newsletter Numen",
+        "note": "Un mail cada tanto, solo cuando vale la pena. Date de baja cuando quieras.",
         "color_scheme": "scheme-2",
         "full_width": true,
         "padding_top": 44,
@@ -434,12 +346,12 @@
   },
   "order": [
     "hero",
-    "trust",
-    "familias",
+    "nav_bar",
     "featured",
-    "kit",
     "autenticidad",
-    "resenas",
+    "decants_banner",
+    "editorial",
+    "testimonios",
     "faq",
     "newsletter"
   ]
