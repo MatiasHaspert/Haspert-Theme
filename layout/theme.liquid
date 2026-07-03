@@ -50,6 +50,17 @@
       assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
       assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
       assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+      # Numen: acento editorial = un peso arriba del cuerpo, en itálica (Montserrat 500 itálica).
+      # Si el picker cambiara a una fuente sin esa variante, cae a la itálica del cuerpo;
+      # y si tampoco hubiera itálica, al cuerpo (nunca dejar accent_font en blank: sus
+      # propiedades se interpolan en --font-accent y quedaría CSS inválido).
+      assign accent_font = settings.type_body_font | font_modify: 'weight', '+100' | font_modify: 'style', 'italic'
+      if accent_font == blank
+        assign accent_font = body_font_italic
+      endif
+      if accent_font == blank
+        assign accent_font = settings.type_body_font
+      endif
     %}
 
     {% style %}
@@ -57,22 +68,16 @@
       {{ body_font_bold | font_face: font_display: 'swap' }}
       {{ body_font_italic | font_face: font_display: 'swap' }}
       {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+      {{ accent_font | font_face: font_display: 'swap' }}
       {{ settings.type_header_font | font_face: font_display: 'swap' }}
 
-      {%- comment -%} Numen: fuentes self-host (no están en la librería de Shopify) {%- endcomment -%}
+      {%- comment -%} Numen: fuente display self-host (no está en la librería de Shopify) {%- endcomment -%}
       @font-face {
         font-family: 'Bebas Neue';
         font-style: normal;
         font-weight: 400;
         font-display: swap;
         src: url({{ 'bebas-neue-400.woff2' | asset_url }}) format('woff2');
-      }
-      @font-face {
-        font-family: 'Fraunces';
-        font-style: italic;
-        font-weight: 400;
-        font-display: swap;
-        src: url({{ 'fraunces-italic.woff2' | asset_url }}) format('woff2');
       }
 
       {% for scheme in settings.color_schemes -%}
@@ -242,9 +247,10 @@
         --variant-pills-shadow-vertical-offset: {{ settings.variant_pills_shadow_vertical_offset }}px;
         --variant-pills-shadow-blur-radius: {{ settings.variant_pills_shadow_blur }}px;
 
-        {%- comment -%} Numen: display/accent + acento de marca. Override del picker (Bebas no está en la librería). {%- endcomment -%}
+        {%- comment -%} Numen: display (Bebas, override del picker) + acento editorial (itálica 500 derivada del cuerpo) + acento de marca. {%- endcomment -%}
         --font-display: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif;
-        --font-accent: 'Fraunces', Georgia, 'Times New Roman', serif;
+        --font-accent: {{ accent_font.family }}, {{ accent_font.fallback_families }};
+        --font-accent-weight: {{ accent_font.weight }};
         --font-heading-family: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif;
         --font-heading-style: normal;
         --font-heading-weight: 400;
