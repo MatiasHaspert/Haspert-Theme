@@ -157,8 +157,8 @@
   border: 0.15rem solid #128c7e; border-radius: 0.8rem;
   background: rgb(var(--color-background)); color: #0c5b51;
   font-weight: 600; font-size: 1.4rem; text-decoration: none;
-  transition: background-color var(--perfume-dur-select, 200ms) var(--perfume-ease-select, ease),
-              transform var(--perfume-dur-tap, 140ms) var(--perfume-ease-select, ease);
+  transition: background-color var(--perfume-dur-select, 200ms) var(--perfume-ease-select, var(--ease-select)),
+              transform var(--perfume-dur-tap, 140ms) var(--perfume-ease-select, var(--ease-select));
 }
 .auth__wa:active { transform: scale(0.97); }
 @media (hover: hover) { .auth__wa:hover { background: rgba(18, 140, 126, 0.06); } }
@@ -166,7 +166,7 @@
   display: flex; align-items: center; gap: 1.2rem;
   margin-top: 1.2rem; padding: 1.3rem 1.4rem;
   border: 0.1rem solid rgba(var(--color-foreground), 0.14); border-radius: 0.8rem;
-  text-decoration: none; color: inherit; transition: border-color var(--perfume-dur-select, 200ms) var(--perfume-ease-select, ease);
+  text-decoration: none; color: inherit; transition: border-color var(--perfume-dur-select, 200ms) var(--perfume-ease-select, var(--ease-select));
 }
 @media (hover: hover) { .auth__compare:hover { border-color: var(--auth-accent); } }
 .auth__compare-body { flex: 1 1 auto; min-width: 0; }

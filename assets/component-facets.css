@@ -217,11 +217,11 @@
 
 .facets__disclosure[open] .facets__display,
 .facets__disclosure-vertical[open] .facets__display-vertical {
-  animation: animateMenuOpen var(--duration-default) ease;
+  animation: animateMenuOpen var(--duration-default) var(--ease-drawer);
 }
 
 .facets__summary span:first-of-type {
-  transition: text-decoration var(--duration-short) ease;
+  transition: text-decoration var(--duration-short) var(--ease-select);
 }
 
 .facets__summary:hover .facets__summary-label {
@@ -363,7 +363,7 @@
   outline-color: transparent;
   transition-property: outline-color, outline-width, box-shadow;
   transition-duration: var(--duration-short);
-  transition-timing-function: ease;
+  transition-timing-function: var(--ease-select);
 }
 
 .facets-layout-grid--image .facet-checkbox__text {
@@ -774,7 +774,7 @@ a.active-facets__button.focused .active-facets__button-inner {
   height: 100%;
   overflow-y: auto;
   pointer-events: all;
-  transition: transform var(--duration-default) ease;
+  transition: transform var(--duration-default) var(--ease-drawer);
   max-width: 37.5rem;
   display: flex;
   flex-direction: column;
@@ -850,7 +850,7 @@ a.active-facets__button.focused .active-facets__button-inner {
 }
 
 .mobile-facets__open-label {
-  transition: text-decoration var(--duration-short) ease;
+  transition: text-decoration var(--duration-short) var(--ease-select);
 }
 
 .mobile-facets__open:hover .mobile-facets__open-label {
@@ -882,7 +882,7 @@ a.active-facets__button.focused .active-facets__button-inner {
   height: 4.4rem;
   z-index: 101;
   opacity: 0;
-  transition: opacity var(--duration-short) ease;
+  transition: opacity var(--duration-short) var(--ease-select);
 }
 
 .mobile-facets__close .svg-wrapper {
@@ -1016,7 +1016,7 @@ input.mobile-facets__checkbox {
 .mobile-facets__label {
   padding: 1.5rem 2rem 1.5rem 2.5rem;
   width: 100%;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s var(--ease-select);
   word-break: break-word;
   display: flex;
 }

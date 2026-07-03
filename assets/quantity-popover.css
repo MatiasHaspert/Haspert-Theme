@@ -64,7 +64,7 @@ quantity-popover .quick-order-list-remove-button .button {
 }
 
 .quantity-popover__info-button--icon-only svg {
-  transition: transform var(--duration-default) ease;
+  transition: transform var(--duration-default) var(--ease-select);
   width: 15px;
   height: 14px;
 }

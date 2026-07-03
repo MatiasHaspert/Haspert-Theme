@@ -133,7 +133,7 @@ product-recommendations.is-accordion + .accordion {
 }
 
 .complementary-products__container .quick-add__submit:not(.animate-arrow) .icon-wrap {
-  transition: transform var(--duration-short) ease;
+  transition: transform var(--duration-short) var(--ease-select);
 }
 
 .complementary-products__container .quick-add__submit:not(.animate-arrow):hover .icon-wrap {

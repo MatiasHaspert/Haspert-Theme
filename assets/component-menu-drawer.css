@@ -16,13 +16,13 @@
   opacity: 0;
   visibility: hidden;
   z-index: 2;
-  transition: opacity 0s, visibility 0s;
+  transition: opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 menu-drawer > details[open] > summary::before {
   visibility: visible;
   opacity: 1;
-  transition: opacity var(--duration-default) ease, visibility var(--duration-default) ease;
+  transition: opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .menu-drawer {
@@ -49,13 +49,25 @@ menu-drawer > details[open] > summary::before {
 
 .js details[open] > .menu-drawer,
 .js details[open] > .menu-drawer__submenu {
-  transition: transform var(--duration-default) ease, visibility var(--duration-default) ease;
+  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.32s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .js details[open].menu-opening > .menu-drawer,
 details[open].menu-opening > .menu-drawer__submenu {
   transform: translateX(0);
   visibility: visible;
+}
+
+/* NUMEN: curva de la casa (diverge de Dawn stock) + guard de reduced-motion,
+   porque el ::before vive en el summary y no hereda la clase motion-reduce. */
+@media (prefers-reduced-motion: reduce) {
+  .js menu-drawer > details > summary::before,
+  .js menu-drawer > details[open]:not(.menu-opening) > summary::before,
+  menu-drawer > details[open] > summary::before,
+  .js details[open] > .menu-drawer,
+  .js details[open] > .menu-drawer__submenu {
+    transition: none;
+  }
 }
 
 .js .menu-drawer__navigation .submenu-open {

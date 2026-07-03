@@ -383,7 +383,7 @@
 @media screen and (min-width: 990px) {
   .card .media.media--hover-effect > img:only-child,
   .card-wrapper .media.media--hover-effect > img:only-child {
-    transition: transform var(--duration-long) ease;
+    transition: transform var(--duration-long) var(--ease-select);
   }
 
   .card:hover .media.media--hover-effect > img:first-child:only-child,
@@ -397,7 +397,7 @@
 
   .card-wrapper:hover .media.media--hover-effect > img + img {
     opacity: 1;
-    transition: transform var(--duration-long) ease;
+    transition: transform var(--duration-long) var(--ease-select);
     transform: scale(1.03);
   }
 
@@ -457,7 +457,7 @@
 .card .icon-wrap {
   margin-left: 0.8rem;
   white-space: nowrap;
-  transition: transform var(--duration-short) ease;
+  transition: transform var(--duration-short) var(--ease-select);
   overflow: hidden;
 }
 
@@ -554,7 +554,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .product-card-wrapper .shape--round {
-    transition: clip-path var(--duration-long) ease;
+    transition: clip-path var(--duration-long) var(--ease-select);
   }
 
   .product-card-wrapper:hover .shape--round {

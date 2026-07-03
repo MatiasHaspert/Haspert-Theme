@@ -584,7 +584,7 @@
   bottom: 0;
   z-index: 4;
   transform: translateY(110%);
-  transition: transform var(--perfume-dur-sticky, 260ms) var(--perfume-ease-drawer, ease);
+  transition: transform var(--perfume-dur-sticky, 260ms) var(--perfume-ease-drawer, var(--ease-drawer));
   background: rgb(var(--color-background));
   border-top: 0.1rem solid rgba(var(--color-foreground), 0.1);
   box-shadow: 0 -0.4rem 1.4rem rgba(0, 0, 0, 0.07);
@@ -634,8 +634,8 @@
   width: auto;
   min-width: 12rem;
   margin: 0;
-  transition: transform var(--perfume-dur-tap, 140ms) var(--perfume-ease-select, ease),
-              background-color var(--perfume-dur-select, 200ms) var(--perfume-ease-select, ease);
+  transition: transform var(--perfume-dur-tap, 140ms) var(--perfume-ease-select, var(--ease-select)),
+              background-color var(--perfume-dur-select, 200ms) var(--perfume-ease-select, var(--ease-select));
 }
 .sticky-atc__button:active { transform: scale(0.97); }
 @media screen and (min-width: 750px) {
@@ -667,8 +667,8 @@
 }
 .product__media-wrapper .product__media img {
   object-fit: contain;
-  transition: transform 0.5s var(--perfume-ease-select, ease),
-              opacity 0.35s var(--perfume-ease-select, ease);
+  transition: transform 0.5s var(--perfume-ease-select, var(--ease-select)),
+              opacity 0.35s var(--perfume-ease-select, var(--ease-select));
 }
 .product__media-wrapper .product__media-item .product__media::after {
   content: "";

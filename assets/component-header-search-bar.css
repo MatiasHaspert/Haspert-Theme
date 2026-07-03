@@ -34,7 +34,7 @@
   background: rgb(var(--color-background));
   padding: 0 1.2rem;
   box-shadow: none;
-  transition: border-color 0.16s ease;
+  transition: border-color 0.16s var(--ease-select);
 }
 .header-search-bar .field::after {
   display: none; /* Sense dibuja un borde inferior en .field::after; acá no va */

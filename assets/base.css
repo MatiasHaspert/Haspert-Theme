@@ -585,6 +585,12 @@ details > * {
   --duration-extra-long: 600ms;
   --duration-extra-longer: 750ms;
   --duration-extended: 3s;
+
+  /* NUMEN — curvas de la casa (sin `ease` plano): select = micro-interacciones
+     (hover, foco, chevrones); drawer = superficies (drawers, dropdowns, modales). */
+  --ease-select: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
   --ease-out-slow: cubic-bezier(0, 0, 0.3, 1);
   --animation-slide-in: slideIn var(--duration-extra-long) var(--ease-out-slow) forwards;
   --animation-fade-in: fadeIn var(--duration-extra-long) var(--ease-out-slow);
@@ -595,7 +601,7 @@ details > * {
 .inline-richtext a {
   text-underline-offset: 0.3rem;
   text-decoration-thickness: 0.1rem;
-  transition: text-decoration-thickness ease 100ms;
+  transition: text-decoration-thickness var(--ease-select) 100ms;
 }
 
 .underlined-link,
@@ -627,7 +633,7 @@ h3 .icon-arrow,
 /* arrow animation */
 .animate-arrow .icon-arrow path {
   transform: translateX(-0.25rem);
-  transition: transform var(--duration-short) ease;
+  transition: transform var(--duration-short) var(--ease-select);
 }
 
 .animate-arrow:hover .icon-arrow path {
@@ -1221,7 +1227,7 @@ button.shopify-payment-button__button--unbranded {
   font-size: 1.5rem;
   text-decoration: none;
   color: rgb(var(--color-button-text));
-  transition: box-shadow var(--duration-short) ease;
+  transition: box-shadow var(--duration-short) var(--ease-select);
   -webkit-appearance: none;
   appearance: none;
   background-color: rgba(var(--color-button), var(--alpha-button-background));
@@ -1258,7 +1264,7 @@ button.shopify-payment-button__button--unbranded {
   box-shadow: 0 0 0 calc(var(--buttons-border-width) + var(--border-offset))
       rgba(var(--color-button-text), var(--border-opacity)),
     0 0 0 var(--buttons-border-width) rgba(var(--color-button), var(--alpha-button-background));
-  transition: box-shadow var(--duration-short) ease;
+  transition: box-shadow var(--duration-short) var(--ease-select);
 }
 
 .button:not([disabled]):hover::after,
@@ -1399,7 +1405,7 @@ shopify-accelerated-checkout-cart {
 }
 
 details[open] > .share-button__fallback {
-  animation: animateMenuOpen var(--duration-default) ease;
+  animation: animateMenuOpen var(--duration-default) var(--ease-drawer);
 }
 
 .share-button__button:hover {
@@ -1444,7 +1450,7 @@ details[open] > .share-button__fallback {
   border: 0.1rem solid transparent;
   border-radius: var(--inputs-radius);
   box-shadow: 0 0 0 var(--inputs-border-width) rgba(var(--color-foreground), var(--inputs-border-opacity));
-  transition: box-shadow var(--duration-short) ease;
+  transition: box-shadow var(--duration-short) var(--ease-select);
   z-index: 1;
 }
 
@@ -1577,7 +1583,7 @@ details[open] > .share-button__fallback {
   font-size: 1.6rem;
   width: 100%;
   box-sizing: border-box;
-  transition: box-shadow var(--duration-short) ease;
+  transition: box-shadow var(--duration-short) var(--ease-select);
   border-radius: var(--inputs-radius);
   height: 4.5rem;
   min-height: calc(var(--inputs-border-width) * 2);
@@ -1619,7 +1625,7 @@ details[open] > .share-button__fallback {
   border: 0.1rem solid transparent;
   border-radius: var(--inputs-radius);
   box-shadow: 0 0 0 var(--inputs-border-width) rgba(var(--color-foreground), var(--inputs-border-opacity));
-  transition: box-shadow var(--duration-short) ease;
+  transition: box-shadow var(--duration-short) var(--ease-select);
   z-index: 1;
 }
 
@@ -1702,7 +1708,7 @@ details[open] > .share-button__fallback {
   position: relative;
   width: 100%;
   display: flex;
-  transition: box-shadow var(--duration-short) ease;
+  transition: box-shadow var(--duration-short) var(--ease-select);
 }
 
 .customer .field {
@@ -1719,7 +1725,7 @@ details[open] > .share-button__fallback {
   text-align: left;
   padding: 1.5rem;
   margin: var(--inputs-border-width);
-  transition: box-shadow var(--duration-short) ease;
+  transition: box-shadow var(--duration-short) var(--ease-select);
 }
 
 .field__label,
@@ -1730,7 +1736,7 @@ details[open] > .share-button__fallback {
   margin-bottom: 0;
   pointer-events: none;
   position: absolute;
-  transition: top var(--duration-short) ease, font-size var(--duration-short) ease;
+  transition: top var(--duration-short) var(--ease-select), font-size var(--duration-short) var(--ease-select);
   color: rgba(var(--color-foreground), 0.75);
   letter-spacing: 0.1rem;
   line-height: 1.5;
@@ -1894,7 +1900,7 @@ input[type='checkbox'] {
   border: 0.1rem solid transparent;
   border-radius: var(--inputs-radius);
   box-shadow: 0 0 0 var(--inputs-border-width) rgba(var(--color-foreground), var(--inputs-border-opacity));
-  transition: box-shadow var(--duration-short) ease;
+  transition: box-shadow var(--duration-short) var(--ease-select);
   z-index: 1;
 }
 
@@ -2200,7 +2206,7 @@ input[type='checkbox'] {
 }
 
 .localization-wrapper .localization-selector + .disclosure__list-wrapper {
-  animation: animateMenuOpen var(--duration-default) ease;
+  animation: animateMenuOpen var(--duration-default) var(--ease-drawer);
 }
 
 .utility-bar .localization-wrapper .disclosure .localization-form__select,
@@ -2640,7 +2646,7 @@ menu-drawer + .header__search {
 
 details[open] > .search-modal {
   opacity: 1;
-  animation: animateMenuOpen var(--duration-default) ease;
+  animation: animateMenuOpen var(--duration-default) var(--ease-drawer);
 }
 
 details[open] .modal-overlay {
@@ -2719,7 +2725,7 @@ details[open] .modal-overlay::after {
   position: absolute;
   opacity: 1;
   transform: scale(1);
-  transition: transform 150ms ease, opacity 150ms ease;
+  transition: transform 150ms var(--ease-select), opacity 150ms var(--ease-select);
 }
 
 details:not([open]) > .header__icon--menu .icon-close,
@@ -2745,7 +2751,7 @@ details[open] > .header__icon--menu .icon-hamburger {
 }
 
 details[open] > .header__submenu {
-  animation: animateMenuOpen var(--duration-default) ease;
+  animation: animateMenuOpen var(--duration-default) var(--ease-drawer);
   animation-fill-mode: forwards;
   z-index: 1;
 }
@@ -2802,7 +2808,7 @@ details[open] > .header__submenu {
 }
 
 .header__menu-item span {
-  transition: text-decoration var(--duration-short) ease;
+  transition: text-decoration var(--duration-short) var(--ease-select);
 }
 
 .header__menu-item:hover span {
@@ -2823,7 +2829,7 @@ details[open] > .header__menu-item .icon-caret {
 }
 
 .header__active-menu-item {
-  transition: text-decoration-thickness var(--duration-short) ease;
+  transition: text-decoration-thickness var(--duration-short) var(--ease-select);
   color: rgb(var(--color-foreground));
   text-decoration: underline;
   text-underline-offset: 0.3rem;
@@ -2834,7 +2840,7 @@ details[open] > .header__menu-item .icon-caret {
 }
 
 .header__submenu {
-  transition: opacity var(--duration-default) ease, transform var(--duration-default) ease;
+  transition: opacity var(--duration-default) var(--ease-drawer), transform var(--duration-default) var(--ease-drawer);
 }
 
 .global-settings-popup,
@@ -3178,7 +3184,7 @@ details-disclosure > details {
   color: rgba(var(--color-link), var(--alpha-link));
   text-underline-offset: 0.3rem;
   text-decoration-thickness: 0.1rem;
-  transition: text-decoration-thickness var(--duration-short) ease;
+  transition: text-decoration-thickness var(--duration-short) var(--ease-select);
 }
 
 .rte a:hover {
@@ -3337,7 +3343,7 @@ details-disclosure > details {
   .animate--hover-3d-lift .customer button,
   .animate--hover-3d-lift .shopify-payment-button__button,
   .animate--hover-3d-lift .deferred-media .deferred-media__poster-button {
-    transition: transform var(--duration-long) ease, box-shadow var(--duration-long) ease;
+    transition: transform var(--duration-long) var(--ease-select), box-shadow var(--duration-long) var(--ease-select);
     transform-origin: center;
   }
 
@@ -3348,7 +3354,7 @@ details-disclosure > details {
   .animate--hover-3d-lift .customer button:not([disabled]):hover,
   .animate--hover-3d-lift .shopify-payment-button__button:hover,
   .animate--hover-3d-lift .deferred-media:hover .deferred-media__poster-button {
-    transition: transform var(--duration-extended) ease, box-shadow var(--duration-long) ease; /* Slow the card transition speed while hover is active. */
+    transition: transform var(--duration-extended) var(--ease-select), box-shadow var(--duration-long) var(--ease-select); /* Slow the card transition speed while hover is active. */
     transform: rotate(1deg);
     box-shadow: -1rem -1rem 1rem -1rem rgba(0, 0, 0, 0.05), 1rem 1rem 1rem -1rem rgba(0, 0, 0, 0.05),
       0 0 0.5rem 0 rgba(255, 255, 255, 0), 0 2rem 3.5rem -2rem rgba(0, 0, 0, 0.5);
@@ -3377,11 +3383,11 @@ details-disclosure > details {
 
   .animate--hover-3d-lift .card-wrapper .card--shape.card--standard:not(.card--text) .card__inner {
     box-shadow: none;
-    transition: transform var(--duration-long) ease, filter var(--duration-long) ease;
+    transition: transform var(--duration-long) var(--ease-select), filter var(--duration-long) var(--ease-select);
   }
 
   .animate--hover-3d-lift .card-wrapper:hover .card--shape.card--standard:not(.card--text) .card__inner {
-    transition: transform calc(2 * var(--duration-extended)) ease, filter var(--duration-long) ease; /* Slow the card transition speed while hover is active. */
+    transition: transform calc(2 * var(--duration-extended)) var(--ease-select), filter var(--duration-long) var(--ease-select); /* Slow the card transition speed while hover is active. */
     filter: drop-shadow(0rem 2rem 2rem rgba(0, 0, 0, 0.15)) drop-shadow(0rem 1rem 1rem rgba(0, 0, 0, 0.15));
   }
 
@@ -3422,7 +3428,7 @@ details-disclosure > details {
     left: 0;
     opacity: 0;
     pointer-events: none;
-    transition: background-position calc(2 * var(--duration-extended)) ease, opacity var(--duration-default) ease;
+    transition: background-position calc(2 * var(--duration-extended)) var(--ease-select), opacity var(--duration-default) var(--ease-select);
     mix-blend-mode: overlay;
     background-size: 400% 100%;
     background-position: 90% 0;
@@ -3438,7 +3444,7 @@ details-disclosure > details {
   .animate--hover-3d-lift .card-wrapper:hover .card--card:before,
   .animate--hover-3d-lift .card-wrapper:hover .card--standard .card__media:after {
     opacity: 0.2;
-    transition: background-position 6s ease, opacity var(--duration-long) ease;
+    transition: background-position 6s var(--ease-select), opacity var(--duration-long) var(--ease-select);
     background-position: left;
     z-index: 2;
   }
@@ -3623,7 +3629,7 @@ button[type="submit"] {
   font-size: 1.8rem !important; /* 18px @ base 62.5%; el ATC hero de la PDP sube a 2.1rem */
   letter-spacing: 0.06em;
   text-align: center;
-  transition: 0.3s ease;
+  transition: 0.3s var(--ease-select);
 }
 .button--primary {
   background-color: var(--brand-button) !important;
@@ -3670,7 +3676,7 @@ a.jdgm-write-rev-link:hover {
 .multicolumn-card {
   border-radius: var(--brand-radius);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: 0.3s ease;
+  transition: 0.3s var(--ease-select);
 }
 .multicolumn-card:hover {
   transform: translateY(-6px) scale(1.02);

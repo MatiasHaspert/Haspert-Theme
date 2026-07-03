@@ -80,7 +80,7 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%) scale(1);
-  transition: transform var(--duration-short) ease, color var(--duration-short) ease;
+  transition: transform var(--duration-short) var(--ease-select), color var(--duration-short) var(--ease-select);
   z-index: 1;
 }
 

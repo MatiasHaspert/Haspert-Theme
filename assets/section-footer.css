@@ -341,7 +341,7 @@
 }
 
 .footer-block__details-content .list-menu__item--active {
-  transition: text-decoration-thickness var(--duration-short) ease;
+  transition: text-decoration-thickness var(--duration-short) var(--ease-select);
   color: rgb(var(--color-foreground));
 }
 

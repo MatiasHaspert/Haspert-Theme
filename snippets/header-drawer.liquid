@@ -88,7 +88,8 @@
                             {% if childlink.current %}aria-current="page"{% endif %}
                           >
                             <span class="mlink__t">{{ childlink.title | escape }}</span>
-                            {%- if childlink.type == 'collection_link' -%}
+                            {%- comment -%} Contador sólo con stock de catálogo: un "0" delata catálogo incompleto. {%- endcomment -%}
+                            {%- if childlink.type == 'collection_link' and childlink.object.products_count > 0 -%}
                               <span class="mlink__n">{{ childlink.object.products_count }}</span>
                             {%- endif -%}
                           </a>

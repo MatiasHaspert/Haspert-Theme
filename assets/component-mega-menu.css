@@ -48,7 +48,7 @@
   padding-bottom: 0.6rem;
   padding-top: 0.6rem;
   text-decoration: none;
-  transition: text-decoration var(--duration-short) ease;
+  transition: text-decoration var(--duration-short) var(--ease-select);
   word-wrap: break-word;
 }
 

@@ -477,7 +477,7 @@ a.product__text {
   left: 1.2rem;
   top: 1.2rem;
   z-index: 1;
-  transition: color var(--duration-short) ease, opacity var(--duration-short) ease;
+  transition: color var(--duration-short) var(--ease-select), opacity var(--duration-short) var(--ease-select);
 }
 
 .product__media-video .product__media-icon {
@@ -853,7 +853,7 @@ a.product__text {
   min-height: 4.4rem;
   text-underline-offset: 0.3rem;
   text-decoration-thickness: 0.1rem;
-  transition: text-decoration-thickness var(--duration-short) ease;
+  transition: text-decoration-thickness var(--duration-short) var(--ease-select);
 }
 
 .product-popup-modal__button:hover {
@@ -1453,7 +1453,7 @@ a.product__text {
 
 .recipient-form > input[type='checkbox']:checked ~ .recipient-fields {
   display: block;
-  animation: animateMenuOpen var(--duration-default) ease;
+  animation: animateMenuOpen var(--duration-default) var(--ease-drawer);
 }
 .recipient-form > input[type='checkbox']:not(:checked, :disabled) ~ .recipient-fields,
 .recipient-email-label {

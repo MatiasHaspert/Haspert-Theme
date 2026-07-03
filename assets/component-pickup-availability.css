@@ -50,7 +50,7 @@ pickup-availability-drawer {
   top: 0;
   right: 0;
   z-index: 4;
-  transition: opacity var(--duration-default) ease, transform var(--duration-default) ease;
+  transition: opacity var(--duration-default) var(--ease-drawer), transform var(--duration-default) var(--ease-drawer);
   transform: translateX(100%);
   width: 100%;
   border-width: 0 0 0 var(--drawer-border-width);
@@ -76,7 +76,7 @@ pickup-availability-drawer[open] {
   pickup-availability-drawer[open] {
     opacity: 1;
     transform: translateX(0);
-    animation: animateDrawerOpen var(--duration-default) ease;
+    animation: animateDrawerOpen var(--duration-default) var(--ease-drawer);
   }
 }
 

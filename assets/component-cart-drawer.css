@@ -8,7 +8,7 @@
   display: flex;
   justify-content: flex-end;
   background-color: rgba(var(--color-foreground), 0.5);
-  transition: visibility var(--duration-default) ease;
+  transition: visibility var(--duration-default) var(--ease-drawer);
 }
 
 .drawer.active {
@@ -26,7 +26,7 @@
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
-  transition: transform var(--duration-default) ease;
+  transition: transform var(--duration-default) var(--ease-drawer);
 }
 
 .drawer__inner-empty {

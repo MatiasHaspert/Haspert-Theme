@@ -175,7 +175,7 @@
   flex-direction: column;
   gap: 0.6rem;
   text-align: center;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s var(--ease-select), box-shadow 0.15s var(--ease-select);
   color: inherit;
   font: inherit;
 }
@@ -200,7 +200,7 @@
   justify-content: center;
   opacity: 0;
   transform: scale(0.6);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity 0.15s var(--ease-select), transform 0.15s var(--ease-select);
 }
 .kit__check .icon { width: 1.2rem; height: 1.2rem; }
 .kit__select[aria-pressed='true'] .kit__check { opacity: 1; transform: scale(1); }
