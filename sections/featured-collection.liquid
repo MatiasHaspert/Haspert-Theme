@@ -39,6 +39,13 @@
 {%- endstyle -%}
 
 {%- liquid
+  # Degradar con dignidad: colección elegida pero sin productos → la sección no
+  # renderiza en la tienda (los placeholders quedan solo para el theme editor).
+  assign hide_empty_section = false
+  if section.settings.collection != blank and section.settings.collection.products.size == 0 and request.design_mode != true
+    assign hide_empty_section = true
+  endif
+
   assign products_to_display = section.settings.collection.all_products_count
 
   if section.settings.collection.all_products_count > section.settings.products_to_show
@@ -64,6 +71,7 @@
   endif
 -%}
 
+{%- unless hide_empty_section -%}
 <div
   class="color-{{ section.settings.color_scheme }} isolate gradient"
 >
@@ -73,6 +81,9 @@
     data-id="{{ section.id }}"
   >
     <div class="collection__title title-wrapper title-wrapper--no-top-margin page-width{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% endif %}{% if show_desktop_slider %} collection__title--desktop-slider{% endif %}">
+      {%- if section.settings.overline != blank -%}
+        <p class="collection__overline">{{ section.settings.overline | escape }}</p>
+      {%- endif -%}
       {%- if section.settings.title != blank -%}
         <h2 class="title inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
           {{ section.settings.title }}
@@ -213,6 +224,20 @@
     {%- endif -%}
   </div>
 </div>
+{%- endunless -%}
+
+{% stylesheet %}
+.collection__overline {
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin: 0 0 0.4rem;
+  width: 100%;
+}
+{% endstylesheet %}
 
 {% schema %}
 {
@@ -240,7 +265,12 @@
     {
       "type": "header",
       "content": "t:sections.featured-collection.settings.header_text.content"
-    },   
+    },
+    {
+      "type": "text",
+      "id": "overline",
+      "label": "Overline (encima del título)"
+    },
     {
       "type": "inline_richtext",
       "id": "title",
