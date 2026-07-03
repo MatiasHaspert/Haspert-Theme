@@ -20,18 +20,22 @@
       "settings": {
         "show_collection_description": true,
         "show_collection_image": true,
+        "show_overline": true,
+        "overline": "Colección",
+        "show_count": true,
+        "count_suffix": "perfumes · originales importados",
         "color_scheme": "scheme-1"
       }
     },
     "collection-nav-bar": {
       "type": "collection-nav-bar",
       "blocks": {
-        "angle_jRMTTb": {
+        "angle_DWgVw7": {
           "type": "angle",
           "settings": {
-            "collection": "los-mas-elegidos",
+            "collection": "nicho",
             "label": "",
-            "image": "shopify://shop_images/edt-intense-2.webp",
+            "image": "shopify://shop_images/1002725.webp",
             "link": ""
           }
         },
@@ -53,12 +57,12 @@
             "link": ""
           }
         },
-        "angle_7KFRTx": {
+        "angle_ikALYc": {
           "type": "angle",
           "settings": {
-            "collection": "frescos-para-el-verano",
-            "label": "",
-            "image": "shopify://shop_images/nuit1.webp",
+            "collection": "perfumes-especiados-copia",
+            "label": "Masculinos",
+            "image": "shopify://shop_images/edt-intense-1.webp",
             "link": ""
           }
         },
@@ -71,23 +75,33 @@
             "link": ""
           }
         },
-        "angle_ikALYc": {
+        "angle_7KFRTx": {
           "type": "angle",
           "settings": {
-            "collection": "perfumes-especiados-copia",
-            "label": "Masculinos",
-            "image": "shopify://shop_images/edt-intense-1.webp",
+            "collection": "frescos-para-el-verano",
+            "label": "",
+            "image": "shopify://shop_images/nuit1.webp",
+            "link": ""
+          }
+        },
+        "angle_jRMTTb": {
+          "type": "angle",
+          "settings": {
+            "collection": "los-mas-elegidos",
+            "label": "",
+            "image": "shopify://shop_images/edt-intense-2.webp",
             "link": ""
           }
         }
       },
       "block_order": [
-        "angle_jRMTTb",
+        "angle_DWgVw7",
         "angle_7rgLFU",
         "angle_YQ4NpH",
-        "angle_7KFRTx",
+        "angle_ikALYc",
         "angle_YB3gDi",
-        "angle_ikALYc"
+        "angle_7KFRTx",
+        "angle_jRMTTb"
       ],
       "settings": {
         "aria_label": "Colecciones",
