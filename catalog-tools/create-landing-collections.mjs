@@ -119,6 +119,25 @@ const CREATE = `
   }
 `;
 
+// Publicaciones (canales de venta): una colección creada por API nace SIN publicar
+// (404 en el storefront) → tras crearla se publica a todos los canales, como el Admin.
+let publications = [];
+if (!DRY) {
+  try {
+    const p = await gql(`{ publications(first: 20) { nodes { id name } } }`);
+    publications = p.publications.nodes;
+  } catch (e) {
+    console.warn(`⚠️ No pude leer los canales de venta (¿scope read_publications?): ${e.message}`);
+    console.warn('   → publicá las colecciones nuevas a mano en Admin → Colecciones.');
+  }
+}
+
+const PUBLISH = `
+  mutation($id: ID!, $input: [PublicationInput!]!) {
+    publishablePublish(id: $id, input: $input) { userErrors { field message } }
+  }
+`;
+
 // Resuelve el modo (smart / smart-fallback / manual) + el ruleSet + el porqué.
 function resolve(c) {
   if (c.manual) return { mode: 'manual', ruleSet: null, why: c.reason };
@@ -159,7 +178,18 @@ for (const c of LANDING) {
   const data = await gql(CREATE, { input });
   const { collection, userErrors } = data.collectionCreate;
   if (collection) {
-    console.log(`  ✓ ${TAG[mode]} ${collection.title} {${collection.handle}}`);
+    let pubNote = '';
+    if (publications.length) {
+      const pub = await gql(PUBLISH, {
+        id: collection.id,
+        input: publications.map((p) => ({ publicationId: p.id })),
+      });
+      const pubErrs = pub.publishablePublish.userErrors;
+      pubNote = pubErrs.length
+        ? ` · ⚠️ sin publicar: ${JSON.stringify(pubErrs)}`
+        : ` · publicada (${publications.length} canales)`;
+    }
+    console.log(`  ✓ ${TAG[mode]} ${collection.title} {${collection.handle}}${pubNote}`);
     created++;
   } else {
     console.error(`  ✗ ${c.title}:`, JSON.stringify(userErrors));
