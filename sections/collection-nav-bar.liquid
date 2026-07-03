@@ -1,10 +1,17 @@
 {%- comment -%}
   Barra de ángulos curatoriales (NUMEN) — sub-navegación por colección.
   Fila horizontal scrolleable de chips (imagen circular + label). Editable por
-  blocks: cada block = colección + (imagen opcional) + (label opcional). Va entre
-  el banner y los controles de la grilla. El chip de la colección actual se
-  resalta. No duplica los filtros (esos van en el drawer): acá van ÁNGULOS
-  (Más elegidos, Para la noche, Frescos, Regalos…), no casas/familias.
+  blocks: cada block = colección + (imagen opcional) + (label opcional). El chip
+  de la colección actual se resalta. No duplica los filtros (esos van en el
+  drawer): acá van ÁNGULOS (Más elegidos, Para la noche, Frescos, Regalos…),
+  no casas/familias.
+
+  ⚠ MULTI-INSTANCIA: vive en la PLP (templates/collection.json) y en la home
+  (templates/index.json). Cualquier cambio acá impacta ambas.
+
+  Colecciones vacías: con "hide_empty_collections" activo (default), un chip
+  cuya colección tiene 0 productos no se renderiza (mismo criterio que el menú
+  drawer). Si ningún chip queda visible, la sección no emite nada.
 
   Fallback de imagen: block.image → collection.image → monograma (1ª letra).
 {%- endcomment -%}
@@ -24,56 +31,74 @@
   }
 {%- endstyle -%}
 
-{%- if section.blocks.size > 0 -%}
+{%- capture collnav_items -%}
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign col = block.settings.collection
+      assign label = block.settings.label
+      if label == blank
+        assign label = col.title
+      endif
+      assign url = col.url | default: block.settings.link
+      assign img = block.settings.image
+      if img == blank
+        assign img = col.image
+      endif
+      assign is_active = false
+      if col.id and collection.id and col.id == collection.id
+        assign is_active = true
+      endif
+
+      # Degradar con dignidad: sin colección (inexistente o sin elegir) y sin
+      # link alternativo, el chip no tiene destino → no se renderiza en la
+      # tienda (en el editor sí, para poder configurarlo). Colección asignada
+      # pero vacía → se oculta si el setting está activo.
+      assign skip_block = false
+      if col == blank and block.settings.link == blank and request.design_mode != true
+        assign skip_block = true
+      endif
+      if section.settings.hide_empty_collections and col != blank and col.products_count == 0
+        assign skip_block = true
+      endif
+    -%}
+    {%- unless skip_block -%}
+      <li class="collnav__item" {{ block.shopify_attributes }}>
+        <a
+          class="collnav__link{% if is_active %} is-active{% endif %}"
+          href="{{ url | default: '#' }}"
+          {% if is_active %}aria-current="page"{% endif %}
+          data-angle="{{ label | escape }}"
+          data-collection="{{ col.handle }}"
+        >
+          <span class="collnav__thumb">
+            {%- if img != blank -%}
+              <img
+                src="{{ img | image_url: width: 120 }}"
+                srcset="{{ img | image_url: width: 60 }} 60w, {{ img | image_url: width: 120 }} 120w"
+                sizes="5.6rem"
+                width="56"
+                height="56"
+                alt=""
+                loading="lazy"
+              >
+            {%- else -%}
+              <span class="collnav__monogram" aria-hidden="true">{{ label | slice: 0 | upcase }}</span>
+            {%- endif -%}
+          </span>
+          <span class="collnav__label">{{ label | escape }}</span>
+        </a>
+      </li>
+    {%- endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if collnav_items != blank -%}
   <nav
     class="collnav color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding"
     aria-label="{{ section.settings.aria_label | escape }}"
   >
     <ul class="collnav__track" role="list">
-      {%- for block in section.blocks -%}
-        {%- liquid
-          assign col = block.settings.collection
-          assign label = block.settings.label
-          if label == blank
-            assign label = col.title
-          endif
-          assign url = col.url | default: block.settings.link
-          assign img = block.settings.image
-          if img == blank
-            assign img = col.image
-          endif
-          assign is_active = false
-          if col.id and collection.id and col.id == collection.id
-            assign is_active = true
-          endif
-        -%}
-        <li class="collnav__item" {{ block.shopify_attributes }}>
-          <a
-            class="collnav__link{% if is_active %} is-active{% endif %}"
-            href="{{ url | default: '#' }}"
-            {% if is_active %}aria-current="page"{% endif %}
-            data-angle="{{ label | escape }}"
-            data-collection="{{ col.handle }}"
-          >
-            <span class="collnav__thumb">
-              {%- if img != blank -%}
-                <img
-                  src="{{ img | image_url: width: 120 }}"
-                  srcset="{{ img | image_url: width: 60 }} 60w, {{ img | image_url: width: 120 }} 120w"
-                  sizes="5.6rem"
-                  width="56"
-                  height="56"
-                  alt=""
-                  loading="lazy"
-                >
-              {%- else -%}
-                <span class="collnav__monogram" aria-hidden="true">{{ label | slice: 0 | upcase }}</span>
-              {%- endif -%}
-            </span>
-            <span class="collnav__label">{{ label | escape }}</span>
-          </a>
-        </li>
-      {%- endfor -%}
+      {{ collnav_items }}
     </ul>
   </nav>
 {%- endif -%}
@@ -94,6 +119,13 @@
       "id": "aria_label",
       "label": "Etiqueta accesible (aria-label)",
       "default": "Colecciones"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_empty_collections",
+      "label": "Ocultar colecciones vacías",
+      "info": "Un chip cuya colección tiene 0 productos no se muestra (evita clics a páginas vacías).",
+      "default": true
     },
     {
       "type": "color_scheme",
