@@ -9,18 +9,258 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "main-list-collections",
+    "breadcrumbs": {
+      "type": "breadcrumbs",
       "settings": {
-        "title": "Collections",
-        "sort": "alphabetical",
-        "image_ratio": "square",
-        "columns_desktop": 3,
-        "columns_mobile": "2"
+        "home_label": "Inicio"
+      }
+    },
+    "header": {
+      "type": "collections-index-header",
+      "settings": {
+        "title": "Colecciones",
+        "subtitle": "Entrá por marca, por momento de uso o directo por estilo."
+      }
+    },
+    "group_marca": {
+      "type": "collections-group",
+      "blocks": {
+        "marca_armaf": {
+          "type": "collection",
+          "settings": {
+            "collection": "armaf"
+          }
+        },
+        "marca_azzaro": {
+          "type": "collection",
+          "settings": {
+            "collection": "azzaro"
+          }
+        },
+        "marca_dior": {
+          "type": "collection",
+          "settings": {
+            "collection": "dior"
+          }
+        },
+        "marca_lattafa": {
+          "type": "collection",
+          "settings": {
+            "collection": "lattafa"
+          }
+        }
+      },
+      "block_order": [
+        "marca_armaf",
+        "marca_azzaro",
+        "marca_dior",
+        "marca_lattafa"
+      ],
+      "settings": {
+        "eyebrow": "Por marca",
+        "card_style": "marca",
+        "hide_empty": true
+      }
+    },
+    "group_genero": {
+      "type": "collections-group",
+      "blocks": {
+        "occ_masculinos": {
+          "type": "collection",
+          "settings": {
+            "collection": "perfumes-masculinos",
+            "label": "Masculinos"
+          }
+        },
+        "occ_femeninos": {
+          "type": "collection",
+          "settings": {
+            "collection": "perfumes-femeninos",
+            "label": "Femeninos"
+          }
+        },
+        "occ_unisex": {
+          "type": "collection",
+          "settings": {
+            "collection": "perfumes-unisex",
+            "label": "Unisex"
+          }
+        },
+        "occ_noche": {
+          "type": "collection",
+          "settings": {
+            "collection": "para-la-noche"
+          }
+        },
+        "occ_frescos": {
+          "type": "collection",
+          "settings": {
+            "collection": "frescos-para-el-verano"
+          }
+        },
+        "occ_rinden": {
+          "type": "collection",
+          "settings": {
+            "collection": "rinden-todo-el-dia"
+          }
+        },
+        "occ_regalar": {
+          "type": "collection",
+          "settings": {
+            "collection": "para-regalar"
+          }
+        },
+        "occ_elegidos": {
+          "type": "collection",
+          "settings": {
+            "collection": "los-mas-elegidos"
+          }
+        },
+        "occ_decants": {
+          "type": "collection",
+          "settings": {
+            "collection": "arranca-con-decants",
+            "label": "Probá con decants",
+            "wide": true
+          }
+        },
+        "occ_alternativas": {
+          "type": "collection",
+          "settings": {
+            "collection": "alternativas-a-los-clasicos",
+            "wide": true
+          }
+        }
+      },
+      "block_order": [
+        "occ_masculinos",
+        "occ_femeninos",
+        "occ_unisex",
+        "occ_noche",
+        "occ_frescos",
+        "occ_rinden",
+        "occ_regalar",
+        "occ_elegidos",
+        "occ_decants",
+        "occ_alternativas"
+      ],
+      "settings": {
+        "eyebrow": "Por género y ocasión",
+        "card_style": "genero_ocasion",
+        "hide_empty": true
+      }
+    },
+    "group_estilo": {
+      "type": "collections-group",
+      "blocks": {
+        "estilo_arabes": {
+          "type": "collection",
+          "settings": {
+            "collection": "arabes",
+            "description": "Dulces, especiados, intensos. La entrada con más carácter."
+          }
+        },
+        "estilo_disenador": {
+          "type": "collection",
+          "settings": {
+            "collection": "disenador",
+            "description": "Los clásicos de siempre, originales y al mejor precio."
+          }
+        },
+        "estilo_nicho": {
+          "type": "collection",
+          "settings": {
+            "collection": "nicho",
+            "description": "Autorales, poco vistos. Para no cruzarte con tu perfume."
+          }
+        }
+      },
+      "block_order": [
+        "estilo_arabes",
+        "estilo_disenador",
+        "estilo_nicho"
+      ],
+      "settings": {
+        "eyebrow": "Por estilo",
+        "card_style": "estilo",
+        "hide_empty": true
+      }
+    },
+    "group_familia": {
+      "type": "collections-group",
+      "blocks": {
+        "fam_amaderado": {
+          "type": "collection",
+          "settings": {
+            "collection": "perfumes-amaderados",
+            "label": "Amaderado"
+          }
+        },
+        "fam_aromatico": {
+          "type": "collection",
+          "settings": {
+            "collection": "perfumes-aromatico",
+            "label": "Aromático"
+          }
+        },
+        "fam_oriental": {
+          "type": "collection",
+          "settings": {
+            "collection": "perfumes-oriental-ambar",
+            "label": "Oriental/Ámbar"
+          }
+        },
+        "fam_floral": {
+          "type": "collection",
+          "settings": {
+            "collection": "perfumes-floral",
+            "label": "Floral"
+          }
+        },
+        "fam_gourmand": {
+          "type": "collection",
+          "settings": {
+            "collection": "perfumes-dulce-gourmand",
+            "label": "Dulce/Gourmand"
+          }
+        },
+        "fam_especiado": {
+          "type": "collection",
+          "settings": {
+            "collection": "perfumes-especiados",
+            "label": "Especiado"
+          }
+        }
+      },
+      "block_order": [
+        "fam_amaderado",
+        "fam_aromatico",
+        "fam_oriental",
+        "fam_floral",
+        "fam_gourmand",
+        "fam_especiado"
+      ],
+      "settings": {
+        "eyebrow": "Por familia olfativa",
+        "card_style": "familia",
+        "hide_empty": true
+      }
+    },
+    "cta": {
+      "type": "collections-index-cta",
+      "settings": {
+        "collection": "perfumes",
+        "label": "Ver todos los perfumes"
       }
     }
   },
   "order": [
-    "main"
+    "breadcrumbs",
+    "header",
+    "group_marca",
+    "group_genero",
+    "group_estilo",
+    "group_familia",
+    "cta"
   ]
 }
