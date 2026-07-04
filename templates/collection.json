@@ -60,7 +60,7 @@
         "angle_ikALYc": {
           "type": "angle",
           "settings": {
-            "collection": "perfumes-especiados-copia",
+            "collection": "perfumes-masculinos",
             "label": "Masculinos",
             "image": "shopify://shop_images/edt-intense-1.webp",
             "link": ""
