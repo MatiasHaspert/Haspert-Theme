@@ -298,6 +298,14 @@
     }
   },
   "sections": {
+    "collections_index": {
+      "count": {
+        "one": "{{ count }} perfume",
+        "other": "{{ count }} perfumes",
+        "many": "{{ count }} perfumes"
+      },
+      "explore": "Explorar"
+    },
     "header": {
       "announcement": "Anuncio",
       "menu": "Menú",

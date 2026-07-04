@@ -289,6 +289,13 @@
     }
   },
   "sections": {
+    "collections_index": {
+      "count": {
+        "one": "{{ count }} perfume",
+        "other": "{{ count }} perfumes"
+      },
+      "explore": "Explore"
+    },
     "announcements": {
       "previous_announcement": "Previous announcement",
       "next_announcement": "Next announcement",

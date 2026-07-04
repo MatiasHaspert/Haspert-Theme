@@ -1,0 +1,172 @@
+{%- comment -%}
+  Índice /collections — grupo de colecciones (NUMEN). Reusable: un grupo =
+  eyebrow (h2 con hairline) + grilla de cards según card_style:
+    marca          → 2 col; monograma (1ª letra) + nombre Bebas + contador + flecha
+    genero_ocasion → 2 col crema; label + número pelado (modificador "wide")
+    estilo         → columna; card grande con watermark tipográfico + descripción
+    familia        → chips pill; label + número chico muteado
+
+  Gating (mismo criterio que collection-nav-bar): colección sin elegir o
+  inexistente → la card no se renderiza; con "hide_empty" (default), tampoco
+  las colecciones con 0 productos. Se usa all_products_count (total real de
+  la colección, no products_count que depende de la vista/filtros). Si ningún
+  block sobrevive, la sección entera no emite nada (ni el eyebrow): al cargar
+  productos, las cards aparecen solas sin tocar nada.
+
+  Fuente visual: numen-collections-mockup.html.
+{%- endcomment -%}
+{{ 'component-collections-index.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  case section.settings.card_style
+    when 'genero_ocasion'
+      assign wrap_class = 'ci-occ'
+    when 'estilo'
+      assign wrap_class = 'ci-styles'
+    when 'familia'
+      assign wrap_class = 'ci-fams'
+    else
+      assign wrap_class = 'ci-brands'
+  endcase
+-%}
+
+{%- capture ci_cards -%}
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign c = block.settings.collection
+      assign skip_block = false
+      if c == blank
+        assign skip_block = true
+      elsif section.settings.hide_empty and c.all_products_count == 0
+        assign skip_block = true
+      endif
+      assign label = block.settings.label | default: c.title
+    -%}
+    {%- unless skip_block -%}
+      {%- case section.settings.card_style -%}
+        {%- when 'marca' -%}
+          <a class="ci-brand" href="{{ c.url }}" {{ block.shopify_attributes }}>
+            <span class="ci-brand__mono" aria-hidden="true">{{ label | slice: 0 | upcase }}</span>
+            <span class="ci-brand__body">
+              <span class="ci-brand__name">{{ label | escape }}</span>
+              <span class="ci-brand__count">{{ 'sections.collections_index.count' | t: count: c.all_products_count }}</span>
+            </span>
+            <svg class="ci-brand__arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 3.5L13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        {%- when 'genero_ocasion' -%}
+          <a class="ci-ocard{% if block.settings.wide %} ci-ocard--wide{% endif %}" href="{{ c.url }}" {{ block.shopify_attributes }}>
+            <span class="ci-ocard__name">{{ label | escape }}</span>
+            <span class="ci-ocard__count" aria-hidden="true">{{ c.all_products_count }}</span>
+            <span class="visually-hidden">{{ 'sections.collections_index.count' | t: count: c.all_products_count }}</span>
+          </a>
+        {%- when 'estilo' -%}
+          <a class="ci-scard" href="{{ c.url }}" {{ block.shopify_attributes }}>
+            <span class="ci-scard__wm" aria-hidden="true">{{ label | slice: 0 | upcase }}</span>
+            <h3 class="ci-scard__title">{{ label | escape }}</h3>
+            {%- if block.settings.description != blank -%}
+              <p class="ci-scard__desc">{{ block.settings.description | escape }}</p>
+            {%- endif -%}
+            <span class="ci-scard__foot">
+              <span class="ci-scard__count">{{ 'sections.collections_index.count' | t: count: c.all_products_count }}</span>
+              <span class="ci-scard__cta">{{ 'sections.collections_index.explore' | t }}<svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 3.5L13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </span>
+          </a>
+        {%- when 'familia' -%}
+          <a class="ci-chip" href="{{ c.url }}" {{ block.shopify_attributes }}>
+            {{- label | escape -}}
+            <small aria-hidden="true">{{ c.all_products_count }}</small>
+            <span class="visually-hidden">{{ 'sections.collections_index.count' | t: count: c.all_products_count }}</span>
+          </a>
+      {%- endcase -%}
+    {%- endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if ci_cards != blank -%}
+  <div class="page-width ci-group">
+    {%- if section.settings.eyebrow != blank -%}
+      <h2 class="ci-eyebrow"><span>{{ section.settings.eyebrow | escape }}</span></h2>
+    {%- endif -%}
+    <div class="{{ wrap_class }}">
+      {{ ci_cards }}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Índice colecciones: grupo",
+  "tag": "section",
+  "class": "section-ci-group",
+  "max_blocks": 16,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Título del grupo (eyebrow)"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "Estilo de card",
+      "options": [
+        { "value": "marca", "label": "Marca (monograma + contador)" },
+        { "value": "genero_ocasion", "label": "Género y ocasión (card crema)" },
+        { "value": "estilo", "label": "Estilo (card grande con watermark)" },
+        { "value": "familia", "label": "Familia olfativa (chips)" }
+      ],
+      "default": "marca"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_empty",
+      "label": "Ocultar colecciones vacías",
+      "info": "Oculta colecciones sin productos para no linkear a páginas vacías.",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Colección",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Colección"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "info": "Si se deja vacío, usa el nombre de la colección."
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Descripción",
+          "info": "Solo la usa el estilo \"Estilo\" (la línea bajo el título grande)."
+        },
+        {
+          "type": "checkbox",
+          "id": "wide",
+          "label": "Card ancha (2 columnas)",
+          "info": "Solo la usa \"Género y ocasión\": para nombres largos.",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Índice colecciones: grupo",
+      "blocks": [
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" }
+      ]
+    }
+  ]
+}
+{% endschema %}

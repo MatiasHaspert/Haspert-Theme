@@ -1,0 +1,446 @@
+/*
+  Índice curado /collections (NUMEN) — fuente visual: numen-collections-mockup.html.
+  Sirve a: collections-index-header / collections-group / collections-index-cta.
+
+  Consume los tokens canónicos --nc-* de base.css :root (no los redefine).
+  Los literales que quedan (bordes/fondos de hover, sombras de reposo) son
+  únicos de esta superficie y no tienen token equivalente.
+
+  El mockup es mobile (412px); las media queries ≥750px son la extensión
+  desktop: mismas cards, columnas fluidas y CTA con ancho acotado.
+*/
+
+/* ————————————————————— Header de página ————————————————————— */
+.ci-head {
+  padding-top: 1rem;
+  padding-bottom: 0.4rem;
+}
+
+.ci-title {
+  margin: 0;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 3.8rem;
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  color: var(--nc-ink);
+}
+
+.ci-sub {
+  margin: 0.7rem 0 0;
+  font-family: var(--font-accent, var(--font-body-family));
+  font-style: italic;
+  font-weight: var(--font-accent-weight, 500);
+  font-size: 1.4rem;
+  line-height: 1.45;
+  color: var(--nc-ink-2);
+}
+
+/* ————————————————————— Grupo: shell + eyebrow ————————————————————— */
+.ci-group {
+  margin-top: 2.6rem;
+}
+
+.ci-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 1.2rem;
+}
+
+.ci-eyebrow span {
+  font-family: var(--font-body-family);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--nc-ink-2);
+  white-space: nowrap;
+}
+
+.ci-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--nc-line-soft);
+}
+
+/* ————————————————————— Por marca ————————————————————— */
+.ci-brands {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.ci-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: var(--nc-surface);
+  border: 1px solid var(--nc-line);
+  border-radius: 1.2rem;
+  text-decoration: none;
+  transition:
+    border-color var(--nc-dur-select) var(--nc-ease-out),
+    box-shadow var(--nc-dur-select) var(--nc-ease-out),
+    transform var(--nc-dur-tap) var(--nc-ease-out);
+}
+
+.ci-brand:active {
+  transform: scale(0.98);
+}
+
+.ci-brand__mono {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 0.9rem;
+  background: var(--nc-soft-bg);
+  border: 1px solid var(--nc-soft-line);
+  font-family: var(--nc-font-display);
+  font-size: 1.7rem;
+  color: var(--nc-terra-deep);
+}
+
+.ci-brand__body {
+  min-width: 0;
+}
+
+.ci-brand__name {
+  display: block;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 1.7rem;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  color: var(--nc-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ci-brand__count {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 1.05rem;
+  color: var(--nc-ink-3);
+}
+
+.ci-brand__arrow {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--nc-ink-3);
+  transition:
+    transform var(--nc-dur-tap) var(--nc-ease-out),
+    color var(--nc-dur-tap) var(--nc-ease-out);
+}
+
+/* ————————————————————— Por género y ocasión ————————————————————— */
+.ci-occ {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.ci-ocard {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 1.3rem;
+  background: var(--nc-cream);
+  border: 1px solid var(--nc-soft-line);
+  border-radius: 1.2rem;
+  text-decoration: none;
+  transition:
+    background var(--nc-dur-select) var(--nc-ease-out),
+    border-color var(--nc-dur-select) var(--nc-ease-out),
+    transform var(--nc-dur-tap) var(--nc-ease-out);
+}
+
+.ci-ocard:active {
+  transform: scale(0.98);
+}
+
+.ci-ocard__name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--nc-ink);
+}
+
+.ci-ocard__count {
+  font-size: 1.05rem;
+  color: var(--nc-ink-3);
+  white-space: nowrap;
+}
+
+/* Card ancha: nombres largos. En la grilla mobile (2 col) = fila completa;
+   en desktop (columnas fluidas) = doble columna. */
+.ci-ocard--wide {
+  grid-column: span 2;
+}
+
+/* ————————————————————— Por estilo (las casas) ————————————————————— */
+.ci-styles {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ci-scard {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  padding: 1.8rem 1.6rem 1.6rem;
+  background: var(--nc-surface);
+  border: 1px solid var(--nc-line);
+  border-radius: 1.4rem;
+  text-decoration: none;
+  transition:
+    border-color var(--nc-dur-select) var(--nc-ease-out),
+    box-shadow var(--nc-dur-select) var(--nc-ease-out),
+    transform var(--nc-dur-tap) var(--nc-ease-out);
+}
+
+.ci-scard:active {
+  transform: scale(0.99);
+}
+
+.ci-scard__wm {
+  position: absolute;
+  top: -1.4rem;
+  right: -0.6rem;
+  font-family: var(--nc-font-display);
+  font-size: 9.6rem;
+  line-height: 1;
+  color: var(--nc-line-soft);
+  user-select: none;
+  pointer-events: none;
+}
+
+.ci-scard__title {
+  position: relative;
+  margin: 0;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 2.7rem;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  color: var(--nc-ink);
+}
+
+.ci-scard__desc {
+  position: relative;
+  margin: 0.6rem 0 0;
+  max-width: 34ch;
+  font-size: 1.25rem;
+  line-height: 1.45;
+  color: var(--nc-ink-2);
+}
+
+.ci-scard__foot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.ci-scard__count {
+  font-size: 1.05rem;
+  color: var(--nc-ink-3);
+}
+
+.ci-scard__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--nc-ink-2);
+  transition: color var(--nc-dur-tap) var(--nc-ease-out);
+}
+
+.ci-scard__cta svg {
+  transition: transform var(--nc-dur-tap) var(--nc-ease-out);
+}
+
+/* ————————————————————— Por familia olfativa (chips) ————————————————————— */
+.ci-fams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.ci-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.8rem 1.3rem;
+  background: var(--nc-surface);
+  border: 1px solid var(--nc-line);
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--nc-ink);
+  transition:
+    border-color var(--nc-dur-tap) var(--nc-ease-out),
+    background var(--nc-dur-tap) var(--nc-ease-out),
+    transform var(--nc-dur-tap) var(--nc-ease-out);
+}
+
+.ci-chip:active {
+  transform: scale(0.96);
+}
+
+.ci-chip small {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--nc-ink-3);
+}
+
+/* ————————————————————— CTA "Ver todos" ————————————————————— */
+.ci-all {
+  margin-top: 2.8rem;
+}
+
+.ci-all__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  width: 100%;
+  min-height: 5.2rem;
+  background: var(--nc-terra);
+  color: #fff;
+  border: none;
+  border-radius: 1.2rem;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: 1.9rem;
+  letter-spacing: 0.06em;
+  box-shadow: var(--nc-shadow-btn);
+  transition:
+    background var(--nc-dur-tap) var(--nc-ease-out),
+    transform var(--nc-dur-tap) var(--nc-ease-out),
+    box-shadow var(--nc-dur-tap) var(--nc-ease-out);
+}
+
+.ci-all__btn:active {
+  transform: scale(0.985);
+}
+
+.ci-all__sep {
+  width: 1px;
+  height: 1.8rem;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.ci-all__count {
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+}
+
+/* ————————————————————— Hover (gateado) y foco ————————————————————— */
+@media (hover: hover) and (pointer: fine) {
+  .ci-brand:hover {
+    border-color: #d6cdbc;
+    box-shadow: 0 8px 22px rgba(111, 88, 72, 0.1);
+  }
+
+  .ci-brand:hover .ci-brand__arrow {
+    transform: translateX(3px);
+    color: var(--nc-terra-deep);
+  }
+
+  .ci-ocard:hover {
+    background: #fbf6e8;
+    border-color: #decfa8;
+  }
+
+  .ci-scard:hover {
+    border-color: #d6cdbc;
+    box-shadow: 0 10px 26px rgba(111, 88, 72, 0.1);
+  }
+
+  .ci-scard:hover .ci-scard__cta {
+    color: var(--nc-terra-deep);
+  }
+
+  .ci-scard:hover .ci-scard__cta svg {
+    transform: translateX(3px);
+  }
+
+  .ci-chip:hover {
+    border-color: var(--nc-terra);
+    background: #fdfcf9;
+  }
+
+  .ci-all__btn:hover {
+    background: #9e4e33;
+    box-shadow: 0 12px 30px rgba(146, 67, 41, 0.3);
+  }
+}
+
+.ci-brand:focus-visible,
+.ci-ocard:focus-visible,
+.ci-scard:focus-visible,
+.ci-chip:focus-visible,
+.ci-all__btn:focus-visible {
+  outline: 0.2rem solid var(--nc-terra);
+  outline-offset: 0.2rem;
+}
+
+/* ————————————————————— Desktop ————————————————————— */
+@media screen and (min-width: 750px) {
+  .ci-brands,
+  .ci-occ {
+    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+  }
+
+  .ci-all {
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .ci-styles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ————————————————————— Reduced motion ————————————————————— */
+@media (prefers-reduced-motion: reduce) {
+  .ci-brand,
+  .ci-ocard,
+  .ci-scard,
+  .ci-chip,
+  .ci-all__btn,
+  .ci-brand__arrow,
+  .ci-scard__cta,
+  .ci-scard__cta svg {
+    transition: none;
+  }
+
+  .ci-brand:active,
+  .ci-ocard:active,
+  .ci-scard:active,
+  .ci-chip:active,
+  .ci-all__btn:active,
+  .ci-brand:hover .ci-brand__arrow,
+  .ci-scard:hover .ci-scard__cta svg {
+    transform: none;
+  }
+}

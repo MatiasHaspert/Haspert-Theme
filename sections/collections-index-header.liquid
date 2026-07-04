@@ -1,0 +1,40 @@
+{%- comment -%}
+  Índice /collections — header de página (NUMEN).
+  h1 único de la página (los eyebrows de grupo son h2) + subtítulo en el
+  acento editorial: Montserrat itálica 500, con font-style y font-weight
+  explícitos en .ci-sub (regla CLAUDE.md).
+  Fuente visual: numen-collections-mockup.html.
+{%- endcomment -%}
+{{ 'component-collections-index.css' | asset_url | stylesheet_tag }}
+
+<div class="page-width ci-head">
+  <h1 class="ci-title">{{ section.settings.title }}</h1>
+  {%- if section.settings.subtitle != blank -%}
+    <p class="ci-sub">{{ section.settings.subtitle | escape }}</p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Índice colecciones: header",
+  "tag": "section",
+  "class": "section-ci-header",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Título",
+      "default": "Colecciones"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Entrá por marca, por momento de uso o directo por estilo."
+    }
+  ],
+  "presets": [
+    { "name": "Índice colecciones: header" }
+  ]
+}
+{% endschema %}

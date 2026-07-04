@@ -1,0 +1,44 @@
+{%- comment -%}
+  Índice /collections — CTA final "Ver todos los perfumes" (NUMEN).
+  Botón terracota full-width: label + separador + total de productos
+  (patrón visual del CTA del carrito). Colección sin elegir o vacía → no
+  renderiza. Fuente visual: numen-collections-mockup.html.
+{%- endcomment -%}
+{{ 'component-collections-index.css' | asset_url | stylesheet_tag }}
+
+{%- assign c = section.settings.collection -%}
+{%- if c != blank and c.all_products_count > 0 -%}
+  <div class="page-width ci-all">
+    <a class="ci-all__btn" href="{{ c.url }}">
+      <span>{{ section.settings.label | escape }}</span>
+      <span class="ci-all__sep" aria-hidden="true"></span>
+      <span class="ci-all__count" aria-hidden="true">{{ c.all_products_count }}</span>
+      <span class="visually-hidden">{{ 'sections.collections_index.count' | t: count: c.all_products_count }}</span>
+    </a>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Índice colecciones: CTA",
+  "tag": "section",
+  "class": "section-ci-cta",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Colección",
+      "info": "La colección \"todo el catálogo\" a la que apunta el botón."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Texto del botón",
+      "default": "Ver todos los perfumes"
+    }
+  ],
+  "presets": [
+    { "name": "Índice colecciones: CTA" }
+  ]
+}
+{% endschema %}
