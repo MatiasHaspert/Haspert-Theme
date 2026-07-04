@@ -1,14 +1,46 @@
 {%- comment -%}
   Breadcrumbs + BreadcrumbList structured data (SEO).
-  Soporta colección, producto y página. En home/otros no renderiza.
+  Cuatro casos (fuente visual: numen-collections-mockup.html, panel spec):
+    /collections (índice) → Inicio / Colecciones (actual)
+    colección             → Inicio / Colecciones (link al índice) / Título
+    producto              → Inicio / Colección / Título (3 niveles, SIN "Colecciones":
+                            en mobile 4 niveles no entran). La colección intermedia:
+                            contexto de navegación primero (/collections/x/products/y);
+                            si se llegó por URL directa, prioridad por handle del setting
+                            (las Casas: arabes,disenador,nicho); último recurso, la primera.
+    página                → Inicio / Título
+  En home/otros no renderiza. El JSON-LD refleja exactamente lo visible.
 {%- endcomment -%}
 {%- liquid
   assign t = template.name
   assign render_bc = false
-  if t == 'collection' or t == 'product' or t == 'page'
+  if t == 'collection' or t == 'product' or t == 'page' or t == 'list-collections'
     assign render_bc = true
   endif
   assign home_label = section.settings.home_label | default: 'Inicio'
+  assign collections_label = section.settings.collections_label | default: 'Colecciones'
+
+  assign bc_col = false
+  if t == 'product'
+    if collection.url
+      assign bc_col = collection
+    else
+      assign priority_handles = section.settings.priority_handles | default: '' | replace: ' ', '' | split: ','
+      for h in priority_handles
+        if bc_col == false
+          for pc in product.collections
+            if pc.handle == h
+              assign bc_col = pc
+              break
+            endif
+          endfor
+        endif
+      endfor
+      if bc_col == false and product.collections.first
+        assign bc_col = product.collections.first
+      endif
+    endif
+  endif
 -%}
 {%- if render_bc -%}
   <nav class="breadcrumb page-width" aria-label="breadcrumb" role="navigation">
@@ -16,13 +48,14 @@
       <li class="breadcrumb__item">
         <a href="{{ routes.root_url }}">{{ home_label }}</a>
       </li>
-      {%- if t == 'collection' -%}
+      {%- if t == 'list-collections' -%}
+        <li class="breadcrumb__item" aria-current="page"><span>{{ collections_label }}</span></li>
+      {%- elsif t == 'collection' -%}
+        <li class="breadcrumb__item"><a href="{{ routes.collections_url }}">{{ collections_label }}</a></li>
         <li class="breadcrumb__item" aria-current="page"><span>{{ collection.title }}</span></li>
       {%- elsif t == 'product' -%}
-        {%- if collection.url -%}
-          <li class="breadcrumb__item"><a href="{{ collection.url }}">{{ collection.title }}</a></li>
-        {%- elsif product.collections.first -%}
-          <li class="breadcrumb__item"><a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a></li>
+        {%- if bc_col -%}
+          <li class="breadcrumb__item"><a href="{{ bc_col.url }}">{{ bc_col.title }}</a></li>
         {%- endif -%}
         <li class="breadcrumb__item" aria-current="page"><span>{{ product.title }}</span></li>
       {%- elsif t == 'page' -%}
@@ -37,14 +70,14 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": {{ home_label | json }}, "item": {{ shop.url | append: routes.root_url | json }} }
-    {%- if t == 'collection' -%}
-    , { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ shop.url | append: collection.url | json }} }
+    {%- if t == 'list-collections' -%}
+    , { "@type": "ListItem", "position": 2, "name": {{ collections_label | json }}, "item": {{ shop.url | append: routes.collections_url | json }} }
+    {%- elsif t == 'collection' -%}
+    , { "@type": "ListItem", "position": 2, "name": {{ collections_label | json }}, "item": {{ shop.url | append: routes.collections_url | json }} }
+    , { "@type": "ListItem", "position": 3, "name": {{ collection.title | json }}, "item": {{ shop.url | append: collection.url | json }} }
     {%- elsif t == 'product' -%}
-      {%- if collection.url -%}
-    , { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ shop.url | append: collection.url | json }} }
-    , { "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
-      {%- elsif product.collections.first -%}
-    , { "@type": "ListItem", "position": 2, "name": {{ product.collections.first.title | json }}, "item": {{ shop.url | append: product.collections.first.url | json }} }
+      {%- if bc_col -%}
+    , { "@type": "ListItem", "position": 2, "name": {{ bc_col.title | json }}, "item": {{ shop.url | append: bc_col.url | json }} }
     , { "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
       {%- else -%}
     , { "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
@@ -67,32 +100,47 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: 1.3rem;
+  font-family: var(--font-body-family);
+  font-size: 1.15rem;
+  letter-spacing: 0.01em;
+  color: var(--nc-ink-3);
 }
 .breadcrumb__item {
   display: flex;
   align-items: center;
-  opacity: 0.75;
+  min-width: 0;
 }
 .breadcrumb__item:not(:last-child)::after {
   content: '/';
-  margin-left: 0.5rem;
-  opacity: 0.5;
+  margin-left: 0.6rem;
+  color: var(--nc-line);
+  user-select: none;
 }
 .breadcrumb__item a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
+  transition: color var(--nc-dur-tap) var(--nc-ease-out);
 }
-.breadcrumb__item a:hover {
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumb__item a:hover {
+    color: var(--nc-terra-deep);
+  }
 }
-.breadcrumb__item[aria-current='page'] {
-  opacity: 1;
+.breadcrumb__item[aria-current='page'] span {
+  color: var(--nc-ink);
   font-weight: 500;
+}
+@media screen and (max-width: 749px) {
+  .breadcrumb__item[aria-current='page'] span {
+    max-width: 19ch;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 {% endstylesheet %}
 
@@ -107,6 +155,19 @@
       "id": "home_label",
       "label": "Etiqueta de inicio",
       "default": "Inicio"
+    },
+    {
+      "type": "text",
+      "id": "collections_label",
+      "label": "Etiqueta del índice de colecciones",
+      "default": "Colecciones"
+    },
+    {
+      "type": "text",
+      "id": "priority_handles",
+      "label": "Colecciones prioritarias (handles)",
+      "info": "Handles de colección que el breadcrumb prefiere para el nivel intermedio del producto, en orden y separados por coma. Se usan cuando el producto se abre por URL directa (sin contexto de colección).",
+      "default": "arabes,disenador,nicho"
     }
   ],
   "presets": [
