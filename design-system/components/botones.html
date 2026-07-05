@@ -9,34 +9,34 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@1,9..144,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box}
-  body{margin:0;background:#F4F2ED;color:#1C1814;font-family:'Montserrat',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:32px}
-  :focus-visible{outline:2px solid #B25A3C;outline-offset:2px}
+  body{margin:0;background:#F7F8F9;color:#14161A;font-family:'Montserrat',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:32px}
+  :focus-visible{outline:2px solid #1E34A8;outline-offset:2px}
   button{transition:background .16s ease-out, transform .12s ease-out, border-color .16s ease-out}
   button:active{transform:scale(.98)}
   @media (hover:hover){ button:hover{transform:translateY(-1px)} }
   @media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition:none!important}}
   /* hover states convertidos desde style-hover (no requiere support.js) */
-  .btn-primary:hover{background:#322B24}
-  .btn-ver-catalogo:hover{background:#E0DBD0}
-  .btn-outline:hover{background:#1C1814;color:#F4F2ED}
+  .btn-primary:hover{background:#16267E}
+  .btn-ver-catalogo:hover{background:#D8DCE1}
+  .btn-outline:hover{background:#14161A;color:#F2F4F7}
 </style>
 </head>
 <body>
   <main style="max-width:980px;margin:0 auto">
 
-    <!-- BOTONES -->
-    <div style="background:#fff;border:1px solid #E0DBD0;border-radius:14px;padding:22px 24px">
-      <div style="font-family:'Montserrat';font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#6B6157;margin-bottom:16px">Botones · jerarquía de acción</div>
+    <!-- BOTONES · paleta ULTRAMAR v2 (fuente de verdad: assets/base.css :root) -->
+    <div style="background:#fff;border:1px solid #D8DCE1;border-radius:14px;padding:22px 24px">
+      <div style="font-family:'Montserrat';font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#4A5058;margin-bottom:16px">Botones · jerarquía de acción</div>
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:14px">
-        <button class="btn-primary" style="font-family:'Bebas Neue';font-size:19px;letter-spacing:.05em;background:#1C1814;color:#F4F2ED;border:none;border-radius:8px;padding:0 26px;height:50px;cursor:pointer;box-shadow:0 8px 26px rgba(111,88,72,.18)">Agregar al carrito</button>
-        <button class="btn-ver-catalogo" style="font-family:'Bebas Neue';font-size:19px;letter-spacing:.05em;background:#1C1814;color:#F4F2ED;border:none;border-radius:8px;padding:0 26px;height:50px;cursor:pointer">Ver catálogo</button>
-        <button class="btn-outline" style="font-family:'Bebas Neue';font-size:19px;letter-spacing:.05em;background:transparent;color:#1C1814;border:1.5px solid #1C1814;border-radius:8px;padding:0 24px;height:50px;cursor:pointer">Probar con decant</button>
-        <button style="font-family:'Montserrat';font-weight:600;font-size:14px;background:none;border:none;color:#8F4329;text-decoration:underline;text-underline-offset:3px;cursor:pointer">Ver ficha completa →</button>
-        <button disabled style="font-family:'Bebas Neue';font-size:19px;letter-spacing:.05em;background:#1C1814;color:#F4F2ED;border:none;border-radius:8px;padding:0 26px;height:50px;opacity:.32;cursor:not-allowed">Sin stock</button>
+        <button class="btn-primary" style="font-family:'Bebas Neue';font-size:19px;letter-spacing:.05em;background:#1E34A8;color:#fff;border:none;border-radius:8px;padding:0 26px;height:50px;cursor:pointer;box-shadow:0 8px 26px rgba(30,52,168,.22)">Agregar al carrito</button>
+        <button class="btn-ver-catalogo" style="font-family:'Bebas Neue';font-size:19px;letter-spacing:.05em;background:#14161A;color:#F2F4F7;border:none;border-radius:8px;padding:0 26px;height:50px;cursor:pointer">Ver catálogo</button>
+        <button class="btn-outline" style="font-family:'Bebas Neue';font-size:19px;letter-spacing:.05em;background:transparent;color:#14161A;border:1.5px solid #14161A;border-radius:8px;padding:0 24px;height:50px;cursor:pointer">Probar con decant</button>
+        <button style="font-family:'Montserrat';font-weight:600;font-size:14px;background:none;border:none;color:#16267E;text-decoration:underline;text-underline-offset:3px;cursor:pointer">Ver ficha completa →</button>
+        <button disabled style="font-family:'Bebas Neue';font-size:19px;letter-spacing:.05em;background:#14161A;color:#F2F4F7;border:none;border-radius:8px;padding:0 26px;height:50px;opacity:.32;cursor:not-allowed">Sin stock</button>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:16px;font-family:'Montserrat';font-size:11.5px;color:#6B6157">
-        <span><strong style="color:#8F4329">Acento (oro)</strong> = la acción más importante de la vista</span>
-        <span><strong style="color:#4A4039">Primario (tinta)</strong> = navegación / CTA secundario</span>
+      <div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:16px;font-family:'Montserrat';font-size:11.5px;color:#4A5058">
+        <span><strong style="color:#16267E">Acento (ultramar)</strong> = la acción más importante de la vista (≤ ~5% de la vista)</span>
+        <span><strong style="color:#14161A">Primario (tinta)</strong> = navegación / CTA secundario</span>
         <span>Texto en Bebas · altura ≥ 48px (táctil)</span>
       </div>
     </div>
