@@ -13,40 +13,9 @@
   para no romper su JS/CSS; las clases nc-* sólo agregan el reskin.
 */
 
-/* ————————————————————— Tokens (scope carrito) ————————————————————— */
-.numen-cart,
-#main-cart-items,
-#main-cart-footer {
-  --nc-bg: #f4f2ed;          /* paper */
-  --nc-surface: #ffffff;     /* card */
-  --nc-ink: #1f1b16;         /* texto principal */
-  --nc-ink-2: #6b6157;       /* muteado */
-  --nc-ink-3: #9a9086;       /* muy muteado (fine print, $/ml decant) */
-  --nc-line: #e0dbd0;        /* hairline */
-  --nc-line-soft: #ece7dc;
-  --nc-terra: #b25a3c;       /* acento */
-  --nc-terra-deep: #8f4329;  /* acento profundo */
-  --nc-cream: #fcf9f0;       /* fondo seleccionado/suave */
-  --nc-ok: #246a45;          /* verde sobrio (NO fluo) */
-  --nc-ok-bg: #edf4ee;
-  --nc-ok-line: #cfe3d5;
-  --nc-alert: #b5471f;
-  --nc-alert-bg: #fbede4;
-  --nc-alert-line: #e7c3ac;
-  --nc-soft-bg: #f6efdd;     /* badge suave */
-  --nc-soft-line: #e7d9b6;
-  --nc-shot-bg: #fbfaf6;     /* marfil parejo del contenedor de foto (§4: el frasco no "flota") */
-
-  --nc-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --nc-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
-  --nc-dur-tap: 140ms;
-  --nc-dur-select: 200ms;
-  --nc-dur-drawer: 320ms;
-  --nc-shadow-btn: 0 8px 26px rgba(111, 88, 72, 0.18);
-  --nc-shadow-drawer: -18px 0 60px rgba(40, 28, 18, 0.2);
-
-  --nc-font-display: 'Bebas Neue', var(--font-heading-family, sans-serif);
-}
+/* ————————————————————— Tokens ————————————————————— */
+/* Heredan del :root canónico de base.css (paleta Ultramar v2). Este archivo ya
+   no redefine --nc-*: si un token faltara, se agrega al canónico, no acá. */
 
 /* ————————————————————— Panel del drawer ————————————————————— */
 /* Scrim más cálido que el gris de Dawn. */

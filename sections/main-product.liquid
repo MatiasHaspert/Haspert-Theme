@@ -15,13 +15,14 @@
     assign media_position = 'left'
   endif
 
-  # Dorado de marca para texto/ícono/borde con contraste AA: oscurece sólo sobre fondos claros.
+  # Acento de marca para texto/ícono/borde con contraste AA: oscurece sólo sobre fondos claros.
+  # darken 12 ≈ paridad con --nc-accent-deep (#16267E) partiendo de #1E34A8 (entrega dc §7.3).
   assign accent = section.settings.accent_color
   assign scheme_bg = section.settings.color_scheme.settings.background
   assign bg_bright = scheme_bg | color_brightness
   assign accent_ink = accent
   if scheme_bg == blank or bg_bright > 140
-    assign accent_ink = accent | color_darken: 22
+    assign accent_ink = accent | color_darken: 12
   endif
 -%}
 
@@ -72,16 +73,16 @@
       --perfume-dur-sticky: 260ms;
 
       /* Verde de transferencia (sobrio, no compite con el precio ni el ATC) */
-      --perfume-ok: #246A45;
-      --perfume-ok-bg: #EDF4EE;
-      --perfume-ok-line: #CFE3D5;
-      --perfume-alert: #b5471f;
-      --perfume-alert-bg: #fae9df;
-      --perfume-alert-line: #e7c3ac;
+      --perfume-ok: var(--nc-ok);
+      --perfume-ok-bg: var(--nc-ok-bg);
+      --perfume-ok-line: var(--nc-ok-line);
+      --perfume-alert: var(--nc-alert);
+      --perfume-alert-bg: var(--nc-alert-bg);
+      --perfume-alert-line: var(--nc-alert-line);
 
-      /* Cream/paper cálido para chips de acento de la ficha (sin oro metálico) */
-      --perfume-soft-bg: #F6EFDD;
-      --perfume-soft-line: #E7D9B6;
+      /* Fill suave frío para chips de acento de la ficha */
+      --perfume-soft-bg: var(--nc-soft-bg);
+      --perfume-soft-line: var(--nc-soft-line);
     }
   {%- endstyle -%}
 
