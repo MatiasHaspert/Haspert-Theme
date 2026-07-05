@@ -28,8 +28,12 @@ if (!customElements.get('sticky-atc')) {
           this.unsubscribe = subscribe(PUB_SUB_EVENTS.variantChange, (event) => {
             if (!event.data || event.data.sectionId !== this.sectionId) return;
             const variant = event.data.variant;
-            const newPrice = event.data.html && event.data.html.getElementById('price-' + this.sectionId);
-            if (newPrice && this.priceEl) this.priceEl.innerHTML = newPrice.innerHTML;
+            // #price-{section} es el bloque entero (precio + chip transferencia + cuotas).
+            // La barra fija sólo lleva el precio: clonamos únicamente el nodo .price
+            // (mismo markup que el render inicial del snippet), no el bloque completo.
+            const priceBlock = event.data.html && event.data.html.getElementById('price-' + this.sectionId);
+            const newPrice = priceBlock && priceBlock.querySelector('.price');
+            if (newPrice && this.priceEl) this.priceEl.innerHTML = newPrice.outerHTML;
             if (this.button) this.button.disabled = !variant || variant.available === false;
           });
         }

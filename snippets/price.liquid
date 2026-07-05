@@ -114,7 +114,18 @@
     </div>
     {%- if show_badges -%}
       <span class="badge price__badge-sale color-{{ settings.sale_badge_color_scheme }}">
-        {{ 'products.product.on_sale' | t }}
+        {%- comment -%} savings_badge (opt-in, ej. PDP): muestra el ahorro en $ en vez del texto genérico "Oferta". El resto de la tienda (cards, cross-sell) sigue con "Oferta". {%- endcomment -%}
+        {%- if savings_badge and compare_at_price > price -%}
+          {%- assign savings = compare_at_price | minus: price -%}
+          {%- if settings.currency_code_enabled -%}
+            {%- assign savings_money = savings | money_with_currency -%}
+          {%- else -%}
+            {%- assign savings_money = savings | money -%}
+          {%- endif -%}
+          {{ 'products.product.save_amount' | t: amount: savings_money }}
+        {%- else -%}
+          {{ 'products.product.on_sale' | t }}
+        {%- endif -%}
       </span>
 
       <span class="badge price__badge-sold-out color-{{ settings.sold_out_badge_color_scheme }}">

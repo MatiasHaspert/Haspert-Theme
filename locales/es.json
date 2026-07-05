@@ -120,6 +120,8 @@
       "add_short": "Agregar",
       "description": "Descripción",
       "on_sale": "Oferta",
+      "percent_off": "-{{ percent }}%",
+      "save_amount": "Ahorrás {{ amount }}",
       "presentation": {
         "label": "Presentación",
         "frasco": "Frasco",

@@ -18,5 +18,14 @@
       liveTrust.innerHTML = newTrust.innerHTML;
       liveTrust.dataset.tipo = newTrust.dataset.tipo || '';
     }
+
+    // Badge de descuento de la galería (fuera de #price-{section}): copiamos el
+    // re-render server-side y su estado hidden (aparece/desaparece según la oferta de la variante).
+    var liveBadge = document.getElementById('GalleryDiscountBadge-' + sectionId);
+    var newBadge = data.html.getElementById('GalleryDiscountBadge-' + sectionId);
+    if (liveBadge && newBadge) {
+      liveBadge.innerHTML = newBadge.innerHTML;
+      liveBadge.hidden = newBadge.hidden;
+    }
   });
 })();

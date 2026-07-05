@@ -14,7 +14,7 @@
 }
 
 .header-search-bar {
-  padding: 0 1.4rem 1rem;
+  padding: 0 1.4rem 0.6rem;
 }
 
 .header-search-bar__wrap,
@@ -47,7 +47,7 @@
   order: 2;
   flex: 1 1 auto;
   min-width: 0;
-  height: 4.6rem;
+  height: 4rem;
   padding: 0;
   border: 0;
   background: transparent;
@@ -94,8 +94,8 @@
   display: inline-flex;
 }
 .header-search-bar .field__button svg {
-  width: 1.9rem;
-  height: 1.9rem;
+  width: 1.7rem;
+  height: 1.7rem;
 }
 
 /* Dropdown predictivo pegado bajo la barra */

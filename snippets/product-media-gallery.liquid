@@ -52,6 +52,22 @@
   data-desktop-layout="{{ section.settings.gallery_layout }}"
 >
   <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
+  {%- comment -%} Badge de descuento sobre la galería (variante-aware: lo repinta perfume-variant-ui.js). Siempre presente; oculto con [hidden] cuando la variante no está en oferta. {%- endcomment -%}
+  {%- liquid
+    assign gv = product.selected_or_first_available_variant
+    assign gv_cap = gv.compare_at_price
+    assign gv_price = gv.price
+    assign gv_on_sale = false
+    if gv_cap and gv_cap > gv_price
+      assign gv_on_sale = true
+      assign gv_save = gv_cap | minus: gv_price
+      assign gv_half = gv_cap | divided_by: 2
+      assign gv_pct = gv_save | times: 100 | plus: gv_half | divided_by: gv_cap
+    endif
+  -%}
+  <div id="GalleryDiscountBadge-{{ section.id }}" class="gallery-discount-badge"{% unless gv_on_sale %} hidden{% endunless %}>
+    {%- if gv_on_sale -%}{{ 'products.product.percent_off' | t: percent: gv_pct }}{%- endif -%}
+  </div>
   <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
     <a class="skip-to-content-link button visually-hidden quick-add-hidden" href="#ProductInfo-{{ section.id }}">
       {{ 'accessibility.skip_to_product_info' | t }}

@@ -39,7 +39,7 @@
         "media_size": "large",
         "media_fit": "contain",
         "constrain_to_viewport": true,
-        "mobile_thumbnails": "hide",
+        "mobile_thumbnails": "show",
         "enable_sticky_info": true,
         "hide_variants": false,
         "enable_video_looping": false,
