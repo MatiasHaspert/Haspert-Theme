@@ -109,7 +109,7 @@
         {%- comment -%} ---------- Media ---------- {%- endcomment -%}
         <div class="grid__item product__media-wrapper">
           {%- if product.media.size > 0 -%}
-            {% render 'product-media-gallery', product: product, variant_images: variant_images %}
+            {% render 'product-media-gallery', product: product, variant_images: variant_images, media_tag: section.settings.media_tag_text %}
           {%- else -%}
             <div class="product__media-item">
               <div class="product-media-container global-media-settings gradient" style="--ratio: 1.0; --preview-ratio: 1.0;">
@@ -586,9 +586,11 @@
   z-index: 4;
   transform: translateY(110%);
   transition: transform var(--perfume-dur-sticky, 260ms) var(--perfume-ease-drawer, var(--ease-drawer));
-  background: rgb(var(--color-background));
+  background: rgba(var(--color-background), 0.95);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
+  backdrop-filter: saturate(140%) blur(12px);
   border-top: 0.1rem solid rgba(var(--color-foreground), 0.1);
-  box-shadow: 0 -0.4rem 1.4rem rgba(0, 0, 0, 0.07);
+  box-shadow: 0 -0.6rem 2.4rem rgba(var(--nc-shadow-deep-rgb), 0.1);
   padding-bottom: env(safe-area-inset-bottom);
 }
 .sticky-atc--visible {
@@ -624,8 +626,18 @@
   text-overflow: ellipsis;
   opacity: 0.75;
 }
+/* Precio del sticky en Bebas (la regla de la buybox está scopeada a .product__info-container
+   y no llega hasta acá). */
 .sticky-atc__price .price {
-  font-weight: 600;
+  font-weight: 400;
+}
+.sticky-atc__price .price-item {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 2.3rem;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 .sticky-atc__price .price__container {
   justify-content: flex-start;
@@ -680,6 +692,39 @@
   filter: blur(5px); z-index: 0; pointer-events: none;
 }
 .product__media-wrapper .product__media img { position: relative; z-index: 1; }
+
+/* Chip "Foto real" sobre el packshot (mockup Ultramar): refuerzo de autenticidad.
+   Anclado a <media-gallery> (no al wrapper) para que no derive cuando la galería
+   queda sticky en desktop. */
+media-gallery { display: block; position: relative; }
+.product__media-tag {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.2rem;
+  z-index: 3;
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  font-family: var(--font-body-family);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--perfume-accent-ink);
+  background: rgba(238, 241, 250, 0.85); /* --nc-soft-bg al 85% */
+  border: 0.1rem solid var(--nc-soft-line);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.9rem;
+}
+.product__media-tag svg { flex: none; }
+
+/* Thumbnail activo: anillo de acento (Dawn lo pinta con foreground). */
+.product__media-wrapper .thumbnail[aria-current] {
+  box-shadow: 0 0 0 0.1rem var(--perfume-accent);
+  border-color: var(--perfume-accent);
+}
 /* OPCIONAL — fotos con fondos off-white/dispares: descomentá para fundir el
    fondo claro contra el estage frío. `multiply` tiñe frascos muy claros;
    probá por familia olfativa antes de dejarlo global.
@@ -689,10 +734,15 @@
   display: inline-block;
   margin-bottom: 0.6rem;
   text-decoration: none;
-  opacity: 0.75;
+  font-weight: 600;
+  color: var(--perfume-accent-ink);
 }
-.perfume-vendor:hover { opacity: 1; }
+.perfume-vendor:hover { color: var(--perfume-accent); }
 .perfume-title { margin: 0 0 1rem; }
+/* Título mobile al encuadre del mockup (Bebas 44px, interlineado apretado). */
+@media screen and (max-width: 749px) {
+  .product__title.perfume-title { font-size: 4.4rem; line-height: 0.92; letter-spacing: 0.012em; }
+}
 .product-app-blocks { margin-top: 3.6rem; }
 .perfume-chips {
   display: flex;
@@ -784,7 +834,7 @@
 .perfume-transfer__chip span {
   font-size: 1.05rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
   color: var(--perfume-ok);
-  background: rgba(36, 106, 69, 0.10);
+  background: rgba(30, 107, 78, 0.10); /* --nc-ok al 10% */
   border-radius: 999px; padding: 0.3rem 0.9rem;
 }
 .perfume-transfer__microcopy { margin: 0.6rem 0 0; font-size: 1.15rem; color: rgba(var(--color-foreground), 0.55); }
@@ -817,7 +867,7 @@
 .perfume-card__input:checked + .perfume-card {
   border-color: var(--perfume-accent);
   background: var(--nc-selected);
-  box-shadow: 0 6px 18px rgba(var(--nc-accent-rgb), 0.10);
+  box-shadow: 0 0.1rem 0 rgba(var(--nc-accent-rgb), 0.04), 0 6px 18px rgba(var(--nc-accent-rgb), 0.10);
 }
 .perfume-card__input:focus-visible + .perfume-card {
   outline: 0.2rem solid var(--perfume-accent-ink); outline-offset: 0.2rem;
@@ -890,20 +940,21 @@
   justify-content: center;
 }
 /* "Comprar ahora" (dynamic checkout) = acción SECUNDARIA en la paleta Ultramar:
-   borde de acento profundo + texto tinta + fondo de página, jerárquicamente debajo del ATC sólido.
+   ghost en TINTA (borde tinta + fondo de página) — el acento queda solo para el ATC
+   (mockup Ultramar; dos botones azules apilados diluirían el CTA).
    Sense lo pinta con --color-button (oscuro/casi negro); lo neutralizamos. !important
    para ganarle a section-main-product.css, y matamos los anillos ::before/::after de Dawn
    (que dibujan el borde/sombra con el color de botón oscuro). */
 .product-form__buttons .shopify-payment-button__button--unbranded {
   background: rgb(var(--color-background)) !important;
   color: rgb(var(--color-foreground)) !important;
-  border: 0.15rem solid var(--perfume-accent-ink) !important;
+  border: 0.15rem solid rgb(var(--color-foreground)) !important;
 }
 .product-form__buttons .shopify-payment-button__button--unbranded::before { box-shadow: none !important; }
 .product-form__buttons .shopify-payment-button__button--unbranded::after { display: none !important; }
 .product-form__buttons .shopify-payment-button__button--unbranded:hover,
 .product-form__buttons .shopify-payment-button__button--unbranded:hover:not([disabled]) {
-  background: rgba(var(--perfume-accent-rgb), 0.06) !important;
+  background: rgba(var(--color-foreground), 0.06) !important;
 }
 
 /* ---- pay reassurance ---- */
@@ -1025,6 +1076,13 @@
     {
       "type": "header",
       "content": "Galería de imágenes"
+    },
+    {
+      "type": "text",
+      "id": "media_tag_text",
+      "label": "Chip sobre la foto",
+      "info": "Refuerzo de autenticidad sobre el packshot (ej. \"Foto real\"). Vacío = oculto.",
+      "default": "Foto real"
     },
     {
       "type": "select",
