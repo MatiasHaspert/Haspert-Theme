@@ -1459,7 +1459,7 @@
       { "type": "number", "id": "free_ship_threshold", "label": "Umbral de envío gratis (en pesos)", "default": 200000 },
       { "type": "text", "id": "free_ship_text", "label": "Texto en progreso", "default": "Te faltan {amount} para el envío gratis", "info": "Usá {amount} donde va el monto restante. El ícono ya lo pone la sección (SVG), no agregues emojis." },
       { "type": "text", "id": "free_ship_success", "label": "Texto al llegar", "default": "¡Tenés envío gratis!" },
-      { "type": "color", "id": "free_ship_bar_color", "label": "Color de la barra", "default": "#B25A3C" }
+      { "type": "color", "id": "free_ship_bar_color", "label": "Color de la barra", "default": "#1E34A8" }
     ]
   },
   {
@@ -1469,7 +1469,7 @@
       { "type": "checkbox", "id": "cart_xsell_enabled", "label": "Activar cross-sell en el carrito", "default": true },
       { "type": "collection", "id": "cart_xsell_collection", "label": "Colección donde buscar", "info": "Apuntá a un catálogo de perfumes con el metafield \"Familia olfativa\" cargado y variantes Decant disponibles (solo se ofrecen candidatos con decant)." },
       { "type": "text", "id": "cart_xsell_heading", "label": "Título (con envío gratis ya logrado)", "default": "Combiná con tu compra" },
-      { "type": "text", "id": "cart_xsell_heading_progress", "label": "Título (cuando falta para el envío gratis)", "default": "*Sumá y llegás* al envío gratis", "info": "Envolvé en *asteriscos* la parte que va en acento (terracota). Ej: *Sumá y llegás* al envío gratis." },
+      { "type": "text", "id": "cart_xsell_heading_progress", "label": "Título (cuando falta para el envío gratis)", "default": "*Sumá y llegás* al envío gratis", "info": "Envolvé en *asteriscos* la parte que va en acento (ultramar). Ej: *Sumá y llegás* al envío gratis." },
       { "type": "range", "id": "cart_xsell_count", "min": 1, "max": 3, "step": 1, "label": "Cantidad de sugerencias", "default": 2 }
     ]
   },
@@ -1492,10 +1492,10 @@
   {
     "name": "Acento de marca",
     "settings": [
-      { "type": "paragraph", "content": "Color de acento (terracota) para íconos, badges, barras y detalles. No es un esquema de color: se inyecta global en :root como --accent / --accent-ink / --accent-soft." },
-      { "type": "color", "id": "accent", "label": "Acento", "default": "#B25A3C" },
-      { "type": "color", "id": "accent_ink", "label": "Acento tinta (texto sobre claro · AA)", "default": "#8F4329" },
-      { "type": "color", "id": "accent_soft", "label": "Acento suave (sobre tinta)", "default": "#F3E2DA" }
+      { "type": "paragraph", "content": "Color de acento (ultramar) para íconos, badges, barras y detalles. No es un esquema de color: se inyecta global en :root como --accent / --accent-ink / --accent-soft." },
+      { "type": "color", "id": "accent", "label": "Acento", "default": "#1E34A8" },
+      { "type": "color", "id": "accent_ink", "label": "Acento tinta (texto sobre claro · AA)", "default": "#16267E" },
+      { "type": "color", "id": "accent_soft", "label": "Acento suave (sobre tinta)", "default": "#DFE6F8" }
     ]
   },
   {

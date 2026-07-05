@@ -9,7 +9,7 @@
   assign kit_size = section.settings.kit_size
   assign size_dc = section.settings.decant_size | downcase
 
-  # Dorado de marca con contraste AA: oscurece sólo sobre fondos claros.
+  # Acento de marca con contraste AA: oscurece sólo sobre fondos claros.
   assign accent = section.settings.accent_color
   assign scheme_bg = section.settings.color_scheme.settings.background
   assign bg_bright = scheme_bg | color_brightness
@@ -235,7 +235,7 @@
   "class": "section",
   "settings": [
     { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "default": "scheme-1" },
-    { "type": "color", "id": "accent_color", "label": "Color de acento", "default": "#B25A3C" },
+    { "type": "color", "id": "accent_color", "label": "Color de acento", "default": "#1E34A8" },
     { "type": "select", "id": "icon", "label": "Ícono",
       "options": [
         { "value": "none", "label": "Sin ícono" },

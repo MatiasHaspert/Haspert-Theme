@@ -142,7 +142,7 @@
       "block_order": ["paso_1", "paso_2", "paso_3"],
       "settings": {
         "color_scheme": "scheme-4",
-        "accent_color": "#B25A3C",
+        "accent_color": "#1E34A8",
         "heading": "Nuestra promesa",
         "title": "Cómo verificás que es original",
         "show_photo": false,
@@ -179,8 +179,8 @@
       "block_order": ["chip_ml", "chip_original", "chip_pedido"],
       "settings": {
         "color_scheme": "scheme-1",
-        "accent_color": "#B25A3C",
-        "card_background": "#FCF9F0",
+        "accent_color": "#1E34A8",
+        "card_background": "#EEF1FA",
         "microbadge": "Para arrancar",
         "heading": "Probá antes de invertir en el frasco",
         "text": "<p>Decants de 5 y 10 ml fraccionados a pedido desde frascos originales verificados. Conocé el aroma en tu piel por una fracción del precio.</p>",
@@ -295,7 +295,7 @@
       "block_order": ["q_original", "q_envio", "q_devolucion"],
       "settings": {
         "color_scheme": "scheme-1",
-        "accent_color": "#b25a3c",
+        "accent_color": "#1E34A8",
         "microbadge": "Dudas rápidas",
         "heading": "",
         "more_label": "Todas las preguntas →",

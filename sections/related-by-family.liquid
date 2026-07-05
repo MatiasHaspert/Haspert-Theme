@@ -18,7 +18,7 @@
   assign cur_family_label = cur_families | first
   assign matched_by_family = false
 
-  # Dorado de marca con contraste AA: oscurece sólo sobre fondos claros.
+  # Acento de marca con contraste AA: oscurece sólo sobre fondos claros.
   assign accent = section.settings.accent_color
   assign scheme_bg = section.settings.color_scheme.settings.background
   assign bg_bright = scheme_bg | color_brightness
@@ -185,7 +185,7 @@
   "class": "section",
   "settings": [
     { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "info": "Las cards usan su propio esquema en Configuración del tema → Tarjetas.", "default": "scheme-1" },
-    { "type": "color", "id": "accent_color", "label": "Color de acento", "default": "#B25A3C" },
+    { "type": "color", "id": "accent_color", "label": "Color de acento", "default": "#1E34A8" },
     { "type": "inline_richtext", "id": "heading", "label": "Título", "default": "Te puede gustar" },
     {
       "type": "select",
