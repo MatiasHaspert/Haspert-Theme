@@ -12,8 +12,8 @@
 .collnav,
 .facets-container-drawer,
 .collection-hero {
-  --perfume-accent: var(--accent, #b25a3c);
-  --perfume-accent-ink: #8f4329;
+  --perfume-accent: var(--accent, #1E34A8);
+  --perfume-accent-ink: #16267E;
   --perfume-ease-select: cubic-bezier(0.23, 1, 0.32, 1);
   --perfume-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --perfume-dur-select: 200ms;

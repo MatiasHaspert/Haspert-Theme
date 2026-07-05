@@ -100,5 +100,5 @@
 .newsletter-form .field__input:focus,
 .newsletter-form .field__input:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 0.2rem var(--accent, #b25a3c);
+  box-shadow: 0 0 0 0.2rem var(--accent, #1E34A8);
 }

@@ -103,7 +103,7 @@
   border: 1px solid var(--nc-soft-line);
   font-family: var(--nc-font-display);
   font-size: 1.7rem;
-  color: var(--nc-terra-deep);
+  color: var(--nc-accent-deep);
 }
 
 .ci-brand__body {
@@ -152,7 +152,7 @@
   justify-content: space-between;
   gap: 0.8rem;
   padding: 1.3rem;
-  background: var(--nc-cream);
+  background: var(--nc-selected);
   border: 1px solid var(--nc-soft-line);
   border-radius: 1.2rem;
   text-decoration: none;
@@ -318,7 +318,7 @@
   gap: 1.2rem;
   width: 100%;
   min-height: 5.2rem;
-  background: var(--nc-terra);
+  background: var(--nc-accent);
   color: #fff;
   border: none;
   border-radius: 1.2rem;
@@ -353,27 +353,27 @@
 /* ————————————————————— Hover (gateado) y foco ————————————————————— */
 @media (hover: hover) and (pointer: fine) {
   .ci-brand:hover {
-    border-color: #d6cdbc;
-    box-shadow: 0 8px 22px rgba(111, 88, 72, 0.1);
+    border-color: var(--nc-soft-line);
+    box-shadow: 0 8px 22px rgba(var(--nc-shadow-neutral-rgb), 0.1);
   }
 
   .ci-brand:hover .ci-brand__arrow {
     transform: translateX(3px);
-    color: var(--nc-terra-deep);
+    color: var(--nc-accent-deep);
   }
 
   .ci-ocard:hover {
-    background: #fbf6e8;
-    border-color: #decfa8;
+    background: var(--nc-soft-bg);
+    border-color: var(--nc-soft-line);
   }
 
   .ci-scard:hover {
-    border-color: #d6cdbc;
-    box-shadow: 0 10px 26px rgba(111, 88, 72, 0.1);
+    border-color: var(--nc-soft-line);
+    box-shadow: 0 10px 26px rgba(var(--nc-shadow-neutral-rgb), 0.1);
   }
 
   .ci-scard:hover .ci-scard__cta {
-    color: var(--nc-terra-deep);
+    color: var(--nc-accent-deep);
   }
 
   .ci-scard:hover .ci-scard__cta svg {
@@ -381,13 +381,13 @@
   }
 
   .ci-chip:hover {
-    border-color: var(--nc-terra);
-    background: #fdfcf9;
+    border-color: var(--nc-accent);
+    background: #FAFBFC;
   }
 
   .ci-all__btn:hover {
-    background: #9e4e33;
-    box-shadow: 0 12px 30px rgba(146, 67, 41, 0.3);
+    background: var(--nc-accent-deep);
+    box-shadow: 0 12px 30px rgba(var(--nc-accent-rgb), 0.3);
   }
 }
 
@@ -396,7 +396,7 @@
 .ci-scard:focus-visible,
 .ci-chip:focus-visible,
 .ci-all__btn:focus-visible {
-  outline: 0.2rem solid var(--nc-terra);
+  outline: 0.2rem solid var(--nc-accent);
   outline-offset: 0.2rem;
 }
 

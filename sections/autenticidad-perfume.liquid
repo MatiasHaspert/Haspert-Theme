@@ -130,9 +130,9 @@
     --auth-accent: {{ accent }};
     --auth-accent-rgb: {{ accent.red }}, {{ accent.green }}, {{ accent.blue }};
     --auth-accent-ink: {{ accent_ink }};
-    --auth-ok: #1c4a32;
-    --auth-ok-bg: #e7f2ea;
-    --auth-ok-line: #b6d8c2;
+    --auth-ok: var(--nc-ok);
+    --auth-ok-bg: var(--nc-ok-bg);
+    --auth-ok-line: var(--nc-ok-line);
 
     /* Motion (consistente con la PDP) */
     --perfume-ease-select: cubic-bezier(0.23, 1, 0.32, 1);
@@ -160,7 +160,7 @@
 }
 .auth__photo {
   position: relative; aspect-ratio: 16 / 10;
-  background: radial-gradient(120% 100% at 30% 18%, #FCFAF4, #EEE8DC);
+  background: radial-gradient(120% 100% at 30% 18%, #FDFDFE, #E9EBEE);
   display: grid; place-items: center;
   border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.14);
 }

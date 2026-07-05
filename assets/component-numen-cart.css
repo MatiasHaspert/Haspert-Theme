@@ -18,9 +18,9 @@
    no redefine --nc-*: si un token faltara, se agrega al canónico, no acá. */
 
 /* ————————————————————— Panel del drawer ————————————————————— */
-/* Scrim más cálido que el gris de Dawn. */
+/* Scrim de marca (tinte frío) sobre el gris de Dawn. */
 cart-drawer.drawer {
-  background-color: rgba(31, 27, 22, 0.46);
+  background-color: rgba(var(--nc-scrim-rgb), 0.46);
 }
 
 .numen-cart.drawer__inner {
@@ -58,7 +58,7 @@ cart-drawer.drawer {
 .nc-head__count {
   font-weight: 600;
   font-size: 1.1rem;
-  color: var(--nc-terra-deep);
+  color: var(--nc-accent-deep);
   background: var(--nc-soft-bg);
   border: 0.1rem solid var(--nc-soft-line);
   border-radius: 999px;
@@ -112,7 +112,7 @@ cart-drawer.drawer {
 .numen-cart .nc-top {
   padding: 1.1rem 1.8rem 1.1rem;
   border-bottom: 0.1rem solid var(--nc-line-soft);
-  background: linear-gradient(180deg, var(--nc-surface), #fcfbf7);
+  background: linear-gradient(180deg, var(--nc-surface), #FAFBFC);
 }
 .numen-cart .nc-top .free-ship { margin: 0; }
 .nc-trust {
@@ -126,7 +126,7 @@ cart-drawer.drawer {
   letter-spacing: 0;
   color: var(--nc-ink-2);
 }
-.nc-trust__icon { flex: 0 0 auto; color: var(--nc-terra); margin-right: 0.4rem; }
+.nc-trust__icon { flex: 0 0 auto; color: var(--nc-accent); margin-right: 0.4rem; }
 .nc-trust__seg { display: inline-flex; align-items: center; white-space: nowrap; }
 .nc-trust__seg b { font-weight: 600; color: var(--nc-ink); }
 /* separador "·" atado al segmento: si wrapea, cae con su texto → nunca queda un punto huérfano. */
@@ -169,7 +169,7 @@ cart-drawer.drawer {
   align-items: center;
   justify-content: center;
   padding: 0.7rem;                               /* aire alrededor del frasco */
-  box-shadow: inset 0 -0.7rem 1.1rem -0.9rem rgba(31, 27, 22, 0.16);  /* apoya el frasco */
+  box-shadow: inset 0 -0.7rem 1.1rem -0.9rem rgba(var(--nc-scrim-rgb), 0.16);  /* apoya el frasco */
 }
 .nc-line__media img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
@@ -194,7 +194,7 @@ cart-drawer.drawer {
   word-break: break-word;
 }
 @media (hover: hover) and (pointer: fine) {
-  .numen-cart .nc-line__name:hover { color: var(--nc-terra-deep); }
+  .numen-cart .nc-line__name:hover { color: var(--nc-accent-deep); }
 }
 
 .numen-cart .nc-line__rm-wrap { margin-left: auto; flex: 0 0 auto; }
@@ -233,13 +233,13 @@ cart-drawer.drawer {
   border-radius: 0.6rem;
   margin: 0.6rem 0 0;
   border: 0.1rem solid var(--nc-line);
-  background: #faf8f3;
+  background: #F4F5F7;
   color: var(--nc-ink-2);
 }
 .nc-chip--decant {
   background: var(--nc-soft-bg);
   border-color: var(--nc-soft-line);
-  color: var(--nc-terra-deep);
+  color: var(--nc-accent-deep);
 }
 .nc-chip__sz { color: var(--nc-ink-3); font-weight: 500; }
 
@@ -275,7 +275,7 @@ cart-drawer.drawer {
   font-weight: 400;
   font-size: 1.2rem;
   letter-spacing: 0.04em;
-  color: var(--nc-terra-deep);
+  color: var(--nc-accent-deep);
   margin-top: 0.3rem;
 }
 .nc-perml--muted { color: var(--nc-ink-3); }
@@ -374,7 +374,7 @@ cart-drawer.drawer {
   text-transform: uppercase;
   color: var(--nc-ink);
 }
-.nc-xsell__accent { color: var(--nc-terra-deep); }
+.nc-xsell__accent { color: var(--nc-accent-deep); }
 
 .nc-xcard {
   display: grid;
@@ -389,7 +389,7 @@ cart-drawer.drawer {
   transition: border-color var(--nc-dur-select) var(--nc-ease-out), box-shadow var(--nc-dur-select) var(--nc-ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
-  .nc-xcard:hover { border-color: #d6cdbc; box-shadow: 0 6px 18px rgba(111, 88, 72, 0.08); }
+  .nc-xcard:hover { border-color: var(--nc-soft-line); box-shadow: 0 6px 18px rgba(var(--nc-shadow-neutral-rgb), 0.08); }
 }
 .nc-xcard__media {
   width: 4.8rem;
@@ -430,8 +430,8 @@ cart-drawer.drawer {
   white-space: nowrap;
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--nc-terra-deep);
-  background: var(--nc-cream);
+  color: var(--nc-accent-deep);
+  background: var(--nc-selected);
   border: 0.1rem solid var(--nc-soft-line);
   border-radius: 0.8rem;
   padding: 0.8rem 1.2rem;
@@ -440,7 +440,7 @@ cart-drawer.drawer {
 }
 .nc-xcard__add:active { transform: scale(0.95); }
 @media (hover: hover) and (pointer: fine) {
-  .nc-xcard__add:hover { background: var(--nc-terra); color: #fff; border-color: var(--nc-terra); }
+  .nc-xcard__add:hover { background: var(--nc-accent); color: #fff; border-color: var(--nc-accent); }
   .nc-xcard__add:hover .nc-xcard__add-icon { transform: rotate(90deg); }
 }
 .nc-xcard__add.is-loading { opacity: 0.75; cursor: default; }
@@ -456,7 +456,7 @@ cart-drawer.drawer {
 .numen-cart .drawer__footer {
   flex: 0 0 auto;
   border-top: 0.1rem solid var(--nc-line);
-  background: linear-gradient(180deg, #fcfbf7, var(--nc-surface));
+  background: linear-gradient(180deg, #FAFBFC, var(--nc-surface));
   padding: 1.1rem 1.8rem calc(1.1rem + env(safe-area-inset-bottom));   /* compacto: 1 ítem completo sobre el fold */
 }
 .numen-cart .cart-drawer__footer > * + * { margin-top: 0; }
@@ -492,12 +492,12 @@ cart-drawer.drawer {
 }
 
 /* Card de pago: transferencia = BENEFICIO (el AHORRO), no un 2º precio (drawer y /cart).
-   El TOTAL manda arriba (2.6rem, tinta); el ahorro va acá, más chico (2rem) y en terracota,
+   El TOTAL manda arriba (2.6rem, tinta); el ahorro va acá, más chico (2rem) y en acento profundo,
    rotulado "ahorrás" → se lee de un vistazo qué se paga / qué se ahorra. Nunca se tacha nada. */
 .nc-pay {
   margin: 1rem 0 0;
   border-radius: 1rem;
-  background: var(--nc-cream);
+  background: var(--nc-selected);
   border: 0.1rem solid var(--nc-soft-line);
   padding: 0.8rem 1.1rem;
 }
@@ -509,7 +509,7 @@ cart-drawer.drawer {
   font-size: 2rem;
   letter-spacing: 0.02em;
   line-height: 1;
-  color: var(--nc-terra-deep);
+  color: var(--nc-accent-deep);
   white-space: nowrap;
 }
 .nc-pay__off {
@@ -517,7 +517,7 @@ cart-drawer.drawer {
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #fff;
-  background: var(--nc-terra);
+  background: var(--nc-accent);
   border-radius: 0.5rem;
   padding: 0.2rem 0.6rem;
   white-space: nowrap;
@@ -528,7 +528,7 @@ cart-drawer.drawer {
   font-family: var(--nc-font-display);
   font-size: 1.3rem;
   letter-spacing: 0.06em;
-  color: var(--nc-terra-deep);
+  color: var(--nc-accent-deep);
   background: var(--nc-surface);
   border: 0.1rem solid var(--nc-soft-line);
   border-radius: 0.4rem;
@@ -544,7 +544,7 @@ cart-drawer.drawer {
   color: var(--nc-ink);
 }
 
-/* CTA terracota con monto */
+/* CTA de acento con monto */
 .numen-cart .nc-cta {
   width: 100%;
   max-width: none;
@@ -553,7 +553,7 @@ cart-drawer.drawer {
   border: 0;
   border-radius: 1.1rem;
   cursor: pointer;
-  background: var(--nc-terra);
+  background: var(--nc-accent);
   color: #fff;
   font-family: var(--nc-font-display);
   font-weight: 400;
@@ -568,7 +568,7 @@ cart-drawer.drawer {
 }
 .numen-cart .nc-cta:active { transform: scale(0.985); }
 @media (hover: hover) and (pointer: fine) {
-  .numen-cart .nc-cta:hover { background: #9e4e33; box-shadow: 0 12px 30px rgba(146, 67, 41, 0.3); }
+  .numen-cart .nc-cta:hover { background: var(--nc-accent-deep); box-shadow: 0 12px 30px rgba(var(--nc-accent-rgb), 0.3); }
 }
 .numen-cart .nc-cta:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 .nc-cta__sep { width: 0.1rem; height: 2rem; background: rgba(255, 255, 255, 0.4); }
@@ -607,7 +607,7 @@ cart-drawer.drawer {
 }
 #main-cart-items .nc-legal { margin: 1.6rem 0 0; }
 .nc-legal__icon { flex: 0 0 auto; margin-top: 0.1rem; color: var(--nc-alert); }
-.nc-legal__text { font-size: 1.1rem; line-height: 1.45; color: #7a4226; }
+.nc-legal__text { font-size: 1.1rem; line-height: 1.45; color: var(--nc-ink-2); }
 .nc-legal__text > :first-child { margin-top: 0; }
 .nc-legal__text > :last-child { margin-bottom: 0; }
 .nc-legal__text b { font-weight: 600; }
@@ -655,12 +655,12 @@ cart-drawer.is-empty .numen-cart .drawer__footer { display: none; }
   height: 8.4rem;
   border-radius: 50%;
   margin-bottom: 1.6rem;
-  background: var(--nc-cream);
+  background: var(--nc-selected);
   border: 0.1rem solid var(--nc-soft-line);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--nc-terra);
+  color: var(--nc-accent);
 }
 .nc-empty__title {
   margin: 0 0 0.6rem;
@@ -686,7 +686,7 @@ cart-drawer.is-empty .numen-cart .drawer__footer { display: none; }
   height: 5.2rem;
   padding: 0 3rem;
   border-radius: 1.1rem;
-  background: var(--nc-terra);
+  background: var(--nc-accent);
   color: #fff;
   font-family: var(--nc-font-display);
   font-weight: 400;
@@ -700,7 +700,7 @@ cart-drawer.is-empty .numen-cart .drawer__footer { display: none; }
 #main-cart-items .nc-empty__cta:active { transform: scale(0.98); }
 @media (hover: hover) and (pointer: fine) {
   .numen-cart .nc-empty__cta:hover,
-  #main-cart-items .nc-empty__cta:hover { background: #9e4e33; }
+  #main-cart-items .nc-empty__cta:hover { background: var(--nc-accent-deep); }
 }
 .nc-empty__hints {
   margin-top: 1.8rem;
@@ -755,7 +755,7 @@ cart-drawer.is-empty .numen-cart .drawer__footer { display: none; }
   border: 0;
   border-radius: 1.1rem;
   cursor: pointer;
-  background: var(--nc-terra);
+  background: var(--nc-accent);
   color: #fff;
   font-family: var(--nc-font-display);
   font-weight: 400;
@@ -769,7 +769,7 @@ cart-drawer.is-empty .numen-cart .drawer__footer { display: none; }
 }
 #main-cart-footer .cart__checkout-button:active { transform: scale(0.985); }
 @media (hover: hover) and (pointer: fine) {
-  #main-cart-footer .cart__checkout-button:hover { background: #9e4e33; box-shadow: 0 12px 30px rgba(146, 67, 41, 0.3); }
+  #main-cart-footer .cart__checkout-button:hover { background: var(--nc-accent-deep); box-shadow: 0 12px 30px rgba(var(--nc-accent-rgb), 0.3); }
 }
 @media (prefers-reduced-motion: reduce) {
   #main-cart-footer .cart__checkout-button { transition: none; }

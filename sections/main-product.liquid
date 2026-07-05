@@ -318,7 +318,7 @@
                     id="ProductSubmitButton-{{ section.id }}"
                     type="submit"
                     name="add"
-                    {%- comment -%} ATC = acción PRIMARIA siempre (terracota sólido). Invierte el patrón de Dawn que lo degrada a button--secondary cuando hay dynamic checkout; acá el "Comprar ahora" es el secundario (ver {% stylesheet %}). {%- endcomment -%}
+                    {%- comment -%} ATC = acción PRIMARIA siempre (acento sólido). Invierte el patrón de Dawn que lo degrada a button--secondary cuando hay dynamic checkout; acá el "Comprar ahora" es el secundario (ver {% stylesheet %}). {%- endcomment -%}
                     class="product-form__submit button button--full-width button--primary"
                     {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
                   >
@@ -646,14 +646,14 @@
 }
 
 /* =====================================================================
-   1 · FOTO REAL PROTAGONISTA — estage marfil parejo + sombra de apoyo.
+   1 · FOTO REAL PROTAGONISTA — estage neutro frío + sombra de apoyo.
    El frasco "flota" parejo sin importar el shot de origen. Pensado para
    fotos sobre fondo blanco de estudio (lo habitual del catálogo).
    ===================================================================== */
 .product__media-wrapper .product__media {
   position: relative;
   background: radial-gradient(135% 108% at 50% 40%,
-    #FFFFFF 0%, #FFFEFC 50%, #F5F0E6 86%, #EFE9DD 100%);
+    #FFFFFF 0%, #FDFDFE 50%, #F2F3F5 86%, #E9EBEE 100%);
   border: 0.1rem solid rgba(var(--color-foreground), 0.10);
   border-radius: 1.4rem;
   overflow: hidden;
@@ -676,12 +676,12 @@
   position: absolute; left: 50%; bottom: 4.2rem; transform: translateX(-50%);
   width: 46%; height: 2.4rem; border-radius: 50%;
   background: radial-gradient(ellipse at center,
-    rgba(27, 21, 16, 0.20), rgba(27, 21, 16, 0) 70%);
+    rgba(var(--nc-shadow-deep-rgb), 0.20), rgba(var(--nc-shadow-deep-rgb), 0) 70%);
   filter: blur(5px); z-index: 0; pointer-events: none;
 }
 .product__media-wrapper .product__media img { position: relative; z-index: 1; }
 /* OPCIONAL — fotos con fondos off-white/dispares: descomentá para fundir el
-   fondo claro contra el estage marfil. `multiply` tiñe frascos muy claros;
+   fondo claro contra el estage frío. `multiply` tiñe frascos muy claros;
    probá por familia olfativa antes de dejarlo global.
    .product__media-wrapper .product__media img { mix-blend-mode: multiply; } */
 
@@ -816,8 +816,8 @@
 .perfume-card:active { transform: scale(0.97); }
 .perfume-card__input:checked + .perfume-card {
   border-color: var(--perfume-accent);
-  background: #FCF7EF;
-  box-shadow: 0 6px 18px rgba(143, 67, 41, 0.10);
+  background: var(--nc-selected);
+  box-shadow: 0 6px 18px rgba(var(--nc-accent-rgb), 0.10);
 }
 .perfume-card__input:focus-visible + .perfume-card {
   outline: 0.2rem solid var(--perfume-accent-ink); outline-offset: 0.2rem;
@@ -825,7 +825,7 @@
 .perfume-card__input.disabled + .perfume-card { opacity: 0.5; }
 .perfume-card__radio {
   width: 2rem; height: 2rem; border-radius: 50%;
-  border: 0.2rem solid #C7BBA6; flex: none; display: grid; place-items: center;
+  border: 0.2rem solid #7E8898; flex: none; display: grid; place-items: center;
   transition: border-color var(--perfume-dur-select) var(--perfume-ease-select),
               background    var(--perfume-dur-select) var(--perfume-ease-select);
 }
@@ -889,8 +889,8 @@
   align-items: center;
   justify-content: center;
 }
-/* "Comprar ahora" (dynamic checkout) = acción SECUNDARIA en la paleta Paper/Terracota:
-   borde terracota + texto tinta + fondo papel, jerárquicamente debajo del ATC sólido.
+/* "Comprar ahora" (dynamic checkout) = acción SECUNDARIA en la paleta Ultramar:
+   borde de acento profundo + texto tinta + fondo de página, jerárquicamente debajo del ATC sólido.
    Sense lo pinta con --color-button (oscuro/casi negro); lo neutralizamos. !important
    para ganarle a section-main-product.css, y matamos los anillos ::before/::after de Dawn
    (que dibujan el borde/sombra con el color de botón oscuro). */
@@ -954,7 +954,7 @@
 }
 .perfume-meter__bar { display: flex; align-items: center; gap: 0.9rem; }
 .perfume-bars { display: inline-flex; gap: 0.4rem; }
-.perfume-bars i { width: 2rem; height: 0.6rem; border-radius: 0.3rem; background: #E2D8C4; }
+.perfume-bars i { width: 2rem; height: 0.6rem; border-radius: 0.3rem; background: #DFE3E9; }
 .perfume-bars i.on { background: var(--perfume-accent); }
 .perfume-meter__v { font-weight: 600; font-size: 1.25rem; color: rgba(var(--color-foreground), 0.78); }
 .perfume-occ { display: flex; flex-wrap: wrap; gap: 0.7rem; }

@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------------
  * Diseño: numen-menu-footer-mockup.html (sección FOOTER). Las superficies y el
  * texto salen del color scheme de la sección (color-{{ scheme }} → scheme-2 =
- * tono panel #ece8df de la paleta activa); el acento usa --accent / --accent-ink
+ * tono panel #ECEEF1 de la paleta activa); el acento usa --accent / --accent-ink
  * (globales de theme.liquid). Blanco fijo sólo en los sellos (superficie de
  * badge, como el marco de las cards).
  *

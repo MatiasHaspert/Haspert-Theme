@@ -10,7 +10,7 @@
 
   Colores a prueba de balas: literales en el CSS (el snippet se rendea en 4 lugares y no
   podemos depender de tokens del scope ni de un setting `color` que stringifique raro).
-  En progreso = terracota; logrado = verde sobrio (#246A45), nunca fluo.
+  En progreso = acento (ultramar); logrado = verde sobrio (#1E6B4E), nunca fluo.
 {%- endcomment -%}
 {%- if settings.free_ship_enabled and settings.free_ship_threshold > 0 -%}
   {%- liquid
@@ -34,14 +34,14 @@
     <p class="free-ship__text">
       {%- if reached -%}
         <svg class="free-ship__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-          <path d="M5 12.5l4.2 4.2L19 7" stroke="#246A45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5 12.5l4.2 4.2L19 7" stroke="#1E6B4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       {%- else -%}
         <svg class="free-ship__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-          <rect x="2" y="6.5" width="13" height="10" rx="1.4" stroke="#B25A3C" stroke-width="1.6"/>
-          <path d="M15 9.5h3.6l2.4 3v4H15z" stroke="#B25A3C" stroke-width="1.6" stroke-linejoin="round"/>
-          <circle cx="6.5" cy="17.5" r="1.7" stroke="#B25A3C" stroke-width="1.6"/>
-          <circle cx="17.2" cy="17.5" r="1.7" stroke="#B25A3C" stroke-width="1.6"/>
+          <rect x="2" y="6.5" width="13" height="10" rx="1.4" stroke="#1E34A8" stroke-width="1.6"/>
+          <path d="M15 9.5h3.6l2.4 3v4H15z" stroke="#1E34A8" stroke-width="1.6" stroke-linejoin="round"/>
+          <circle cx="6.5" cy="17.5" r="1.7" stroke="#1E34A8" stroke-width="1.6"/>
+          <circle cx="17.2" cy="17.5" r="1.7" stroke="#1E34A8" stroke-width="1.6"/>
         </svg>
       {%- endif -%}
       <span class="free-ship__msg">{{ message }}</span>
@@ -70,12 +70,12 @@
       gap: 0.7rem;
     }
     .free-ship__icon { flex: 0 0 auto; }
-    .free-ship__amt { font-weight: 700; color: #8F4329; }
-    .free-ship--reached .free-ship__text { color: #246A45; font-weight: 600; }
+    .free-ship__amt { font-weight: 700; color: #16267E; }
+    .free-ship--reached .free-ship__text { color: #1E6B4E; font-weight: 600; }
     .free-ship__track {
       height: 0.7rem;
       border-radius: 999px;
-      background: rgba(31, 27, 22, 0.07);
+      background: rgba(18, 22, 30, 0.07);
       overflow: hidden;
     }
     /* `display: block` anula la regla global `div:empty { display:none }` de base.css
@@ -84,7 +84,7 @@
       display: block;
       height: 100%;
       min-width: 0.6rem;
-      background-color: #B25A3C; /* terracota base (vale aunque el setting venga vacío/none) */
+      background-color: #1E34A8; /* ultramar base (vale aunque el setting venga vacío/none) */
       {%- if bar_color contains '#' %}
       background-color: {{ bar_color }}; /* override del merchant sólo si es hex válido */
       {%- endif %}
@@ -92,7 +92,7 @@
       transition: width 460ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms cubic-bezier(0.23, 1, 0.32, 1);
     }
     /* Logrado: verde sobrio. (0,3,0) gana sobre el override del merchant (0,2,0). */
-    .free-ship--reached .free-ship__track .free-ship__fill { background-color: #246A45; }
+    .free-ship--reached .free-ship__track .free-ship__fill { background-color: #1E6B4E; }
     @media (prefers-reduced-motion: reduce) {
       .free-ship__fill { transition: none; }
     }

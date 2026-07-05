@@ -5,7 +5,7 @@
      · el panel lateral        → hoja inferior (sombra hacia arriba, curva ~300ms);
      · el drill-down           → acordeón inline multi-open (focus-trap lo
                                  neutraliza numen-facets-accordion.js);
-     · las opciones tipo lista → FILAS CHECKBOX (box + tick terracota, 44px táctil).
+     · las opciones tipo lista → FILAS CHECKBOX (box + tick de acento, 44px táctil).
    Scope: .facets-container-drawer. Se carga DESPUÉS de component-facets.css.
    ========================================================================== */
 
@@ -14,8 +14,8 @@
 .collnav,
 .facets-container-drawer,
 .collection-hero {
-  --perfume-accent: var(--accent, #b25a3c);
-  --perfume-accent-ink: #8f4329;
+  --perfume-accent: var(--accent, #1E34A8);
+  --perfume-accent-ink: #16267E;
   --perfume-ease-select: cubic-bezier(0.23, 1, 0.32, 1);
   --perfume-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --perfume-dur-select: 200ms;
@@ -43,7 +43,7 @@
   border-width: 0;
   border-radius: 1.8rem 1.8rem 0 0;
   overflow: hidden; /* el scroll interno lo maneja __main */
-  box-shadow: 0 -1.4rem 4.4rem rgba(31, 27, 22, 0.16);
+  box-shadow: 0 -1.4rem 4.4rem rgba(var(--nc-scrim-rgb), 0.16);
   transition: transform var(--perfume-dur-sheet) var(--perfume-ease-drawer);
 }
 
@@ -151,7 +151,7 @@
   transform: rotate(-90deg);
 }
 
-/* ---- OPCIONES como CHECKBOX (fila 4.4rem, check terracota). Reemplaza los chips. ---- */
+/* ---- OPCIONES como CHECKBOX (fila 4.4rem, check de acento). Reemplaza los chips. ---- */
 .facets-container-drawer .mobile-facets__submenu ul.mobile-facets__list {
   display: flex;
   flex-direction: column;
@@ -181,7 +181,7 @@
 }
 @media (hover: hover) {
   .facets-container-drawer .mobile-facets__label:hover {
-    background: #faf7f0;
+    background: var(--nc-soft-bg);
   }
 }
 /* box */
@@ -194,7 +194,7 @@
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 0.6rem;
-  border: 0.2rem solid #c7bba6;
+  border: 0.2rem solid #7E8898;
   background: rgb(var(--color-background));
   transition: background var(--perfume-dur-select) var(--perfume-ease-select),
     border-color var(--perfume-dur-select) var(--perfume-ease-select);
@@ -261,7 +261,7 @@
   padding: 0.2rem 2rem 1.6rem;
 }
 
-/* ---- Footer: "Aplicar / Ver N productos" terracota, full-width, dominante ---- */
+/* ---- Footer: "Aplicar / Ver N productos" en acento, full-width, dominante ---- */
 .facets-container-drawer .mobile-facets__main > .mobile-facets__footer {
   flex-direction: column-reverse;
   gap: 0.6rem;
@@ -295,11 +295,11 @@
   color: rgba(var(--color-foreground), 0.6);
 }
 
-/* ---- Chips de filtros activos (sobre la grilla): pill cálido + ✕ cómoda ---- */
+/* ---- Chips de filtros activos (sobre la grilla): pill suave + ✕ cómoda ---- */
 .facets-container-drawer .active-facets__button-inner {
   border-radius: 999px;
-  border-color: #e4d6ae;
-  background: #f6efdd;
+  border-color: var(--nc-soft-line);
+  background: var(--nc-soft-bg);
   color: var(--perfume-accent-ink);
   font-weight: 600;
   font-size: 1.2rem;
@@ -316,7 +316,7 @@
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  background: rgba(143, 67, 41, 0.1);
+  background: rgba(var(--nc-accent-rgb), 0.1);
   color: var(--perfume-accent-ink);
 }
 

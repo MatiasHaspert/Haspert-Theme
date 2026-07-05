@@ -3,7 +3,7 @@
    ----------------------------------------------------------------------------
    Adapta la card de Sense (.product-card-wrapper) al sistema de perfumería:
    packshot sobre blanco, jerarquía marca → título → ficha → PRECIO (Bebas manda)
-   → cuotas. "Agregar" terracota sólido. Motion con las curvas del sistema
+   → cuotas. "Agregar" en acento sólido. Motion con las curvas del sistema
    (--perfume-*). Todo dinámico (precio/compare desde Shopify; ficha metafields).
    Scope: .product-card-wrapper. Usa las variables de esquema de color de Sense.
    ========================================================================== */
@@ -13,8 +13,8 @@
 .collnav,
 .facets-container-drawer,
 .collection-hero {
-  --perfume-accent: var(--accent, #b25a3c);
-  --perfume-accent-ink: #8f4329;
+  --perfume-accent: var(--accent, #1E34A8);
+  --perfume-accent-ink: #16267E;
   --perfume-ease-select: cubic-bezier(0.23, 1, 0.32, 1);
   --perfume-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --perfume-dur-select: 200ms;
@@ -26,19 +26,20 @@
 /* La ficha de perfume se lee mejor alineada a la izquierda. */
 .product-card-wrapper {
   --text-alignment: left;
-  --card-frame-border: #e0dbd0;
+  --card-frame-border: var(--nc-card-frame);
   --card-frame-radius: 1.2rem;
   --card-frame-bg: #ffffff;
 }
 
-/* — Marco de la tarjeta: contorno arena + radius + fondo. Curva real en la elevación. — */
+/* — Marco de la tarjeta (2a): contorno tinta + radius + fondo; hover → acento. — */
 .product-card-wrapper .card {
   background-color: var(--card-frame-bg);
   border: 0.1rem solid var(--card-frame-border);
   border-radius: var(--card-frame-radius);
   overflow: hidden;
   transition: transform var(--perfume-dur-select) var(--perfume-ease-select),
-    box-shadow var(--perfume-dur-select) var(--perfume-ease-select);
+    box-shadow var(--perfume-dur-select) var(--perfume-ease-select),
+    border-color var(--perfume-dur-select) var(--perfume-ease-select);
 }
 
 .product-card-wrapper .card__inner {
@@ -48,7 +49,8 @@
 @media (hover: hover) {
   .product-card-wrapper:hover .card {
     transform: translateY(-4px);
-    box-shadow: 0 1.4rem 3.4rem rgba(28, 24, 20, 0.12);
+    border-color: var(--nc-accent);
+    box-shadow: 0 1.4rem 3.4rem rgba(var(--nc-shadow-neutral-rgb), 0.12);
   }
 }
 
@@ -177,7 +179,7 @@
   border: 0.1rem solid rgba(var(--color-foreground), 0.15);
 }
 
-/* — CTA "Agregar": terracota sólido (acción #1 de la card) + feedback con curva — */
+/* — CTA "Agregar": acento sólido (acción #1 de la card) + feedback con curva — */
 .product-card-wrapper .card-perfume__add {
   position: relative;
   overflow: hidden;
@@ -260,7 +262,7 @@
   flex-shrink: 0;
 }
 /* icon-check.svg trae stroke="#111" hardcodeado (no currentColor); en el botón
-   terracota el ✓ tiene que ir blanco → forzamos el color del botón. */
+   de acento el ✓ tiene que ir blanco → forzamos el color del botón. */
 .product-card-wrapper .card-perfume__add-done svg {
   stroke: currentColor;
 }
@@ -313,12 +315,12 @@
   outline-offset: 0.2rem;
 }
 
-/* Seleccionado: borde terracota + fondo cálido + texto terracota-ink (AA). */
+/* Seleccionado: borde de acento + fondo de selección + texto acento profundo (AA). */
 .product-card-wrapper .card-perfume__pres-btn.is-selected {
   border-color: var(--perfume-accent);
   color: var(--perfume-accent-ink);
-  background: #fcf9f0;
-  box-shadow: 0 0.1rem 0 rgba(143, 67, 41, 0.05);
+  background: var(--nc-selected);
+  box-shadow: 0 0.1rem 0 rgba(var(--nc-accent-rgb), 0.05);
 }
 
 /* — Línea fiscal "sin impuestos nacionales": letra mínima gris — */
@@ -330,7 +332,7 @@
   margin-top: 0.4rem;
 }
 
-/* — Pista "desde $X en decant": visible pero SECUNDARIA (terracota-ink, chica) — */
+/* — Pista "desde $X en decant": visible pero SECUNDARIA (acento profundo, chica) — */
 .product-card-wrapper .card-perfume__from {
   font-family: var(--font-body-family);
   font-weight: 600;
