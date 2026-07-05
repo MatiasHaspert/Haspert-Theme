@@ -3,40 +3,67 @@
   --alpha-button-border: 1;
   --alpha-link: 0.85;
   --alpha-badge-border: 0.1;
-  --focused-base-outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+  --focused-base-outline: 0.2rem solid var(--nc-accent);
   --focused-base-outline-offset: 0.3rem;
-  --focused-base-box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0.5rem 0.4rem rgba(var(--color-foreground), 0.3);
+  --focused-base-box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0.5rem 0.4rem rgba(var(--nc-accent-rgb), 0.3);
 
-  /* Tokens canónicos Numen — fuente de verdad. Las copias locales en
-     component-numen-cart.css y main-product.liquid son deuda a limpiar. */
-  --nc-bg: #f4f2ed;          /* paper */
-  --nc-surface: #ffffff;     /* card */
-  --nc-ink: #1f1b16;         /* texto principal */
-  --nc-ink-2: #6b6157;       /* muteado */
-  --nc-ink-3: #9a9086;       /* muy muteado (fine print) */
-  --nc-line: #e0dbd0;        /* hairline */
-  --nc-line-soft: #ece7dc;
-  --nc-terra: #b25a3c;       /* acento */
-  --nc-terra-deep: #8f4329;  /* acento profundo */
-  --nc-cream: #fcf9f0;       /* fondo seleccionado/suave */
-  --nc-ok: #246a45;          /* verde sobrio (NO fluo) */
-  --nc-ok-bg: #edf4ee;
-  --nc-ok-line: #cfe3d5;
-  --nc-alert: #b5471f;
-  --nc-alert-bg: #fbede4;
-  --nc-alert-line: #e7c3ac;
-  --nc-soft-bg: #f6efdd;     /* badge suave */
-  --nc-soft-line: #e7d9b6;
+  /* Tokens canónicos Numen · PALETA ULTRAMAR (v2 · jul 2026) — fuente de verdad.
+     Regla de uso del acento: ≤ ~5% de la vista (CTA, links, micro-badges);
+     nunca detrás ni pegado a un packshot (hay frascos azules en catálogo). */
+
+  /* Neutrales */
+  --nc-bg: #F7F8F9;          /* fondo de página (blanco frío) */
+  --nc-surface: #FFFFFF;     /* cards, inputs */
+  --nc-panel: #ECEEF1;       /* paneles, fills suaves */
+  --nc-ink: #14161A;         /* texto principal · 17:1 sobre --nc-bg */
+  --nc-ink-2: #4A5058;       /* texto secundario · 7,7:1 */
+  --nc-ink-3: #626973;       /* texto tenue · 5,2:1 (el viejo #9A9086 fallaba AA) */
+  --nc-line: #D8DCE1;        /* borde / divisor */
+  --nc-line-soft: #EBEDF0;
+
+  /* Acento — uno solo, manda el CTA */
+  --nc-accent: #1E34A8;      /* CTA · blanco encima 9,9:1 */
+  --nc-accent-deep: #16267E; /* hover · tambien único acento AA para texto chico */
+  --nc-accent-press: #101C5E;/* :active */
+  --nc-accent-soft: #DFE6F8; /* fill suave del acento (ex --accent-soft) */
+  --nc-accent-rgb: 30, 52, 168;
+
+  /* Superficies derivadas */
+  --nc-selected: #EEF1FA;    /* ex --nc-cream: fondo de selección */
+  --nc-soft-bg: #EEF1FA;     /* chips / badges suaves */
+  --nc-soft-line: #C8D2EE;
+  --nc-shot-bg: #F1F2F4;     /* fondo de packshot: neutro, no pelea con ningún frasco */
+  --nc-card-frame: #14161A;  /* marco de card de producto (2a) · hover → --nc-accent */
+
+  /* Semánticos (no compiten con el acento; verde nunca fluo) */
+  --nc-ok: #1E6B4E;     --nc-ok-bg: #E7F2ED;     --nc-ok-line: #BFDCCB;
+  --nc-alert: #B02E2E;  --nc-alert-bg: #FBEBE9;  --nc-alert-line: #F0C6C1;
+
+  /* Franjas oscuras (componentes, no fondo de página) */
+  --nc-dark-bg: #14161A;   --nc-on-dark: #F2F4F7;   --nc-on-dark-2: #9BA3AE;
 
   --nc-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --nc-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --nc-dur-tap: 140ms;
   --nc-dur-select: 200ms;
   --nc-dur-drawer: 320ms;
-  --nc-shadow-btn: 0 8px 26px rgba(111, 88, 72, 0.18);
-  --nc-shadow-drawer: -18px 0 60px rgba(40, 28, 18, 0.2);
+
+  /* Sombras — 3 tintes (nunca marrón sobre paleta fría) */
+  --nc-shadow-neutral-rgb: 52, 60, 80;   /* elevación de cards / hovers */
+  --nc-shadow-deep-rgb: 16, 24, 48;      /* drawer, sheets, apoyo de frasco */
+  --nc-scrim-rgb: 18, 22, 30;            /* overlays */
+  --nc-shadow-btn: 0 8px 26px rgba(30, 52, 168, 0.22);      /* glow SOLO del CTA */
+  --nc-shadow-drawer: -18px 0 60px rgba(16, 24, 48, 0.18);
 
   --nc-font-display: 'Bebas Neue', var(--font-heading-family, sans-serif);
+
+  /* Aliases de compatibilidad — deprecados, no usar en código nuevo.
+     OJO: --accent / --accent-ink / --accent-soft NO se alias-ean acá: los inyecta
+     theme.liquid desde settings (Acento de marca) y base.css carga después —
+     redefinirlos acá pisaría el setting del merchant. */
+  --nc-terra: var(--nc-accent);
+  --nc-terra-deep: var(--nc-accent-deep);
+  --nc-cream: var(--nc-selected);
 }
 
 .product-card-wrapper .card,
@@ -770,15 +797,15 @@ summary::-webkit-details-marker {
 */
 
 .focus-inset:focus-visible {
-  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+  outline: 0.2rem solid var(--nc-accent);
   outline-offset: -0.2rem;
-  box-shadow: 0 0 0.2rem 0 rgba(var(--color-foreground), 0.3);
+  box-shadow: 0 0 0.2rem 0 rgba(var(--nc-accent-rgb), 0.3);
 }
 
 .focused.focus-inset {
-  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+  outline: 0.2rem solid var(--nc-accent);
   outline-offset: -0.2rem;
-  box-shadow: 0 0 0.2rem 0 rgba(var(--color-foreground), 0.3);
+  box-shadow: 0 0 0.2rem 0 rgba(var(--nc-accent-rgb), 0.3);
 }
 
 /*
@@ -792,15 +819,15 @@ summary::-webkit-details-marker {
 }
 
 .focus-offset:focus-visible {
-  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+  outline: 0.2rem solid var(--nc-accent);
   outline-offset: 1rem;
-  box-shadow: 0 0 0 1rem rgb(var(--color-background)), 0 0 0.2rem 1.2rem rgba(var(--color-foreground), 0.3);
+  box-shadow: 0 0 0 1rem rgb(var(--color-background)), 0 0 0.2rem 1.2rem rgba(var(--nc-accent-rgb), 0.3);
 }
 
 .focus-offset.focused {
-  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+  outline: 0.2rem solid var(--nc-accent);
   outline-offset: 1rem;
-  box-shadow: 0 0 0 1rem rgb(var(--color-background)), 0 0 0.2rem 1.2rem rgba(var(--color-foreground), 0.3);
+  box-shadow: 0 0 0 1rem rgb(var(--color-background)), 0 0 0.2rem 1.2rem rgba(var(--nc-accent-rgb), 0.3);
 }
 
 /* component-title */
@@ -3635,11 +3662,11 @@ details-disclosure > details {
 
 /* -----------------------------------------------
    NUMEN - overrides globales (tipografia + botones)
-   Heredado del theme base (ex "Calmi"); recoloreado a terracota de marca.
+   Heredado del theme base (ex "Calmi"); recoloreado al acento de marca (Ultramar v2).
    ----------------------------------------------- */
 :root {
-  --brand-button: #8F4329;       /* terracota AA: texto blanco encima, borde/relleno sobre claro */
-  --brand-button-hover: #B25A3C;
+  --brand-button: var(--nc-accent);            /* acento AA: texto blanco encima (9,9:1) */
+  --brand-button-hover: var(--nc-accent-deep); /* el hover OSCURECE (accent → deep); el viejo aclaraba */
   --brand-radius: 14px;
 }
 
@@ -3650,7 +3677,7 @@ h3, .h3 { font-weight: 600; }
 p, li, .rte p { line-height: 1.55; font-size: 1rem; }
 .small { font-size: 0.88rem; opacity: 0.75; }
 
-/* Botones unificados (terracota de marca) */
+/* Botones unificados (acento de marca) */
 .button,
 button[type="submit"] {
   border-radius: var(--brand-radius) !important;
@@ -3675,7 +3702,7 @@ button[type="submit"] {
   background: #fff !important;
 }
 .button--secondary:hover {
-  background-color: #f7ece6 !important;
+  background-color: var(--nc-accent-soft) !important;
 }
 /* Sin el anillo gris del pseudo-borde de Sense (.button:after) en los botones de marca */
 .button--primary::after,
@@ -3699,7 +3726,7 @@ button[type="submit"] {
    !important para ganarle al estilo inyectado por la app. */
 .jdgm-write-rev-link,
 a.jdgm-write-rev-link {
-  background-color: var(--brand-button) !important; /* terracota AA #8F4329 */
+  background-color: var(--brand-button) !important; /* acento AA (Ultramar) */
   color: #fff !important;
   border-color: var(--brand-button) !important;
 }
