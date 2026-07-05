@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&amp;display=swap" rel="stylesheet">
+<style>body{margin:0;background:#F7F8F9;-webkit-font-smoothing:antialiased}</style>
+</helmet>
+
+<div style="max-width:1020px;margin:0 auto;padding:44px 28px 80px;font-family:Montserrat,system-ui,sans-serif;color:#14161A">
+
+  <div data-screen-label="Entrega · Header">
+    <div style="display:flex;align-items:center;gap:10px;font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#1E34A8">Entrega · Prompt B <span style="width:34px;height:1px;background:#C8D2EE"></span> Theme Haspert / Dawn OS 2.0</div>
+    <h1 style="font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:58px;line-height:.94;letter-spacing:.01em;margin:12px 0 10px">Paleta Ultramar — capa de cambio completa</h1>
+    <p style="font-size:14px;line-height:1.65;color:#4A5058;max-width:72ch;margin:0 0 16px">Dirección <strong>2a firmada</strong> (Ultramar + marco de card en tinta). Alcance <strong>solo color</strong>: cero JS, cero lógica Liquid, tipografía intacta (Bebas + Montserrat, itálica 500 como acento editorial). El material de abajo es para integrar, no para interpretar.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <span style="background:#EEF1FA;border:1px solid #C8D2EE;color:#4A5058;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:999px">Cero dorado</span>
+      <span style="background:#EEF1FA;border:1px solid #C8D2EE;color:#4A5058;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:999px">Oscuro solo en componentes</span>
+      <span style="background:#EEF1FA;border:1px solid #C8D2EE;color:#4A5058;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:999px">AA calculado, no estimado</span>
+      <span style="background:#EEF1FA;border:1px solid #C8D2EE;color:#4A5058;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:999px">Sombras re-derivadas (3 tintes)</span>
+      <span style="background:#EEF1FA;border:1px solid #C8D2EE;color:#4A5058;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:999px">prefers-reduced-motion y easings intactos</span>
+    </div>
+  </div>
+
+  <!-- ============ 1 · ROOT CANÓNICO ============ -->
+  <div data-screen-label="Entrega §1 Root canónico" style="margin-top:44px">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;letter-spacing:.02em;margin:0 0 6px">1 · Bloque :root canónico <span style="color:#626973">→ assets/base.css</span></h2>
+    <p style="font-size:13px;line-height:1.6;color:#4A5058;max-width:76ch;margin:0 0 14px">Se define <strong>una sola vez</strong> (Fase 0). Al pegarlo, borrar los dos bloques duplicados: <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#EEF1FA;padding:1px 5px;border-radius:4px">--nc-*</code> en <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#EEF1FA;padding:1px 5px;border-radius:4px">component-numen-cart.css</code> (~L20-47) y los semánticos <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#EEF1FA;padding:1px 5px;border-radius:4px">--perfume-*</code> del <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#EEF1FA;padding:1px 5px;border-radius:4px">{%- style -%}</code> de main-product.liquid. Incluye aliases deprecados (<code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#EEF1FA;padding:1px 5px;border-radius:4px">--nc-terra → var(--nc-accent)</code>) para que ningún componente rompa antes del rename. Archivo listo: <a href="ultramar-nc-root.css" style="color:#1E34A8;font-weight:600">ultramar-nc-root.css</a>.</p>
+    <pre style="background:#14161A;color:#F2F4F7;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:1.55;padding:18px 20px;border-radius:10px;overflow-x:auto;margin:0">:root {
+  /* Neutrales */
+  --nc-bg: #F7F8F9;          /* fondo de página (blanco frío) */
+  --nc-surface: #FFFFFF;     /* cards, inputs */
+  --nc-panel: #ECEEF1;       /* paneles, fills suaves */
+  --nc-ink: #14161A;         /* texto principal · 17:1 sobre --nc-bg */
+  --nc-ink-2: #4A5058;       /* texto secundario · 7,7:1 */
+  --nc-ink-3: #626973;       /* texto tenue · 5,2:1 (el viejo #9A9086 fallaba AA) */
+  --nc-line: #D8DCE1;  --nc-line-soft: #EBEDF0;
+
+  /* Acento — uno solo, manda el CTA */
+  --nc-accent: #1E34A8;       /* blanco encima: 9,9:1 */
+  --nc-accent-deep: #16267E;  /* hover · único acento AA para texto chico */
+  --nc-accent-press: #101C5E; /* :active */
+  --nc-accent-soft: #DFE6F8;  --nc-accent-rgb: 30, 52, 168;
+
+  /* Superficies derivadas */
+  --nc-selected: #EEF1FA;    /* ex --nc-cream */
+  --nc-soft-bg: #EEF1FA;  --nc-soft-line: #C8D2EE;
+  --nc-shot-bg: #F1F2F4;     /* packshot: neutro, no pelea con ningún frasco */
+  --nc-card-frame: #14161A;  /* NUEVO (2a) · hover → --nc-accent */
+
+  /* Semánticos (verde nunca fluo) */
+  --nc-ok: #1E6B4E;     --nc-ok-bg: #E7F2ED;     --nc-ok-line: #BFDCCB;
+  --nc-alert: #B02E2E;  --nc-alert-bg: #FBEBE9;  --nc-alert-line: #F0C6C1;
+
+  /* Franjas oscuras (componentes, no fondo de página) */
+  --nc-dark-bg: #14161A;  --nc-on-dark: #F2F4F7;  --nc-on-dark-2: #9BA3AE;
+
+  /* Sombras — 3 tintes (nunca marrón sobre paleta fría) */
+  --nc-shadow-neutral-rgb: 52, 60, 80;   /* elevación de cards / hovers */
+  --nc-shadow-deep-rgb: 16, 24, 48;      /* drawer, sheets, apoyo de frasco */
+  --nc-scrim-rgb: 18, 22, 30;            /* overlays */
+  --nc-shadow-btn: 0 8px 26px rgba(30, 52, 168, 0.22);   /* glow SOLO del CTA */
+  --nc-shadow-drawer: -18px 0 60px rgba(16, 24, 48, 0.18);
+
+  /* Aliases de compatibilidad — deprecados */
+  --nc-terra: var(--nc-accent);  --nc-terra-deep: var(--nc-accent-deep);
+  --nc-cream: var(--nc-selected);
+  --accent: var(--nc-accent);  --accent-ink: var(--nc-accent-deep);
+}
+:focus-visible { outline: 2px solid var(--nc-accent); outline-offset: 2px; }</pre>
+  </div>
+
+  <!-- ============ 2 · MAPEO DE TOKENS ============ -->
+  <div data-screen-label="Entrega §2 Mapeo tokens" style="margin-top:44px">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;letter-spacing:.02em;margin:0 0 6px">2 · Mapeo definitivo — tokens con nombre</h2>
+    <p style="font-size:13px;line-height:1.6;color:#4A5058;margin:0 0 14px">Cubre los dos bloques duplicados del repo y el tokens.css de los mockups. Mapeo <strong>por rol</strong>, no por hex.</p>
+    <div style="background:#FFFFFF;border:1px solid #D8DCE1;border-radius:10px;padding:6px 18px">
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:9px 0;border-bottom:2px solid #14161A;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#626973"><span>Token · rol</span><span>Viejo</span><span>Nuevo</span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-bg · fondo página</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#F4F2ED;border:1px solid #D8DCE1"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#F4F2ED</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#F7F8F9;border:1px solid #D8DCE1"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#F7F8F9</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-surface · card</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#FFFFFF;border:1px solid #D8DCE1"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#FFFFFF</span></span><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">sin cambio</span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-ink / --ink · tinta</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#1F1B16"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#1F1B16</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#14161A"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#14161A</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-ink-2 · texto-2 <span style="color:#626973">(tokens.css: #57514A)</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#6B6157"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#6B6157</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#4A5058"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#4A5058</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-ink-3 · texto-3 / fine print</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#9A9086"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#9A9086 <s style="color:#B02E2E">2,9:1</s></span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#626973"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#626973 · 5,2:1</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-line · línea <span style="color:#626973">(mockups --line: #E3DDD2 → #E2E5EA)</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#E0DBD0"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#E0DBD0</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#D8DCE1"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#D8DCE1</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-line-soft · línea suave</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#ECE7DC"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#ECE7DC</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#EBEDF0"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#EBEDF0</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--panel · panel</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#ECE8DF"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#ECE8DF</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#ECEEF1"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#ECEEF1</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:700">--nc-terra / --accent / --perfume-accent · ACENTO → renombrar --nc-accent</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#B25A3C"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#B25A3C</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#1E34A8"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:700">#1E34A8</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-terra-deep / --accent-ink / --perfume-accent-ink · acento profundo (hover · texto chico)</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#8F4329"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#8F4329</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#16267E"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#16267E</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--accent-soft · fill suave del acento</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#F3E2DA"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#F3E2DA</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#DFE6F8"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#DFE6F8</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-cream / --cream · fondo selección → renombrar --nc-selected</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#FCF9F0;border:1px solid #D8DCE1"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#FCF9F0</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#EEF1FA;border:1px solid #D8DCE1"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#EEF1FA</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-soft-bg / --perfume-soft-bg / --pill-bg · chips y badges</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#F6EFDD"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#F6EFDD</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#EEF1FA"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#EEF1FA</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-soft-line / --perfume-soft-line / --pill-line(-2) <span style="color:#626973">(#E7D9B6 y #E4D6AE)</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#E7D9B6"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#E7D9B6</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#C8D2EE"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#C8D2EE</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-shot-bg · fondo de packshot</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#FBFAF6;border:1px solid #D8DCE1"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#FBFAF6</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#F1F2F4;border:1px solid #D8DCE1"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#F1F2F4</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-ok / --perfume-ok / --ok <span style="color:#626973">(#246A45 y #2E7D52)</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#246A45"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#246A45</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#1E6B4E"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#1E6B4E</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">ok-bg · ok-line <span style="color:#626973">(#EDF4EE/#E7F2EA · #CFE3D5/#B6D8C2)</span></span><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">varios</span><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#E7F2ED · #BFDCCB</span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">--nc-alert / --perfume-alert / --alert</span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#B5471F"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#B5471F</span></span><span style="display:flex;align-items:center;gap:6px"><i style="width:13px;height:13px;border-radius:3px;background:#B02E2E"></i><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#B02E2E</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">alert-bg · alert-line <span style="color:#626973">(#FBEDE4/#FAE9DF · #E7C3AC)</span></span><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">varios</span><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#FBEBE9 · #F0C6C1</span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;border-bottom:1px solid #EBEDF0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px">franjas oscuras · --dark-bg / --dark-bg-2 / --on-dark / --on-dark-2 / --ink-raised</span><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">#1F1B16 / #2A1F12 / #F4EEE2 / #B7AC9A / #241C15</span><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">#14161A / #1A2030 / #F2F4F7 / #9BA3AE / #171922</span></div>
+      <div style="display:grid;grid-template-columns:minmax(240px,1.4fr) 1fr 1fr;gap:12px;padding:8px 0;font-size:11.5px;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:700">NUEVOS · sin equivalente viejo</span><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#626973">—</span><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600">--nc-accent-press #101C5E · --nc-card-frame #14161A (2a)</span></div>
+    </div>
+  </div>
+
+  <!-- ============ 3 · HEXES SUELTOS ============ -->
+  <div data-screen-label="Entrega §3 Hexes sueltos" style="margin-top:44px">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;letter-spacing:.02em;margin:0 0 6px">3 · Hexes sueltos y sombras — cada uno con destino</h2>
+    <p style="font-size:13px;line-height:1.6;color:#4A5058;margin:0 0 14px">Verificado contra el repo. Donde el rol coincide con un token, el destino es <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#EEF1FA;padding:1px 5px;border-radius:4px">var(--nc-…)</code>; si no, hex derivado. Los archivos <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#EEF1FA;padding:1px 5px;border-radius:4px">numen-*-polish-ultramar.css</code> de esta entrega ya lo tienen aplicado — sirven de diff de referencia.</p>
+    <div style="background:#FFFFFF;border:1px solid #D8DCE1;border-radius:10px;padding:6px 18px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5">
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:8px 0;border-bottom:2px solid #14161A;font-family:Montserrat,sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#626973"><span>Viejo</span><span>Dónde</span><span>Destino</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#9E4E33</span><span style="color:#626973">hover del CTA (cart ×3)</span><span style="font-weight:600">var(--nc-accent-deep) #16267E</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#D6CDBC</span><span style="color:#626973">borde hover de xcard (cart)</span><span style="font-weight:600">var(--nc-soft-line) #C8D2EE</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#FCFBF7</span><span style="color:#626973">tope de gradiente de card (cart ×2)</span><span style="font-weight:600">#FAFBFC</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#FAF8F3</span><span style="color:#626973">fondo de bloque (cart)</span><span style="font-weight:600">#F4F5F7</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#FBF6E8</span><span style="color:#626973">del inventario del brief — no apareció en el repo actual</span><span style="font-weight:600">si aparece: var(--nc-soft-bg) #EEF1FA</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#FAF7F0</span><span style="color:#626973">estado activo (facets)</span><span style="font-weight:600">var(--nc-soft-bg) #EEF1FA</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#FCF7EF</span><span style="color:#626973">card de variante seleccionada (PDP)</span><span style="font-weight:600">var(--nc-selected) #EEF1FA</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#7A4226</span><span style="color:#626973">nota legal bajo el CTA (cart)</span><span style="font-weight:600">var(--nc-ink-2) #4A5058</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#C7BBA6</span><span style="color:#626973">borde de radio/checkbox (PDP + facets)</span><span style="font-weight:600">#7E8898 · 3,6:1 (el viejo daba 1,9:1)</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#E2D8C4</span><span style="color:#626973">barras vacías de ficha olfativa (PDP)</span><span style="font-weight:600">#DFE3E9</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#9A9086</span><span style="color:#626973">fine print $/ml (cart)</span><span style="font-weight:600">var(--nc-ink-3) #626973</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>gradiente packshot</span><span style="color:#626973">#FFFFFF → #FFFEFC → #F5F0E6 → #EFE9DD (PDP media)</span><span style="font-weight:600">#FFFFFF → #FDFDFE → #F2F3F5 → #E9EBEE</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#8F4329 + #FFFFFF</span><span style="color:#626973">announcement bar (header-group.json)</span><span style="font-weight:600">bg #14161A · texto #FFFFFF (franja = tinta, no acento)</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>"#B25A3C"</span><span style="color:#626973">default del setting acento (schema de main-product.liquid)</span><span style="font-weight:600">"#1E34A8"</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>#128C7E · #0C5B51</span><span style="color:#626973">botón WhatsApp (menu drawer)</span><span style="font-weight:600">SIN CAMBIO — marca del canal</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:8px 0 6px;border-bottom:1px solid #EBEDF0;font-family:Montserrat,sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#626973"><span style="grid-column:1 / -1">Sombras — 3 tintes</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>rgba(111,88,72,·)</span><span style="color:#626973">elevación neutra (cards, hover)</span><span style="font-weight:600">rgba(52,60,80,·) misma alpha</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>rgba(111,88,72,.18) · rgba(146,67,41,.3)</span><span style="color:#626973">glow del CTA (btn + hover)</span><span style="font-weight:600">rgba(30,52,168,.22) · rgba(30,52,168,.30)</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>rgba(40,28,18,·) · rgba(27,21,16,·)</span><span style="color:#626973">profunda (drawer, sheets, apoyo del frasco)</span><span style="font-weight:600">rgba(16,24,48,·)</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>rgba(31,27,22,·)</span><span style="color:#626973">scrim del drawer + insets</span><span style="font-weight:600">rgba(18,22,30,·)</span></div>
+      <div style="display:grid;grid-template-columns:150px 1fr 1.2fr;gap:12px;padding:6px 0"><span>rgba(143,67,41,·)</span><span style="color:#626973">sombra de selección (PDP, facets)</span><span style="font-weight:600">rgba(30,52,168,·)</span></div>
+    </div>
+  </div>
+
+  <!-- ============ 4 · SETTINGS_DATA ============ -->
+  <div data-screen-label="Entrega §4 settings_data" style="margin-top:44px">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;letter-spacing:.02em;margin:0 0 6px">4 · settings_data.json — color_schemes, campo por campo</h2>
+    <p style="font-size:13px;line-height:1.6;color:#4A5058;max-width:76ch;margin:0 0 14px">Solo el bloque <strong>activo</strong> (L172-236). El segundo bloque de color_schemes que vive dentro de <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#EEF1FA;padding:1px 5px;border-radius:4px">presets</code> (con el dorado #C2A24C) es el preset de fábrica del theme: <strong>no tocarlo</strong>, no afecta al sitio publicado.</p>
+    <pre style="background:#14161A;color:#F2F4F7;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:1.6;padding:18px 20px;border-radius:10px;overflow-x:auto;margin:0">"color_schemes": {
+  "scheme-1": {  /* página */
+    "background": "#F7F8F9",  "text": "#14161A",
+    "button": "#14161A",      "button_label": "#FFFFFF",
+    "secondary_button_label": "#14161A",  "shadow": "#14161A" },
+  "scheme-2": {  /* panel */
+    "background": "#ECEEF1",  "text": "#14161A",
+    "button": "#14161A",      "button_label": "#FFFFFF",
+    "secondary_button_label": "#14161A",  "shadow": "#14161A" },
+  "scheme-3": {  /* franja oscura (antes terra profundo) — componente, no página */
+    "background": "#14161A",  "text": "#F2F4F7",
+    "button": "#FFFFFF",      "button_label": "#14161A",
+    "secondary_button_label": "#F2F4F7",  "shadow": "#000000" },
+  "scheme-4": {  /* cards blancas */
+    "background": "#FFFFFF",  "text": "#14161A",
+    "button": "#14161A",      "button_label": "#FFFFFF",
+    "secondary_button_label": "#14161A",  "shadow": "#14161A" },
+  "scheme-5": {  /* badge SALE — el único scheme en acento */
+    "background": "#1E34A8",  "text": "#FFFFFF",
+    "button": "#FFFFFF",      "button_label": "#1E34A8",
+    "secondary_button_label": "#FFFFFF",  "shadow": "#14161A" },
+  "scheme-9fee2964-…": {  /* clon de scheme-1 — mismos valores */
+    "background": "#F7F8F9",  "text": "#14161A",
+    "button": "#14161A",      "button_label": "#FFFFFF",
+    "secondary_button_label": "#14161A",  "shadow": "#14161A" }
+}</pre>
+    <p style="font-size:12.5px;line-height:1.6;color:#4A5058;margin:12px 0 0">Nota Dawn: los botones de scheme son las acciones <em>genéricas</em> (newsletter, secciones de contenido) y quedan en tinta. El CTA de compra —la acción #1 de cada vista— toma el acento vía <code style="font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:#EEF1FA;padding:1px 5px;border-radius:4px">--nc-accent</code> en los componentes numen. Así el ultramar no se derrama.</p>
+  </div>
+
+  <!-- ============ 5 · QA AA ============ -->
+  <div data-screen-label="Entrega §5 QA AA" style="margin-top:44px">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;letter-spacing:.02em;margin:0 0 6px">5 · QA de contraste — calculado (WCAG 2.x)</h2>
+    <div style="background:#FFFFFF;border:1px solid #D8DCE1;border-radius:10px;padding:6px 18px;font-size:12px">
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:8px 0;border-bottom:2px solid #14161A;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#626973"><span>Par</span><span>Ratio</span><span>AA</span></div>
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>tinta / fondo de página</span><span style="font-family:ui-monospace,Menlo,monospace">17,0:1</span><span style="color:#1E6B4E;font-weight:700">PASA</span></div>
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>texto-2 / fondo</span><span style="font-family:ui-monospace,Menlo,monospace">7,7:1</span><span style="color:#1E6B4E;font-weight:700">PASA</span></div>
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>texto-3 / fondo · texto-3 / soft-bg</span><span style="font-family:ui-monospace,Menlo,monospace">5,2 · 4,9</span><span style="color:#1E6B4E;font-weight:700">PASA</span></div>
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span><strong>blanco / acento (CTA)</strong> · hover · press</span><span style="font-family:ui-monospace,Menlo,monospace">9,9 · 13,0 · 15,6</span><span style="color:#1E6B4E;font-weight:700">PASA</span></div>
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>acento como texto / fondo · acento-deep como texto / fondo</span><span style="font-family:ui-monospace,Menlo,monospace">9,3 · 12,3</span><span style="color:#1E6B4E;font-weight:700">PASA</span></div>
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>ok / ok-bg · ok / fondo</span><span style="font-family:ui-monospace,Menlo,monospace">5,6 · 6,0</span><span style="color:#1E6B4E;font-weight:700">PASA</span></div>
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>alerta / alerta-bg · alerta / fondo</span><span style="font-family:ui-monospace,Menlo,monospace">5,5 · 6,0</span><span style="color:#1E6B4E;font-weight:700">PASA</span></div>
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>on-dark / franja tinta · on-dark-2 / franja tinta</span><span style="font-family:ui-monospace,Menlo,monospace">16,4 · 7,1</span><span style="color:#1E6B4E;font-weight:700">PASA</span></div>
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:6px 0;border-bottom:1px solid #EBEDF0"><span>borde de radio/control / card (mínimo UI 3:1)</span><span style="font-family:ui-monospace,Menlo,monospace">3,6:1</span><span style="color:#1E6B4E;font-weight:700">PASA</span></div>
+      <div style="display:grid;grid-template-columns:1.6fr 100px 90px;gap:12px;padding:6px 0"><span>precio tachado / card (decorativo, no informativo crítico)</span><span style="font-family:ui-monospace,Menlo,monospace">3,2:1</span><span style="color:#626973;font-weight:700">OK*</span></div>
+    </div>
+    <p style="font-size:11.5px;color:#626973;margin:10px 2px 0">* El tachado es refuerzo visual del precio ancla; el valor vigente siempre está en tinta 17:1. Ningún par crítico falló: no hubo que ajustar componentes.</p>
+  </div>
+
+  <!-- ============ 6 · RENDERS ============ -->
+  <div data-screen-label="Entrega §6 Renders" style="margin-top:44px">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;letter-spacing:.02em;margin:0 0 6px">6 · Renders de referencia — la paleta aplicada a las vistas reales</h2>
+    <p style="font-size:13px;line-height:1.6;color:#4A5058;max-width:76ch;margin:0 0 16px">Mismos mockups del sistema (clases reales del theme), re-tematizados con el mapeo de arriba aplicado <strong>mecánicamente</strong> — si el mapa tuviera huecos, se verían acá. Incluyen packshot oscuro (Sauvage) y claro (Yara) sobre el nuevo fondo de foto.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <a href="NUMEN PLP Ultramar.html" style="display:block;background:#FFFFFF;border:1px solid #14161A;border-radius:10px;padding:16px;text-decoration:none;color:#14161A">
+        <span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.02em">PLP · colección</span>
+        <span style="display:block;font-size:11.5px;color:#4A5058;line-height:1.5;margin-top:4px">Grilla con marco 2a en tinta, chips de filtro, badges SALE en acento, cards oscura y clara.</span>
+      </a>
+      <a href="NUMEN PDP Ultramar.html" style="display:block;background:#FFFFFF;border:1px solid #14161A;border-radius:10px;padding:16px;text-decoration:none;color:#14161A">
+        <span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.02em">PDP · hero + buybox</span>
+        <span style="display:block;font-size:11.5px;color:#4A5058;line-height:1.5;margin-top:4px">Packshot sobre gradiente frío, precio Bebas, variantes con selección en acento, beneficio transferencia en verde sobrio.</span>
+      </a>
+      <a href="NUMEN Cart Ultramar.html" style="display:block;background:#FFFFFF;border:1px solid #14161A;border-radius:10px;padding:16px;text-decoration:none;color:#14161A">
+        <span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.02em">Carrito · drawer + /cart</span>
+        <span style="display:block;font-size:11.5px;color:#4A5058;line-height:1.5;margin-top:4px">Footer con total + beneficio + CTA «Pagar pedido», cross-sell, empty state, barra de envío.</span>
+      </a>
+      <a href="Paletas Numen.dc.html#2a" style="display:block;background:#FFFFFF;border:1px solid #D8DCE1;border-radius:10px;padding:16px;text-decoration:none;color:#14161A">
+        <span style="display:block;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.02em">Hero de home · 2a</span>
+        <span style="display:block;font-size:11.5px;color:#4A5058;line-height:1.5;margin-top:4px">Franja de hero con titular Bebas + módulos de decisión (los mockups de home del repo siguen en paleta vieja: son referencia histórica).</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ============ 7 · RIESGOS ============ -->
+  <div data-screen-label="Entrega §7 Riesgos" style="margin-top:44px">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;letter-spacing:.02em;margin:0 0 6px">7 · Nota de riesgos — qué decidí y dónde mirar</h2>
+    <ol style="margin:10px 0 0;padding-left:20px;font-size:13px;line-height:1.7;color:#14161A;display:flex;flex-direction:column;gap:10px">
+      <li><strong>Régimen del acento (≤ ~5% de la vista).</strong> Si un módulo pide franja de color, va <em>tinta</em>, no ultramar — derramado, el azul vira a fintech. Por eso scheme-3 y la announcement bar quedaron en #14161A y no en acento.</li>
+      <li><strong>Packshots azules</strong> (el propio Sauvage, Bleu, etc.): el acento nunca va detrás ni pegado al frasco. El fondo de foto #F1F2F4 es neutro a propósito; la separación la hace el marco 2a, no el color.</li>
+      <li><strong>accent_ink derivado en Liquid</strong> (<code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#EEF1FA;padding:1px 5px;border-radius:4px">color_darken: 22</code> sobre #1E34A8) da ≈#0B1440: un paso más oscuro que el token --nc-accent-deep (#16267E). AA pasa igual; para paridad exacta cambiar 22 → 12 (es un número del style, no lógica).</li>
+      <li><strong>Controles más presentes:</strong> el borde de radios pasó de #C7BBA6 (1,9:1, sub-AA) a #7E8898 (3,6:1). Es intencional — el viejo era invisible en gama media. Igual el fine print: #9A9086 (2,9:1) → #626973 (5,2:1).</li>
+      <li><strong>Glow azul del CTA</strong> (rgba(30,52,168,.22–.30)): en OLED baratos puede «vibrar». Si pasa, bajar alpha a .16 en el token, no en el componente.</li>
+      <li><strong>Verde WhatsApp intacto</strong> (#128C7E): es marca del canal, no del theme. No lo alineé al verde ok a propósito.</li>
+      <li><strong>Jerarquía del carrito:</strong> el beneficio transferencia sigue en verde y el CTA en acento — chequear en el drawer real que el verde no gane peso óptico contra «Pagar pedido» (en el render no lo hace).</li>
+    </ol>
+  </div>
+
+  <!-- ============ INTEGRACIÓN ============ -->
+  <div data-screen-label="Entrega · Integración" style="margin-top:44px;background:#EEF1FA;border:1px solid #C8D2EE;border-radius:10px;padding:20px 24px">
+    <div style="font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#16267E;margin-bottom:10px">Orden de integración sugerido (dev)</div>
+    <ol style="margin:0;padding-left:20px;font-size:13px;line-height:1.8;color:#14161A">
+      <li>Pegar <a href="ultramar-nc-root.css" style="color:#1E34A8;font-weight:600">ultramar-nc-root.css</a> en el :root de assets/base.css y borrar los dos bloques duplicados (§1).</li>
+      <li>Reemplazar los hexes sueltos según §3 — los <code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#FFFFFF;padding:1px 5px;border-radius:4px">numen-*-polish-ultramar.css</code> de esta entrega sirven de diff de referencia.</li>
+      <li>settings_data.json: bloque activo de §4. Luego sections/header-group.json (announcement → #14161A).</li>
+      <li>Schema de main-product.liquid: default del acento → "#1E34A8".</li>
+      <li><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#FFFFFF;padding:1px 5px;border-radius:4px">shopify theme check</code> + QA visual: PDP (buybox + variantes), drawer (footer + cross-sell), PLP (marco 2a), badge SALE, focus ring.</li>
+    </ol>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

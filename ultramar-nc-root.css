@@ -1,0 +1,56 @@
+/* =============================================================================
+   NUMEN · PALETA ULTRAMAR (v2 · jul 2026) — bloque canónico
+   Pegar en assets/base.css dentro de :root (Fase 0: centralización de tokens).
+   Reemplaza los bloques duplicados --nc-* (component-numen-cart.css ~L20-47)
+   y los semánticos --perfume-* ({%- style -%} de sections/main-product.liquid).
+   Regla de uso del acento: ≤ ~5% de la vista (CTA, links, micro-badges);
+   nunca detrás ni pegado a un packshot (hay frascos azules en catálogo).
+   ============================================================================= */
+:root {
+  /* Neutrales */
+  --nc-bg: #F7F8F9;          /* fondo de página (blanco frío) */
+  --nc-surface: #FFFFFF;     /* cards, inputs */
+  --nc-panel: #ECEEF1;       /* paneles, fills suaves */
+  --nc-ink: #14161A;         /* texto principal · 17:1 sobre --nc-bg */
+  --nc-ink-2: #4A5058;       /* texto secundario · 7,7:1 */
+  --nc-ink-3: #626973;       /* texto tenue · 5,2:1 (el viejo #9A9086 fallaba AA) */
+  --nc-line: #D8DCE1;        /* borde / divisor */
+  --nc-line-soft: #EBEDF0;
+
+  /* Acento — uno solo, manda el CTA */
+  --nc-accent: #1E34A8;      /* CTA · blanco encima 9,9:1 */
+  --nc-accent-deep: #16267E; /* hover · tambien único acento AA para texto chico */
+  --nc-accent-press: #101C5E;/* :active */
+  --nc-accent-soft: #DFE6F8; /* fill suave del acento (ex --accent-soft) */
+  --nc-accent-rgb: 30, 52, 168;
+
+  /* Superficies derivadas */
+  --nc-selected: #EEF1FA;    /* ex --nc-cream: fondo de selección */
+  --nc-soft-bg: #EEF1FA;     /* chips / badges suaves */
+  --nc-soft-line: #C8D2EE;
+  --nc-shot-bg: #F1F2F4;     /* fondo de packshot: neutro, no pelea con ningún frasco */
+  --nc-card-frame: #14161A;  /* NUEVO (2a): marco de card de producto · hover → --nc-accent */
+
+  /* Semánticos (no compiten con el acento; verde nunca fluo) */
+  --nc-ok: #1E6B4E;     --nc-ok-bg: #E7F2ED;     --nc-ok-line: #BFDCCB;
+  --nc-alert: #B02E2E;  --nc-alert-bg: #FBEBE9;  --nc-alert-line: #F0C6C1;
+
+  /* Franjas oscuras (componentes, no fondo de página) */
+  --nc-dark-bg: #14161A;   --nc-on-dark: #F2F4F7;   --nc-on-dark-2: #9BA3AE;
+
+  /* Sombras — 3 tintes (nunca marrón sobre paleta fría) */
+  --nc-shadow-neutral-rgb: 52, 60, 80;   /* elevación de cards / hovers */
+  --nc-shadow-deep-rgb: 16, 24, 48;      /* drawer, sheets, apoyo de frasco */
+  --nc-scrim-rgb: 18, 22, 30;            /* overlays */
+  --nc-shadow-btn: 0 8px 26px rgba(30, 52, 168, 0.22);      /* glow SOLO del CTA */
+  --nc-shadow-drawer: -18px 0 60px rgba(16, 24, 48, 0.18);
+
+  /* Aliases de compatibilidad — deprecados, no usar en código nuevo */
+  --nc-terra: var(--nc-accent);
+  --nc-terra-deep: var(--nc-accent-deep);
+  --nc-cream: var(--nc-selected);
+  --accent: var(--nc-accent);
+  --accent-ink: var(--nc-accent-deep);
+}
+/* Foco visible AA — el ring usa el acento */
+:focus-visible { outline: 2px solid var(--nc-accent); outline-offset: 2px; }
