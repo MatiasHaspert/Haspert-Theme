@@ -109,7 +109,7 @@
         {%- comment -%} ---------- Media ---------- {%- endcomment -%}
         <div class="grid__item product__media-wrapper">
           {%- if product.media.size > 0 -%}
-            {% render 'product-media-gallery', product: product, variant_images: variant_images, media_tag: section.settings.media_tag_text %}
+            {% render 'product-media-gallery', product: product, variant_images: variant_images %}
           {%- else -%}
             <div class="product__media-item">
               <div class="product-media-container global-media-settings gradient" style="--ratio: 1.0; --preview-ratio: 1.0;">
@@ -693,33 +693,6 @@
 }
 .product__media-wrapper .product__media img { position: relative; z-index: 1; }
 
-/* Chip "Foto real" sobre el packshot (mockup Ultramar): refuerzo de autenticidad.
-   Anclado a <media-gallery> (no al wrapper) para que no derive cuando la galería
-   queda sticky en desktop. */
-media-gallery { display: block; position: relative; }
-.product__media-tag {
-  position: absolute;
-  top: 1.2rem;
-  left: 1.2rem;
-  z-index: 3;
-  pointer-events: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
-  font-family: var(--font-body-family);
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--perfume-accent-ink);
-  background: rgba(238, 241, 250, 0.85); /* --nc-soft-bg al 85% */
-  border: 0.1rem solid var(--nc-soft-line);
-  border-radius: 0.4rem;
-  padding: 0.4rem 0.9rem;
-}
-.product__media-tag svg { flex: none; }
-
 /* Thumbnail activo: anillo de acento (Dawn lo pinta con foreground). */
 .product__media-wrapper .thumbnail[aria-current] {
   box-shadow: 0 0 0 0.1rem var(--perfume-accent);
@@ -1076,13 +1049,6 @@ media-gallery { display: block; position: relative; }
     {
       "type": "header",
       "content": "Galería de imágenes"
-    },
-    {
-      "type": "text",
-      "id": "media_tag_text",
-      "label": "Chip sobre la foto",
-      "info": "Refuerzo de autenticidad sobre el packshot (ej. \"Foto real\"). Vacío = oculto.",
-      "default": "Foto real"
     },
     {
       "type": "select",

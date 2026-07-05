@@ -52,13 +52,6 @@
   data-desktop-layout="{{ section.settings.gallery_layout }}"
 >
   <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
-  {%- if media_tag != blank -%}
-    {%- comment -%} Chip "Foto real" sobre el packshot (PDP): refuerzo de autenticidad. Solo se emite si la sección lo pasa. {%- endcomment -%}
-    <span class="product__media-tag">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" stroke="currentColor" stroke-width="1.6"/></svg>
-      {{ media_tag }}
-    </span>
-  {%- endif -%}
   <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
     <a class="skip-to-content-link button visually-hidden quick-add-hidden" href="#ProductInfo-{{ section.id }}">
       {{ 'accessibility.skip_to_product_info' | t }}
