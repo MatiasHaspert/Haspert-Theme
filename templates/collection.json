@@ -12,7 +12,9 @@
     "breadcrumbs": {
       "type": "breadcrumbs",
       "settings": {
-        "home_label": "Inicio"
+        "home_label": "Inicio",
+        "collections_label": "Colecciones",
+        "priority_handles": "arabes,disenador,nicho"
       }
     },
     "main-collection-banner": {
@@ -79,7 +81,7 @@
           "type": "angle",
           "settings": {
             "collection": "frescos-para-el-verano",
-            "label": "",
+            "label": "Frescos",
             "image": "shopify://shop_images/nuit1.webp",
             "link": ""
           }
@@ -105,6 +107,7 @@
       ],
       "settings": {
         "aria_label": "Colecciones",
+        "hide_empty_collections": true,
         "color_scheme": "",
         "padding_top": 14,
         "padding_bottom": 8

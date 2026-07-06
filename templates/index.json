@@ -96,8 +96,8 @@
         "aria_label": "Colecciones",
         "hide_empty_collections": true,
         "color_scheme": "scheme-1",
-        "padding_top": 14,
-        "padding_bottom": 8
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
     "featured": {
