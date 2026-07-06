@@ -692,11 +692,24 @@
   overflow: hidden;
 }
 @media screen and (max-width: 749px) {
-  .product__media-wrapper .product__media-item .product__media {
-    aspect-ratio: 4 / 5;
+  /* Marco cuadrado fijo para la foto del PDP. Subimos la especificidad (incluyendo
+     .product-media-container[.constrain-height]) para ganarle a section-main-product.css:
+     su regla .product-media-container.constrain-height .media { padding-top } reinfla
+     la altura con el ratio natural del ARCHIVO, y como el frasco va centrado terminaba
+     "flotando" en una caja larga. Con el padding fijo de abajo, manda el aspect-ratio. */
+  .product__media-wrapper .product-media-container .product__media,
+  .product__media-wrapper .product-media-container.constrain-height .product__media {
+    aspect-ratio: 1 / 1;
     display: grid;
     place-items: center;
     padding: 3.6rem 3.4rem 4.6rem;
+  }
+  /* El theme angosta el contenedor al alto de viewport cuando media_fit=contain
+     (width: min(--contained-width, 100%)); lo dejamos a ancho completo de la columna. */
+  .product__media-wrapper .product-media-container.constrain-height,
+  .product__media-wrapper .product-media-container.constrain-height.media-fit-contain {
+    width: 100%;
+    max-width: 100%;
   }
 }
 .product__media-wrapper .product__media img {
