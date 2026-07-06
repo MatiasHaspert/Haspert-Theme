@@ -11,7 +11,10 @@
   "sections": {
     "main": {
       "type": "main-page",
-      "settings": {}
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
     },
     "auth": {
       "type": "autenticidad-perfume",
@@ -35,8 +38,31 @@
           }
         }
       },
-      "block_order": ["paso_1", "paso_2", "paso_3"],
-      "settings": {}
+      "block_order": [
+        "paso_1",
+        "paso_2",
+        "paso_3"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "accent_color": "#1e34a8",
+        "heading": "Cómo verificás que es original",
+        "title": "",
+        "show_photo": true,
+        "lote_badge": "Foto real del lote",
+        "whatsapp_label": "Pedir video del lote por WhatsApp",
+        "whatsapp_message": "Hola! Quiero ver el video del lote de {product} antes de comprar.",
+        "whatsapp_fallback_name": "este perfume",
+        "compare_link": "",
+        "compare_title": "Original vs. réplica: cómo notar la diferencia",
+        "compare_text": "Guía con las señales que mira nuestro equipo.",
+        "link_1_label": "",
+        "link_1_url": "",
+        "link_2_label": "",
+        "link_2_url": "",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
     },
     "compare": {
       "type": "original-vs-replica",
@@ -82,7 +108,7 @@
           "settings": {
             "icon": "shield",
             "feature": "Garantía",
-            "ours": "Garantía de originalidad: si no es original, te devolvemos el 100% + el envío (hasta 30 días)",
+            "ours": "Garantía de originalidad: si no es original, te devolvemos el 100% + el envío.",
             "replica": "Sin garantía"
           }
         },
@@ -104,7 +130,22 @@
         "row_garantia",
         "row_postventa"
       ],
-      "settings": {}
+      "settings": {
+        "color_scheme": "",
+        "accent_color": "#1e34a8",
+        "microbadge": "Cómo reconocer un perfume original",
+        "heading": "No todos los importados son iguales",
+        "subheading": "Trabajamos sólo con originales. Mirá la diferencia con una réplica.",
+        "col_feature_label": "Característica",
+        "col_ours_label": "Nuestros perfumes",
+        "col_replica_label": "Réplica",
+        "closing": "Por eso cada compra incluye garantía de originalidad y devolución sin vueltas.",
+        "show_button": true,
+        "button_label": "Ver catálogo",
+        "button_link": "",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
     },
     "faq": {
       "type": "faq-perfume",
@@ -126,13 +167,28 @@
           }
         }
       },
-      "block_order": ["qa_original", "qa_replica"],
+      "block_order": [
+        "qa_original",
+        "qa_replica"
+      ],
       "settings": {
+        "color_scheme": "",
+        "accent_color": "#1e34a8",
         "microbadge": "Autenticidad",
         "heading": "Preguntas sobre autenticidad",
-        "emit_schema": false
+        "more_label": "",
+        "more_url": "",
+        "emit_schema": false,
+        "legal_text": "<p><strong>Derecho de arrepentimiento.</strong> Tenés 10 días corridos desde la recepción para revocar la compra sin costo (art. 34, Ley 24.240; Disposición 954/2025, que deroga la Res. 424/2020). El botón de arrepentimiento está en el inicio del sitio. Excepción: los decants abiertos quedan excluidos (art. 1.116 CCyC).</p>",
+        "padding_top": 48,
+        "padding_bottom": 48
       }
     }
   },
-  "order": ["main", "auth", "compare", "faq"]
+  "order": [
+    "main",
+    "auth",
+    "compare",
+    "faq"
+  ]
 }
