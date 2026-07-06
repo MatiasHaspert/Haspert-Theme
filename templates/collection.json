@@ -32,15 +32,6 @@
     "collection-nav-bar": {
       "type": "collection-nav-bar",
       "blocks": {
-        "angle_DWgVw7": {
-          "type": "angle",
-          "settings": {
-            "collection": "nicho",
-            "label": "",
-            "image": "shopify://shop_images/1002725.webp",
-            "link": ""
-          }
-        },
         "angle_7rgLFU": {
           "type": "angle",
           "settings": {
@@ -56,6 +47,15 @@
             "collection": "arabes",
             "label": "",
             "image": "shopify://shop_images/lataffaasad2.webp",
+            "link": ""
+          }
+        },
+        "angle_DWgVw7": {
+          "type": "angle",
+          "settings": {
+            "collection": "nicho",
+            "label": "",
+            "image": "shopify://shop_images/1002725.webp",
             "link": ""
           }
         },
@@ -94,16 +94,26 @@
             "image": "shopify://shop_images/edt-intense-2.webp",
             "link": ""
           }
+        },
+        "angle_mDXXPk": {
+          "type": "angle",
+          "settings": {
+            "collection": "perfumes-unisex",
+            "label": "",
+            "image": "shopify://shop_images/images_10.jpg",
+            "link": ""
+          }
         }
       },
       "block_order": [
-        "angle_DWgVw7",
         "angle_7rgLFU",
         "angle_YQ4NpH",
+        "angle_DWgVw7",
         "angle_ikALYc",
         "angle_YB3gDi",
         "angle_7KFRTx",
-        "angle_jRMTTb"
+        "angle_jRMTTb",
+        "angle_mDXXPk"
       ],
       "settings": {
         "aria_label": "Colecciones",
