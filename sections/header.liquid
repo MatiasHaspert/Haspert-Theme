@@ -186,8 +186,20 @@
     if localization.available_countries.size > 1 and section.settings.enable_country_selector or section.settings.enable_language_selector and localization.available_languages.size > 1
       assign localization_forms = true
     endif
+
+    # NUMEN · Fix 4 — buscador mobile: en 'browse' la barra persistente vive solo en
+    # home/colecciones/búsqueda; el resto usa el ícono-modal (recupera fold en la PDP).
+    assign show_mobile_searchbar = false
+    case section.settings.mobile_search_scope
+      when 'all'
+        assign show_mobile_searchbar = true
+      when 'browse'
+        if template.name == 'index' or template.name == 'collection' or template.name == 'list-collections' or template.name == 'search'
+          assign show_mobile_searchbar = true
+        endif
+    endcase
   -%}
-  <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
+  <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if show_mobile_searchbar %} header--mobile-searchbar{% endif %}{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
     {%- liquid
       if section.settings.menu != blank
         render 'header-drawer'
@@ -348,10 +360,12 @@
       </a>
     </div>
   </header>
-  {%- comment -%} NUMEN: búsqueda prominente en mobile (barra visible; el ícono-modal queda para tablet/desktop). {%- endcomment -%}
-  <div class="header__mobile-search medium-hide large-up-hide">
-    {% render 'header-search-bar', input_id: 'Search-Bar' %}
-  </div>
+  {%- comment -%} NUMEN: búsqueda prominente en mobile (barra visible; el ícono-modal queda para tablet/desktop). Con 'Buscador en mobile' = browse se muestra solo en home/colecciones/búsqueda; en el resto (PDP, page, cart) manda el ícono-modal. {%- endcomment -%}
+  {%- if show_mobile_searchbar -%}
+    <div class="header__mobile-search medium-hide large-up-hide">
+      {% render 'header-search-bar', input_id: 'Search-Bar' %}
+    </div>
+  {%- endif -%}
 </{{ header_tag }}>
 
 {%- if settings.cart_type == "notification" -%}
@@ -612,6 +626,31 @@
       "id": "show_line_separator",
       "default": true,
       "label": "t:sections.header.settings.show_line_separator.label"
+    },
+    {
+      "type": "header",
+      "content": "Buscador (mobile)"
+    },
+    {
+      "type": "select",
+      "id": "mobile_search_scope",
+      "options": [
+        {
+          "value": "all",
+          "label": "Barra en todas las páginas"
+        },
+        {
+          "value": "browse",
+          "label": "Barra solo en home, colecciones y búsqueda"
+        },
+        {
+          "value": "icon",
+          "label": "Siempre ícono (tap para abrir)"
+        }
+      ],
+      "default": "browse",
+      "label": "Buscador en mobile",
+      "info": "En 'browse', la PDP y otras páginas usan el ícono-modal para no comer espacio sobre el fold."
     },
     {
       "type": "header",

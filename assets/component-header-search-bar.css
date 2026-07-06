@@ -6,9 +6,12 @@
    sigue el ícono-modal original. Reusa <predictive-search> y su JS.
    ========================================================================== */
 
-/* En mobile: barra visible, ícono-modal oculto (lo reemplaza la barra). */
+/* En mobile: cuando la barra persistente está presente (.header--mobile-searchbar,
+   seteado en header.liquid según el setting "Buscador en mobile"), se oculta el
+   ícono-modal que la barra reemplaza. Sin esa clase (PDP/page/cart en modo 'browse',
+   o modo 'icon'), la lupa vuelve a mostrarse en mobile y abre el modal. */
 @media screen and (max-width: 749px) {
-  .header__search {
+  .header--mobile-searchbar .header__search {
     display: none;
   }
 }
