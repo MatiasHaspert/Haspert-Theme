@@ -288,7 +288,7 @@ slider-component.slider-component-full-width {
 
 .slider-counter__link--dots .dot,
 .slider-counter__link--numbers {
-  transition: transform 0.2s ease-in-out;
+  transition: transform var(--duration-default) var(--ease-select);
 }
 
 .slider-counter__link--active.slider-counter__link--numbers,

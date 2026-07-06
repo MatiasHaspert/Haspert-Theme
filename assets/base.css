@@ -659,7 +659,7 @@ details > * {
 .inline-richtext a {
   text-underline-offset: 0.3rem;
   text-decoration-thickness: 0.1rem;
-  transition: text-decoration-thickness var(--ease-select) 100ms;
+  transition: text-decoration-thickness 100ms var(--ease-select);
 }
 
 .underlined-link,
@@ -2392,7 +2392,7 @@ input[type='checkbox'] {
 }
 
 .section-header.animate {
-  transition: top 0.15s ease-out;
+  transition: top 150ms var(--ease-select);
 }
 
 .shopify-section-group-header-group {
