@@ -56,7 +56,7 @@
           "settings": {
             "icon": "truck",
             "question": "¿Hacen envíos a todo el país?",
-            "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 4–7 días hábiles. Envío gratis en compras desde $200.000.</p>"
+            "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 3–6 días hábiles. Envío gratis en compras desde $200.000.</p>"
           }
         },
         "qa_cuotas": {
@@ -72,7 +72,7 @@
           "settings": {
             "icon": "return",
             "question": "¿Qué pasa si me arrepiento o no me gusta?",
-            "answer": "<p>Tenés 10 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido y de naturaleza no devolvible — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>"
+            "answer": "<p>Tenés 15 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido y de naturaleza no devolvible — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>"
           }
         },
         "qa_conservar": {
