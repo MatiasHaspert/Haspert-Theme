@@ -511,15 +511,15 @@ cart-drawer.drawer {
   font-size: 2rem;
   letter-spacing: 0.02em;
   line-height: 1;
-  color: var(--nc-accent-deep);
+  color: var(--nc-ok);
   white-space: nowrap;
 }
 .nc-pay__off {
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: #fff;
-  background: var(--nc-accent);
+  color: var(--nc-ok);
+  background: var(--nc-ok-bg);
   border-radius: 0.5rem;
   padding: 0.2rem 0.6rem;
   white-space: nowrap;
