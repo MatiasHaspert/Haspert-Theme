@@ -13,15 +13,15 @@
       "type": "hero-home",
       "settings": {
         "color_scheme": "scheme-1",
-        "eyebrow": "Perfumería curada",
+        "eyebrow": "Perfumería importada",
         "heading": "Originales que podés verificar frasco por frasco",
-        "subheading": "Importados árabes, de diseñador y nicho. Lote visible, video del frasco antes de comprar.",
+        "subheading": "Importados árabes, de diseñador y nicho. Lote visible y video del lote antes de comprar.",
         "cta1_label": "Ver perfumes",
         "cta1_link": "shopify://collections/all",
         "cta2_label": "Cómo verificamos originalidad",
         "cta2_link": "shopify://pages/autenticidad",
         "image": "shopify://shop_images/naxos.jpg",
-        "microcopy": "",
+        "microcopy": "Originalidad garantizada · Video del lote por WhatsApp",
         "padding_top": 64,
         "padding_bottom": 40
       }
@@ -29,6 +29,15 @@
     "nav_bar": {
       "type": "collection-nav-bar",
       "blocks": {
+        "angle_WgXBq8": {
+          "type": "angle",
+          "settings": {
+            "collection": "nicho",
+            "label": "",
+            "image": "shopify://shop_images/images_10.jpg",
+            "link": ""
+          }
+        },
         "angle_elegidos": {
           "type": "angle",
           "settings": {
@@ -61,24 +70,27 @@
           "settings": {
             "collection": "para-la-noche",
             "label": "Para la noche",
+            "image": "shopify://shop_images/images_9.jpg",
             "link": ""
           }
         },
-        "angle_decants": {
+        "angle_j4HCkq": {
           "type": "angle",
           "settings": {
-            "collection": "decants",
-            "label": "Decants",
+            "collection": "frescos-para-el-verano",
+            "label": "",
+            "image": "shopify://shop_images/edt-intense-2.webp",
             "link": ""
           }
         }
       },
       "block_order": [
+        "angle_WgXBq8",
         "angle_elegidos",
         "angle_arabes",
         "angle_disenador",
         "angle_noche",
-        "angle_decants"
+        "angle_j4HCkq"
       ],
       "settings": {
         "aria_label": "Colecciones",
@@ -139,13 +151,18 @@
           }
         }
       },
-      "block_order": ["paso_1", "paso_2", "paso_3"],
+      "block_order": [
+        "paso_1",
+        "paso_2",
+        "paso_3"
+      ],
       "settings": {
         "color_scheme": "scheme-4",
-        "accent_color": "#1E34A8",
+        "accent_color": "#1e34a8",
         "heading": "Nuestra promesa",
         "title": "Cómo verificás que es original",
         "show_photo": false,
+        "lote_badge": "Foto real del lote",
         "whatsapp_label": "Pedir video del lote por WhatsApp",
         "whatsapp_message": "¡Hola! Quiero ver el video del lote de un perfume antes de comprar.",
         "whatsapp_fallback_name": "un perfume",
@@ -165,22 +182,32 @@
       "blocks": {
         "chip_ml": {
           "type": "chip",
-          "settings": { "text": "5 y 10 ml" }
+          "settings": {
+            "text": "5 y 10 ml"
+          }
         },
         "chip_original": {
           "type": "chip",
-          "settings": { "text": "Del frasco original" }
+          "settings": {
+            "text": "Del frasco original"
+          }
         },
         "chip_pedido": {
           "type": "chip",
-          "settings": { "text": "Fraccionado a pedido" }
+          "settings": {
+            "text": "Fraccionado a pedido"
+          }
         }
       },
-      "block_order": ["chip_ml", "chip_original", "chip_pedido"],
+      "block_order": [
+        "chip_ml",
+        "chip_original",
+        "chip_pedido"
+      ],
       "settings": {
         "color_scheme": "scheme-1",
-        "accent_color": "#1E34A8",
-        "card_background": "#EEF1FA",
+        "accent_color": "#1e34a8",
+        "card_background": "#eef1fa",
         "microbadge": "Para arrancar",
         "heading": "Probá antes de invertir en el frasco",
         "text": "<p>Decants de 5 y 10 ml fraccionados a pedido desde frascos originales verificados. Conocé el aroma en tu piel por una fracción del precio.</p>",
@@ -216,7 +243,11 @@
           }
         }
       },
-      "block_order": ["overline", "texto", "firma"],
+      "block_order": [
+        "overline",
+        "texto",
+        "firma"
+      ],
       "settings": {
         "desktop_content_position": "center",
         "content_alignment": "center",
@@ -229,7 +260,6 @@
     },
     "testimonios": {
       "type": "custom-testimonials",
-      "disabled": true,
       "blocks": {
         "t1": {
           "type": "testimonial",
@@ -250,7 +280,11 @@
           }
         }
       },
-      "block_order": ["t1", "t2"],
+      "block_order": [
+        "t1",
+        "t2"
+      ],
+      "disabled": true,
       "settings": {
         "overline": "Clientes",
         "title": "Los que ya compraron",
@@ -292,10 +326,14 @@
           }
         }
       },
-      "block_order": ["q_original", "q_envio", "q_devolucion"],
+      "block_order": [
+        "q_original",
+        "q_envio",
+        "q_devolucion"
+      ],
       "settings": {
         "color_scheme": "scheme-1",
-        "accent_color": "#1E34A8",
+        "accent_color": "#1e34a8",
         "microbadge": "Dudas rápidas",
         "heading": "",
         "more_label": "Todas las preguntas →",

@@ -22,11 +22,11 @@
             "link": ""
           }
         },
-        "item_envio": {
+        "item_BncQkY": {
           "type": "item",
           "settings": {
-            "icon": "truck",
-            "text": "Envíos a todo el país",
+            "icon": "none",
+            "text": "20% de descuento por transferencia",
             "link": ""
           }
         },
@@ -37,21 +37,31 @@
             "text": "Hasta 6 cuotas sin interés",
             "link": ""
           }
+        },
+        "item_envio": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "text": "Envíos a todo el país",
+            "link": ""
+          }
         }
       },
       "block_order": [
         "item_orig",
-        "item_envio",
-        "item_cuotas"
+        "item_BncQkY",
+        "item_cuotas",
+        "item_envio"
       ],
       "settings": {
-        "bg_color": "#14161A",
+        "bg_color": "#14161a",
         "text_color": "#ffffff",
         "font_size": 16,
         "speed": 10,
         "speed_mobile": 10,
         "padding_top": 10,
-        "padding_bottom": 10
+        "padding_bottom": 10,
+        "edge_fade": 48
       }
     },
     "header": {
@@ -63,6 +73,14 @@
         "menu_type_desktop": "dropdown",
         "sticky_header_type": "none",
         "show_line_separator": false,
+        "mobile_search_scope": "browse",
+        "highlight_link_title": "Autenticidad",
+        "highlight_link_badge": "Cómo lo verificamos",
+        "drawer_wa_label": "Escribinos por WhatsApp",
+        "drawer_legal_1": "",
+        "drawer_legal_1_label": "Botón de arrepentimiento",
+        "drawer_legal_2": "",
+        "drawer_legal_2_label": "Términos",
         "color_scheme": "scheme-1",
         "menu_color_scheme": "scheme-1",
         "enable_country_selector": false,
