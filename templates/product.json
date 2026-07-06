@@ -12,7 +12,9 @@
     "breadcrumbs": {
       "type": "breadcrumbs",
       "settings": {
-        "home_label": "Inicio"
+        "home_label": "Inicio",
+        "collections_label": "Colecciones",
+        "priority_handles": "arabes,disenador,nicho"
       }
     },
     "main": {
@@ -33,7 +35,7 @@
       ],
       "settings": {
         "color_scheme": "",
-        "accent_color": "#1E34A8",
+        "accent_color": "#1e34a8",
         "media_position": "left",
         "gallery_layout": "thumbnail_slider",
         "media_size": "large",
@@ -47,13 +49,40 @@
         "picker_type": "button",
         "show_dynamic_checkout": true,
         "show_sticky_atc": true,
+        "selector_heading": "Elegí tu presentación",
+        "best_perml_label": "Mejor $/ml",
+        "pay_reassurance_text": "Pago seguro con Mercado Pago · Tarjeta, débito y transferencia",
+        "transfer_discount_enabled": true,
+        "transfer_discount_pct": 20,
+        "transfer_label": "con transferencia",
+        "transfer_microcopy": "Elegí Transferencia y aplicá el código TRANSFERENCIA20 al pagar.",
         "show_facts": true,
+        "facts_heading": "Ficha olfativa",
+        "notes_label": "Notas",
+        "longevity_label": "Longevidad",
+        "sillage_label": "Estela / proyección",
+        "occasion_label": "Ocasión · estación",
         "show_pyramid": true,
         "pyramid_heading": "Pirámide olfativa",
         "label_top": "Salida",
         "label_heart": "Corazón",
         "label_base": "Fondo",
+        "show_trust": true,
+        "trust_sealed_title": "Original sellado · garantía de devolución",
+        "trust_sealed_text": "Importado, frasco sellado con lote verificable. Si no es original, te devolvemos el 100%.",
+        "trust_tester_title": "Tester original · garantía de devolución",
+        "trust_tester_text": "Mismo jugo que el frasco, presentación tester. Lote verificable.",
+        "trust_decant_title": "Fraccionado de un original verificado",
+        "trust_decant_text": "Lo decantamos a pedido de un frasco sellado. Pedí el video del lote por WhatsApp.",
+        "decant_legal_text": "<p>Los decants se fraccionan a pedido; una vez abiertos quedan excluidos del derecho de arrepentimiento (art. 1.116 CCyC). El frasco sellado y el tester sí admiten devolución en 10 días.</p>",
+        "show_shipping": true,
+        "free_ship_label": "Envío gratis desde",
+        "envio_rosario_hoy": true,
+        "envio_rosario_text": "Entrega en el día en Rosario comprando antes de las 16 hs.",
+        "envio_nacional_text": "Resto del país: Correo Argentino, 3–6 días hábiles.",
         "inspired_prefix": "Inspirado en el perfil olfativo de",
+        "inspired_legal": "Numen es una perfumería multimarca. No representamos ni estamos asociados a las marcas mencionadas; la referencia describe el perfil olfativo.",
+        "arabic_collection_handle": "arabes",
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -80,8 +109,31 @@
           }
         }
       },
-      "block_order": ["paso-1", "paso-2", "paso-3"],
-      "settings": {}
+      "block_order": [
+        "paso-1",
+        "paso-2",
+        "paso-3"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "accent_color": "#1e34a8",
+        "heading": "Cómo verificás que es original",
+        "title": "",
+        "show_photo": true,
+        "lote_badge": "Foto real del lote",
+        "whatsapp_label": "Pedir video del lote por WhatsApp",
+        "whatsapp_message": "Hola! Quiero ver el video del lote de {product} antes de comprar.",
+        "whatsapp_fallback_name": "este perfume",
+        "compare_link": "",
+        "compare_title": "Original vs. réplica: cómo notar la diferencia",
+        "compare_text": "Guía con las señales que mira nuestro equipo.",
+        "link_1_label": "",
+        "link_1_url": "",
+        "link_2_label": "",
+        "link_2_url": "",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
     },
     "faq": {
       "type": "faq-perfume",
@@ -89,13 +141,15 @@
         "qa-1": {
           "type": "qa",
           "settings": {
+            "icon": "none",
             "question": "¿Los perfumes son 100% originales?",
-            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>"
+            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío.</p>"
           }
         },
         "qa-2": {
           "type": "qa",
           "settings": {
+            "icon": "none",
             "question": "¿Cómo sé que no es una réplica?",
             "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. Si querés, te mandamos el unboxing por WhatsApp antes de comprar. Y si algo no cierra: garantía de originalidad, te devolvemos el 100%.</p>"
           }
@@ -103,6 +157,7 @@
         "qa-3": {
           "type": "qa",
           "settings": {
+            "icon": "none",
             "question": "¿Qué es un \"decant\"? ¿Es el mismo perfume?",
             "answer": "<p>Sí, es el mismo jugo fraccionado del frasco original en un atomizador. Ideal para probar el aroma antes de comprar el frasco completo, o para llevar en la cartera.</p>"
           }
@@ -110,6 +165,7 @@
         "qa-4": {
           "type": "qa",
           "settings": {
+            "icon": "none",
             "question": "¿Y el \"tester\"? ¿En qué se diferencia del original?",
             "answer": "<p>Es exactamente el mismo perfume, en packaging de prueba (caja blanca o sin tapa premium). Por eso es más económico — pero el jugo es idéntico.</p>"
           }
@@ -117,6 +173,7 @@
         "qa-5": {
           "type": "qa",
           "settings": {
+            "icon": "none",
             "question": "¿Hacen envíos a todo el país?",
             "answer": "<p>Sí, con Correo Argentino. <strong>En Rosario, envío en el día.</strong> Santa Fe, Entre Ríos, Córdoba, CABA y GBA: 2–4 días hábiles. Resto del país: 4–7 días hábiles. Envío gratis en compras desde $200.000.</p>"
           }
@@ -124,6 +181,7 @@
         "qa-6": {
           "type": "qa",
           "settings": {
+            "icon": "none",
             "question": "¿Puedo pagar en cuotas?",
             "answer": "<p>Sí, con Mercado Pago: hasta <strong>6 cuotas sin interés</strong> y hasta <strong>12 con interés</strong>. Además, <strong>20% de descuento</strong> pagando contado o por transferencia.</p>"
           }
@@ -131,6 +189,7 @@
         "qa-7": {
           "type": "qa",
           "settings": {
+            "icon": "none",
             "question": "¿Qué pasa si me arrepiento o no me gusta?",
             "answer": "<p>Tenés 10 días para arrepentirte (Ley 24.240). El frasco original o tester <strong>sellado</strong> se cambia o devuelve sin vueltas. Los <strong>decants abiertos</strong> no entran en arrepentimiento por ser fraccionados a pedido y de naturaleza no devolvible — pero te damos garantía de aroma: si algo salió mal, lo resolvemos.</p>"
           }
@@ -138,26 +197,47 @@
         "qa-8": {
           "type": "qa",
           "settings": {
+            "icon": "none",
             "question": "¿Cómo conservo el perfume para que dure?",
             "answer": "<p>Lejos del calor, la luz directa y la humedad. Guardalo en su caja, idealmente entre 15–20°C.</p>"
           }
         }
       },
-      "block_order": ["qa-1", "qa-2", "qa-3", "qa-4", "qa-5", "qa-6", "qa-7", "qa-8"],
+      "block_order": [
+        "qa-1",
+        "qa-2",
+        "qa-3",
+        "qa-4",
+        "qa-5",
+        "qa-6",
+        "qa-7",
+        "qa-8"
+      ],
       "settings": {
-        "emit_schema": false
+        "color_scheme": "",
+        "accent_color": "#1e34a8",
+        "microbadge": "Preguntas frecuentes",
+        "heading": "Todo lo que querés saber antes de comprar",
+        "more_label": "",
+        "more_url": "",
+        "emit_schema": false,
+        "legal_text": "<p><strong>Derecho de arrepentimiento.</strong> Tenés 15 días corridos desde la recepción para revocar la compra sin costo (art. 34, Ley 24.240; Disposición 954/2025, que deroga la Res. 424/2020). El botón de arrepentimiento está en el inicio del sitio. Excepción: los decants abiertos quedan excluidos (art. 1.116 CCyC).</p>",
+        "padding_top": 48,
+        "padding_bottom": 48
       }
     },
     "related_family": {
       "type": "related-by-family",
       "settings": {
         "color_scheme": "",
-        "accent_color": "#1E34A8",
+        "accent_color": "#1e34a8",
         "heading": "Te puede gustar",
         "heading_size": "h1",
         "show_family_label": true,
+        "collection": "",
         "products_to_show": 4,
         "enable_fallback": true,
+        "onboarding_text": "Sin coincidencias todavía: cargá el metafield \"Familia olfativa\" en los productos o elegí una colección con perfumes.",
         "columns_desktop": 4,
         "columns_mobile": "2",
         "image_ratio": "adapt",
@@ -175,7 +255,8 @@
       "name": "Kit de decants",
       "settings": {
         "color_scheme": "",
-        "accent_color": "#1E34A8",
+        "accent_color": "#1e34a8",
+        "icon": "none",
         "microbadge": "🧪 Armá tu kit",
         "heading": "Armá tu kit de decants",
         "subheading": "Elegí varios aromas para probar y ahorrá llevándolos juntos.",
