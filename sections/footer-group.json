@@ -54,7 +54,7 @@
       ],
       "settings": {
         "color_scheme": "scheme-2",
-        "footer_tagline": "Perfumería curada. Originales importados, verificables frasco por frasco.",
+        "footer_tagline": "Perfumería importada. Originales que verificás frasco por frasco.",
         "contact_heading": "¿Dudas? Escribinos:",
         "contact_wa_display": "",
         "footer_email": "",
@@ -69,7 +69,7 @@
         "data_fiscal_url": "",
         "data_fiscal_label": "Data Fiscal",
         "arrepentimiento_url": "",
-        "bottom_note": "Hecho en Argentina"
+        "bottom_note": "Desde Argentina"
       }
     }
   },
