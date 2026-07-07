@@ -16,7 +16,7 @@
       "login_form_password_placeholder": "Tu contraseña",
       "login_form_error": "Contraseña incorrecta",
       "login_form_submit": "Ingresar",
-      "admin_link_html": "¿Eres el propietario de la tienda? <a href=\"/admin\" class=\"link underlined-link\">Inicia sesión aquí</a>",
+      "admin_link_html": "¿Sos el dueño de la tienda? <a href=\"/admin\" class=\"link underlined-link\">Iniciá sesión acá</a>",
       "powered_by_shopify_html": "Esta tienda contará con tecnología Shopify {{ shopify }}"
     },
     "social": {
@@ -83,6 +83,7 @@
       "external": "Se abre el sitio web externo."
     },
     "loading": "Cargando...",
+    "whatsapp": "Escribinos por WhatsApp",
     "skip_to_product_info": "Ir directamente a la información del producto",
     "total_reviews": "reseñas totales",
     "star_reviews_info": "{{ rating_value }} de {{ rating_max }} estrellas",
@@ -98,8 +99,8 @@
         "other": "{{ count }} comentarios",
         "many": "{{ count }} comentarios"
       },
-      "moderated": "Ten en cuenta que los comentarios deben aprobarse antes de que se publiquen.",
-      "comment_form_title": "Deja un comentario",
+      "moderated": "Tené en cuenta que los comentarios deben aprobarse antes de que se publiquen.",
+      "comment_form_title": "Dejá un comentario",
       "name": "Nombre",
       "email": "Correo electrónico",
       "message": "Comentario",
@@ -246,7 +247,7 @@
   },
   "templates": {
     "search": {
-      "no_results": "No encontramos resultados para \"{terms}\". Revisá la ortografía o probá con otra palabra.",
+      "no_results": "No encontramos resultados para \"{{ terms }}\". Revisá la ortografía o probá con otra palabra.",
       "results_with_count": {
         "one": "{{ count }} resultado",
         "other": "{{ count }} resultados",
@@ -340,8 +341,8 @@
       "note": "Instrucciones especiales del pedido",
       "checkout": "Pagar pedido",
       "empty": "Tu carrito esta vacío",
-      "cart_error": "Hubo un error al actualizar tu carrito de compra. Inténtalo de nuevo.",
-      "cart_quantity_error_html": "Solo puedes agregar {{ quantity }} de este artículo a tu carrito.",
+      "cart_error": "Hubo un error al actualizar tu carrito de compra. Probá de nuevo.",
+      "cart_quantity_error_html": "Solo podés agregar {{ quantity }} de este artículo a tu carrito.",
       "headings": {
         "product": "Producto",
         "price": "Precio",
@@ -351,8 +352,8 @@
       },
       "update": "Actualizar",
       "login": {
-        "title": "¿Tienes una cuenta?",
-        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Inicia sesión</a> para finalizar tus compras con mayor rapidez."
+        "title": "¿Tenés una cuenta?",
+        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Iniciá sesión</a> para finalizar tus compras más rápido."
       },
       "estimated_total": "Total estimado",
       "new_estimated_total": "Nuevo total estimado",
@@ -383,7 +384,7 @@
     "collection_template": {
       "title": "Colección",
       "empty": "No se encontró ningún producto",
-      "use_fewer_filters_html": "Usa menos filtros o <a class=\"{{ class }}\" href=\"{{ link }}\">elimínalos todos</a>"
+      "use_fewer_filters_html": "Usá menos filtros o <a class=\"{{ class }}\" href=\"{{ link }}\">quitá los filtros</a>"
     },
     "video": {
       "load_video": "Cargar video: {{ description }}"
@@ -432,7 +433,7 @@
       "remove_all_single_item_confirmation": "¿Eliminar 1 artículo de tu carrito?",
       "min_error": "Este artículo tiene un mínimo de {{ min }}.",
       "max_error": "Este artículo tiene un máximo de {{ max }}.",
-      "step_error": "Solo puedes agregar este artículo en incrementos de {{ step }}"
+      "step_error": "Solo podés agregar este artículo en incrementos de {{ step }}"
     }
   },
   "localization": {
@@ -454,7 +455,7 @@
     "account_fallback": "Cuenta",
     "activate_account": {
       "title": "Activar cuenta",
-      "subtext": "Crea tu contraseña para activar tu cuenta.",
+      "subtext": "Creá tu contraseña para activar tu cuenta.",
       "password": "Contraseña",
       "password_confirm": "Confirmar contraseña",
       "submit": "Activar cuenta",
@@ -481,7 +482,7 @@
       "cancel": "Cancelar",
       "edit": "Editar",
       "delete": "Eliminar",
-      "delete_confirm": "¿Está seguro/a de que deseas eliminar esta dirección?"
+      "delete_confirm": "¿Estás seguro/a de que querés eliminar esta dirección?"
     },
     "log_in": "Iniciar sesión",
     "log_out": "Cerrar sesión",
@@ -523,7 +524,7 @@
     },
     "reset_password": {
       "title": "Restablecer contraseña de cuenta",
-      "subtext": "Introduce una nueva contraseña.",
+      "subtext": "Ingresá una nueva contraseña.",
       "password": "Contraseña",
       "password_confirm": "Confirmar contraseña",
       "submit": "Restablecer contraseña"
@@ -562,7 +563,7 @@
       "gift_card_code": "Código de tarjeta de regalo",
       "shop_link": "Visitar la tienda online",
       "add_to_apple_wallet": "Agregar a Apple Wallet",
-      "qr_image_alt": "Código QR: escanea para canjear la tarjeta de regalo",
+      "qr_image_alt": "Código QR: escaneá para canjear la tarjeta de regalo",
       "copy_code": "Copiar el código de la tarjeta de regalo",
       "expired": "Vencido",
       "copy_code_success": "El código se copió correctamente",
