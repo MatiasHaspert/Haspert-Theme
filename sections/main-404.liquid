@@ -1,23 +1,226 @@
-<style type="text/css">
-  .template-404 .title + * {
-    margin-top: 1rem;
-  }
+{%- comment -%}
+  404 (Numen) — "ruta", no "pared": en vez de un callejón sin salida, ofrece salidas.
+  Orden (centrado, mobile-first): 404 gigante (Bebas, apagado) → H1 → bajada → CTA al
+  catálogo (acento) → atajos a colecciones → línea de WhatsApp (número GLOBAL, misma
+  fuente que header/drawer/footer). 100% editable por settings; sin precios ni copy
+  hardcodeado. El status HTTP 404 lo sigue devolviendo Shopify (template 404): esto es
+  solo la vista. Los atajos van como settings (no blocks): el template 404.json trae la
+  sección con settings vacíos y sin blocks, así que un preset no se agregaría — los
+  defaults de settings sí caen solos.
+{%- endcomment -%}
 
+{%- liquid
+  # WhatsApp global (misma fuente que header/drawer/footer): ignorar el placeholder con X.
+  assign wa_num = settings.whatsapp_number
+  if wa_num contains 'X' or wa_num contains 'x'
+    assign wa_num = ''
+  endif
+
+  # Cada atajo aparece solo si tiene texto Y link (evita chips rotos si el cliente vacía uno).
+  assign show_1 = false
+  if section.settings.shortcut_1_label != blank and section.settings.shortcut_1_url != blank
+    assign show_1 = true
+  endif
+  assign show_2 = false
+  if section.settings.shortcut_2_label != blank and section.settings.shortcut_2_url != blank
+    assign show_2 = true
+  endif
+  assign show_3 = false
+  if section.settings.shortcut_3_label != blank and section.settings.shortcut_3_url != blank
+    assign show_3 = true
+  endif
+  assign show_shortcuts = false
+  if show_1 or show_2 or show_3
+    assign show_shortcuts = true
+  endif
+-%}
+
+<div class="page-404 color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+  <div class="page-404__inner">
+    <p class="page-404__code" aria-hidden="true">404</p>
+
+    {%- if section.settings.headline != blank -%}
+      <h1 class="page-404__title">{{ section.settings.headline | escape }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.subtext != blank -%}
+      <p class="page-404__text">{{ section.settings.subtext | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <a
+        class="button button--primary page-404__cta"
+        href="{{ routes.all_products_collection_url }}"
+      >{{ section.settings.button_label | escape }}</a>
+    {%- endif -%}
+
+    {%- if show_shortcuts -%}
+      <div class="page-404__shortcuts">
+        {%- if section.settings.shortcuts_label != blank -%}
+          <p class="page-404__shortcuts-label">{{ section.settings.shortcuts_label | escape }}</p>
+        {%- endif -%}
+        <ul class="page-404__shortcuts-list" role="list">
+          {%- if show_1 -%}
+            <li>
+              <a class="link page-404__shortcut" href="{{ section.settings.shortcut_1_url }}">
+                {{- section.settings.shortcut_1_label | escape -}}
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if show_2 -%}
+            <li>
+              <a class="link page-404__shortcut" href="{{ section.settings.shortcut_2_url }}">
+                {{- section.settings.shortcut_2_label | escape -}}
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if show_3 -%}
+            <li>
+              <a class="link page-404__shortcut" href="{{ section.settings.shortcut_3_url }}">
+                {{- section.settings.shortcut_3_label | escape -}}
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      </div>
+    {%- endif -%}
+
+    {%- if wa_num != blank and section.settings.whatsapp_text != blank -%}
+      <p class="page-404__wa">
+        <a
+          class="link page-404__wa-link"
+          href="https://wa.me/{{ wa_num }}"
+          target="_blank"
+          rel="noopener"
+          aria-label="{{ 'accessibility.whatsapp' | t }}"
+        >{{ section.settings.whatsapp_text | escape }}</a>
+      </p>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.7 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.7 | round: 0 }}px;
+  }
   @media screen and (min-width: 750px) {
-    .template-404 .title + * {
-      margin-top: 2rem;
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
-</style>
+{%- endstyle -%}
 
-<div class="template-404 page-width page-margin center">
-  <p>
-    {{ 'templates.404.subtext' | t }}
-  </p>
-  <h1 class="title">
-    {{ 'templates.404.title' | t }}
-  </h1>
-  <a href="{{ routes.all_products_collection_url }}" class="button">
-    {{ 'general.continue_shopping' | t }}
-  </a>
-</div>
+{% stylesheet %}
+.page-404__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 56rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  text-align: center;
+}
+
+/* "404" decorativo: Bebas, grande y apagado (ink ~35%) — calmo, nunca en acento. */
+.page-404__code {
+  margin: 0;
+  font-family: var(--nc-font-display);
+  font-weight: 400;
+  font-size: clamp(9rem, 30vw, 17rem);
+  line-height: 0.82;
+  letter-spacing: 0.02em;
+  color: var(--nc-ink);
+  opacity: 0.35;
+}
+
+/* Título en Montserrat (desviación deliberada: las H del theme son Bebas). */
+.page-404__title {
+  margin: 1.2rem 0 0;
+  font-family: var(--font-body-family);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  line-height: 1.15;
+  color: var(--nc-ink);
+}
+
+.page-404__text {
+  margin: 1.2rem 0 0;
+  max-width: 42ch;
+  font-family: var(--font-body-family);
+  font-size: 1.6rem;
+  line-height: 1.6;
+  color: var(--nc-ink-2);
+}
+
+.page-404__cta {
+  margin-top: 2.8rem;
+}
+
+.page-404__shortcuts {
+  margin-top: 3.4rem;
+}
+
+.page-404__shortcuts-label {
+  margin: 0 0 1.2rem;
+  font-family: var(--font-body-family);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--nc-ink-3);
+}
+
+.page-404__shortcuts-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem 2.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-404__shortcut {
+  font-size: 1.5rem;
+}
+
+.page-404__wa {
+  max-width: 44ch;
+  margin: 3.4rem auto 0;
+  font-family: var(--font-body-family);
+  font-size: 1.4rem;
+  line-height: 1.5;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "404",
+  "tag": "section",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "default": "scheme-1" },
+    { "type": "header", "content": "Textos" },
+    { "type": "text", "id": "headline", "label": "Título (H1)", "default": "No encontramos esta página" },
+    { "type": "text", "id": "subtext", "label": "Bajada", "default": "El enlace puede estar viejo, o el perfume que buscabas ya no está en catálogo." },
+    { "type": "text", "id": "button_label", "label": "Botón principal", "info": "Lleva a la colección de todos los productos.", "default": "Ver el catálogo" },
+    { "type": "header", "content": "Atajos a colecciones" },
+    { "type": "text", "id": "shortcuts_label", "label": "Título de los atajos", "default": "O entrá directo por" },
+    { "type": "paragraph", "content": "Cada atajo aparece solo si tiene texto y link. El link es una ruta relativa (ej: /collections/arabes) o una URL completa." },
+    { "type": "text", "id": "shortcut_1_label", "label": "Atajo 1 · texto", "default": "Árabes" },
+    { "type": "text", "id": "shortcut_1_url", "label": "Atajo 1 · link", "default": "/collections/arabes" },
+    { "type": "text", "id": "shortcut_2_label", "label": "Atajo 2 · texto", "default": "Diseñador" },
+    { "type": "text", "id": "shortcut_2_url", "label": "Atajo 2 · link", "default": "/collections/disenador" },
+    { "type": "text", "id": "shortcut_3_label", "label": "Atajo 3 · texto", "default": "Nicho" },
+    { "type": "text", "id": "shortcut_3_url", "label": "Atajo 3 · link", "default": "/collections/nicho" },
+    { "type": "header", "content": "WhatsApp" },
+    { "type": "paragraph", "content": "El número sale de Configuración del tema → WhatsApp / Contacto. Si está vacío o con X, la línea no se muestra." },
+    { "type": "text", "id": "whatsapp_text", "label": "Texto", "default": "¿Buscás algo puntual? Escribinos por WhatsApp y te lo conseguimos." },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "Padding superior", "default": 96 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "Padding inferior", "default": 96 }
+  ]
+}
+{% endschema %}

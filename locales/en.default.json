@@ -84,6 +84,7 @@
       "external": "Opens external website."
     },
     "loading": "Loading...",
+    "whatsapp": "Message us on WhatsApp",
     "total_reviews": "total reviews",
     "star_reviews_info": "{{ rating_value }} out of {{ rating_max }} stars",
     "collapsible_content_title": "Collapsible content",
