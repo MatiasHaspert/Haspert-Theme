@@ -246,7 +246,7 @@
   },
   "templates": {
     "search": {
-      "no_results": "No se encontraron resultados para “{{ terms }}” Revisa la ortografía o usa una palabra o frase diferente.",
+      "no_results": "No encontramos resultados para \"{terms}\". Revisá la ortografía o probá con otra palabra.",
       "results_with_count": {
         "one": "{{ count }} resultado",
         "other": "{{ count }} resultados",
