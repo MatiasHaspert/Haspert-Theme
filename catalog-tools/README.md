@@ -227,6 +227,79 @@ API 2026-04 (`changeFromQuantity` + directiva `@idempotent`).
 npm run pull                    # node pull-stock.mjs  (Shopify → hoja "Stock (Shopify)")
 ```
 
+## Sincronización con proveedor (Star Company)
+
+Pipeline **read-only del sitio público** del proveedor (PrestaShop): saca snapshots datados del
+catálogo de perfumería y los compara entre corridas. No toca Shopify ni necesita `.env`.
+Alimenta después el Excel B2B (Sprint 2) y el catálogo mayorista en Shopify (Sprint 3).
+
+```bash
+npm run proveedor:pull            # corrida completa (~90 requests, ~4 min)
+node pull-proveedor.mjs --dry-run # 1 request: página 1 + 5 registros derivados, no escribe
+node pull-proveedor.mjs --cat 121 # debug: una categoría → proveedor/debug-cat121.csv (gitignoreado)
+npm run proveedor:diff            # último snapshot vs anterior → reporte Markdown
+node diff-proveedor.mjs --from 2026-07-10 --to 2026-07-17   # (sufijo -N para corridas del mismo día)
+```
+
+**Alcance del crawl:** categoría 121 (PERFUMES) completa + categoría 100 (COSMÉTICOS) filtrada a
+las marcas que existen en `proveedor/marcas-categoria.csv` (intersección con la sidebar; hoy 8:
+Ard al Zaafaran, Armaf, Carolina Herrera, Chanel, Lattafa, Maison Alhambra, Thierry Mugler,
+Xerjoff). Verificado en la reconciliación inicial: el resto de las filas del CSV viejo que no
+aparecen son churn real del sitio, no categorías sin cubrir.
+
+**Contrato de archivos (`proveedor/`):**
+
+- `snapshots/{fecha}.csv` — un snapshot por corrida (schema abajo), commiteado (git = historial).
+- `snapshots/{fecha}-marcas.csv` — censo de la sidebar (cat, marca, id_manufacturer, conteo).
+- `reportes/{fecha}-diff.md` — altas / bajas / Δ precio ±3% / stock crítico (≥15→<15, no-clon,
+  Árabe/Diseñador; insumo para despublicar del B2B) / censo de marcas.
+- `reportes/{fecha}-reconciliacion.md` — solo primera corrida: matching contra el CSV legacy.
+- `legacy-catalogo-proveedor.csv` — copia byte a byte del CSV pre-pipeline (referencia).
+- `marcas-categoria.csv` — seed marca→categoría (paso 3 de la cascada). **Editable a mano**: las
+  marcas nuevas que el pull lista como REVISAR se agregan acá (también sirve para aliases de
+  grafía, ej. `Hermes Paris`). Ojo: `node seed-marcas-categoria.mjs` lo REGENERA desde el
+  catálogo y pisa los agregados manuales.
+- `marcas-clones.txt` — marcas excluidas de B2C/B2B; sus filas llevan `Comentario=clon/genérico`
+  (el flag además es sticky por `id_star` corrida a corrida, y cubre flags por-fila heredados
+  del CSV viejo en marcas fuera de la lista, ej. Attracione).
+
+**Master `catalogo-proveedor.csv`** = último snapshot **+ 1 corrida de gracia**: una fila ausente
+se retiene con su `fecha_snapshot` vieja (hace de "última vista") y recién cae tras 2 corridas
+consecutivas sin aparecer (sin stock no se lista → una ausencia puede ser temporal). Schema v2 =
+las 6 columnas originales (mismo orden) + `id_star` (clave primaria, id numérico estable de la
+URL de producto), `url_star`, `stock_star`, `imagen_url` (vacía si es el placeholder `img/p/`),
+`fecha_snapshot`. UTF-8 con BOM, coma, CRLF.
+
+**Clasificación (cascada, gana la primera):** nombre empieza con `TESTER` o slug `perfume-tester`
+→ Tester · slug `perfumes-de-nicho` → Nicho · marca en `marcas-categoria.csv` → esa categoría ·
+si no → `REVISAR` (el pull las lista al final; agregarlas al seed y re-correr).
+
+**Contrato del sitio (verificado 10-jul-2026):**
+
+- Server-rendered, módulo custom `starcategorypremium` (tiles `article.scp-card`). **No hay
+  endpoint JSON**: el listado con `X-Requested-With: XMLHttpRequest` o `&from-xhr=1` devuelve el
+  mismo HTML completo y `&ajax=1` devuelve vacío → se parsea HTML con cheerio.
+- `robots.txt` prohíbe `?order=`/`&order=` → las URLs de paginación van **sin** `order=`
+  (el orden por defecto ya es "position"). No hay sitemap público (403).
+- Cortesía obligatoria: 1 req/s con jitter ±300ms, concurrencia 1, User-Agent identificable
+  (`HaspertCatalogSync/1.0`), 3 reintentos con backoff, timeout 20s. Ante 403/429/challenge el
+  script **aborta y reporta**; no escalar a headless sin decisión explícita.
+- **El listado oculta los productos sin stock** (nunca aparece "0 In Stock"): un agotado se ve
+  como "baja" temporal, no como stock 0 — por eso la gracia de 1 corrida en el master.
+- Hay tiles **sin marca** (línea NEW NOTES): quedan con `Marca` vacía y categoría REVISAR/Nicho
+  según slug; es un faltante del sitio, no del parseo.
+
+**Validación dura antes de escribir** (si falla, aborta sin pisar nada): 0 filas sin `id_star` o
+sin `Costo USD`, y total ≥ 1.850 en corrida completa.
+
+> ⚠️ `Costo USD` es el **precio de vidriera minorista-PY** del storefront, no la lista mayorista
+> (pedida a Star). Cuando llegue la lista oficial, esa será la fuente de **costo** y este pipeline
+> queda como fuente de **stock + altas/novedades**. El `stock_star` es orientativo (umbrales
+> disponible / <15 / sin stock), nunca cantidad prometible.
+
+> Pendiente (a propósito): GitHub Actions para la corrida programada — recién cuando el flujo
+> manual esté validado 2-3 corridas.
+
 ## Notas / límites
 
 - **Inventario (mixto):** frasco/tester `tracked: true` + `DENY` (se agotan); decants `tracked: false`
