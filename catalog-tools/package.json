@@ -15,9 +15,12 @@
     "landing": "node create-landing-collections.mjs",
     "audit": "node audit-metafield-values.mjs",
     "stock": "node set-stock.mjs",
-    "pull": "node pull-stock.mjs"
+    "pull": "node pull-stock.mjs",
+    "proveedor:pull": "node pull-proveedor.mjs",
+    "proveedor:diff": "node diff-proveedor.mjs"
   },
   "dependencies": {
+    "cheerio": "^1.2.0",
     "exceljs": "^4.4.0"
   }
 }

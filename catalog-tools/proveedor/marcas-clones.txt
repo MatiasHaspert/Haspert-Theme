@@ -1,0 +1,16 @@
+# Marcas de clones/genéricos: EXCLUIDAS de B2C y B2B por decisión de negocio (jul 2026).
+# Se conservan en los snapshots con Comentario = "clon/genérico" para trazabilidad;
+# los consumidores del CSV (Excel, sync Shopify) filtran por ese flag.
+# Una marca por línea; líneas con # se ignoran. El matching es insensible a
+# mayúsculas/acentos/apóstrofes (ver normalizar() en lib/proveedor.mjs).
+Iscents
+Mini Brand Collection
+L'Affair
+D'Hermosa
+Smart Collection
+Paris Corner
+Zakat
+Modyafa
+Mawwal
+Marquisa Dubai
+Thoq Al Hawamer
