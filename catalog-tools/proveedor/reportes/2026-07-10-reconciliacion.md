@@ -1,0 +1,314 @@
+# Reconciliación primera corrida — 2026-07-10
+
+CSV legacy: **1903 filas** → matcheadas por nombre normalizado contra el scrape:
+
+| bucket | filas |
+|---|---:|
+| en cat 121 (PERFUMES) | 1612 |
+| en cat 100 (COSMÉTICOS) | 0 |
+| **sin correspondencia** | **291** |
+
+## Matcheadas vía cat 100 (por marca)
+
+_ninguna_
+
+## Sin correspondencia (deuda de matching)
+
+No son altas ni bajas: son filas del CSV viejo que el scrape de hoy no encontró por nombre.
+Causas típicas: producto descatalogado desde la extracción original, **sin stock al momento del
+crawl** (el listado oculta agotados), renombrado en el sitio, o producto de una categoría no
+cubierta por el alcance (cat 121 + cat 100 de marcas del catálogo).
+
+| Marca | Producto | Categoría | Costo USD |
+|---|---|---|---:|
+| Afnan | AFNAN HISTORIC OLMEDA EDP 100ML | Árabe | 23.75 |
+| Afnan | AFNAN TURATHI BLUE EDP 90ML MASC | Árabe | 24.75 |
+| Al Haramain | AL HARAMAIN AMBER OUD AQUA DUBAI EDP 100ML (AZUL) | Árabe | 42.00 |
+| Al Haramain | AL HARAMAIN AMBER OUD RUBY EDITION EDP 120ML | Árabe | 43.50 |
+| Al Haramain | AL HARAMAIN FLORAL FAIR EDP 100ML | Árabe | 25.00 |
+| Al Haramain | AL HARAMAIN KIT AMBER OUD RUBY EDITION EDP 75ML + EDP 30ML + DEO 200ML | Árabe | 49.50 |
+| Al Haramain | AL HARAMAIN VERGINE ROSA EDP 100ML | Árabe | 41.00 |
+| Al Wataniah | AL WATANIAH AMEERI EDP 100ML | Árabe | 10.00 |
+| Al Wataniah | AL WATANIAH AMNIA EDP 100ML FEM | Árabe | 14.00 |
+| Al Wataniah | AL WATANIAH BAREEQ AL DHAHAB EDP 100ML MASCULINO | Árabe | 10.00 |
+| Al Wataniah | AL WATANIAH DURRAT AL AROOS EDP 85ML | Árabe | 12.00 |
+| Al Wataniah | AL WATANIAH DURRAT AL AROOS LOVE EDP 85ML | Árabe | 23.50 |
+| Al Wataniah | AL WATANIAH SABAH AL WARD DELILAH EDP 100ML FEM | Árabe | 23.50 |
+| Al Wataniah | AL WATANIAH SABAH AL WARD SUGAR EDP 100ML FEM | Árabe | 11.50 |
+| Al Wataniah | AL WATANIAH SULTAN AL LAIL EDP 100ML MASC | Árabe | 11.00 |
+| Al Wataniah | AL WATANIAH TIARA PINK EDP 100ML | Árabe | 12.00 |
+| Al Wataniah | AL WATANIAH WATANI PURPLE EDP 100ML FEMININO | Árabe | 13.00 |
+| Alexandre J | ALEXANDRE J ORIENTAL ENIGMA EDP 100ML UNISEX | Nicho | 240.00 |
+| Alexandre J | ALEXANDRE J ROSE OUD EDP 100ML FEM | Nicho | 42.00 |
+| Armaf | ARMAF DUNESCAPE EDP 100ML | Árabe | 28.50 |
+| Armaf | ARMAF ODYSSEY MANDARIN SKY EDP 200ML MASC | Árabe | 38.00 |
+| Armaf | ARMAF ODYSSEY TYRANT EDP 100ML | Árabe | 16.75 |
+| Armaf | DESODORANTE ARMAF HOMME FOR MEN 200ML | Árabe | 3.00 |
+| Armaf | DESODORANTE ARMAF ODYSSEY AOUD 200ML | Árabe | 3.00 |
+| Armaf | DESODORANTE ARMAF ODYSSEY CHOCOLATE 200ML | Árabe | 2.75 |
+| Attracione | ATTRACIONE MEN PERFUME DE FEROMONAS VERMELHO 25ML | Árabe | 12.50 |
+| Azzaro | AZZARO POUR HOMME EDT 50ML MASC | Diseñador | 17.50 |
+| Bharara | BHARARA QUEEN EDP 100ML FEM | Árabe | 36.00 |
+| Billie Eilish | BILLIE EILISH EDP 100ML | Diseñador | 56.00 |
+| Britney Spears | BRITNEY SPEARS FANTASY HIDDEN EDP 100ML FEM | Diseñador | 17.00 |
+| Brut | DESODORANTE BRUT CLASSIC SCENT 24HRS 283G | Diseñador | 6.00 |
+| Cacharel | TESTER CACHAREL NOA EDT 100ML FEM | Tester | 28.50 |
+| Calvin Klein | CALVIN KLEIN ETERNITY FOR MEN EDT 100ML | Diseñador | 30.00 |
+| Calvin Klein | CALVIN KLEIN OBSESSION EDP 100ML FEM | Diseñador | 25.00 |
+| Calvin Klein | CALVIN KLEIN OBSESSION FOR MEN EDT 125ML | Diseñador | 23.00 |
+| Calvin Klein | TESTER CALVIN KLEIN EUPHORIA EDP 100ML FEM S/T | Tester | 29.00 |
+| Carolina Herrera | CAROLINA HERRERA 212 VIP ROSE EDP 80ML FEM | Diseñador | 72.00 |
+| Carolina Herrera | CAROLINA HERRERA 212 VIP ROSE ELIXIR EDP 80ML FEM | Diseñador | 74.00 |
+| Carolina Herrera | CAROLINA HERRERA BAD BOY LE PARFUM 50ML MASC | Diseñador | 50.00 |
+| Carolina Herrera | CAROLINA HERRERA CH EDT 100ML FEM | Diseñador | 77.00 |
+| Carolina Herrera | CAROLINA HERRERA CHIC FOR MEN EDT 100ML MASC | Diseñador | 46.00 |
+| Carolina Herrera | CAROLINA HERRERA GOOD GIRL EDP 80ML | Diseñador | 78.00 |
+| Carolina Herrera | CAROLINA HERRERA GOOD GIRL JASMINE ABSOLUTE EDP 80ML | Diseñador | 95.00 |
+| Carolina Herrera | CAROLINA HERRERA NEW YORK EDT 100ML FEM | Diseñador | 57.00 |
+| Carolina Herrera | CAROLINA HERRERA VERY GOOD GIRL EDP 80ML | Diseñador | 77.00 |
+| Carolina Herrera | TESTER CAROLINA HERRERA 212 VIP ROSE EDP 80ML FEM C/T | Tester | 58.00 |
+| Carolina Herrera | TESTER CAROLINA HERRERA BAD BOY EXTREME 100ML MASC | Tester | 53.00 |
+| Carolina Herrera | TESTER CAROLINA HERRERA CH EDT 100ML FEM C/T | Tester | 60.00 |
+| Carolina Herrera | TESTER CAROLINA HERRERA GOOD GIRL EDP 80ML FEM | Tester | 57.00 |
+| Carolina Herrera | TESTER CAROLINA HERRERA VERY GOOD GIRL EDP 80ML FEM | Tester | 61.00 |
+| Chanel | CHANEL ALLURE HOMME SPORT EAU EXTREME 100ML | Diseñador | 140.00 |
+| Chanel | CHANEL ALLURE HOMME SPORT EDT 150ML | Diseñador | 150.00 |
+| Chanel | CHANEL BLEU DE CHANEL EDP 100ML | Diseñador | 146.00 |
+| Chanel | CHANEL BLEU L' EXCLUSIF PARFUM 100ML | Diseñador | 265.00 |
+| Chanel | CHANEL GABRIELLE EDP 100ML FEM | Diseñador | 157.00 |
+| Chanel | CHANEL GABRIELLE ESSENCE EDP 100ML FEM | Diseñador | 185.00 |
+| Chanel | TESTER CHANEL BLEU DE CHANEL EDP 100ML C/T | Tester | 121.00 |
+| Chanel | TESTER CHANEL BLEU DE CHANEL PARFUM 100ML C/T | Tester | 145.00 |
+| Chanel | TESTER CHANEL CHANCE EDT 100ML | Tester | 92.00 |
+| Chloe | CHLOE EDP 75ML FEM | Diseñador | 65.00 |
+| Christian Dior | DIOR ADDICT EDP 100ML | Diseñador | 110.00 |
+| Christian Dior | DIOR ADDICT EDT 100ML | Diseñador | 95.00 |
+| Christian Dior | DIOR HOMME EDT 100ML MASC | Diseñador | 85.00 |
+| Christian Dior | DIOR HOMME INTENSE EDP 100ML MASC | Diseñador | 99.00 |
+| Christian Dior | DIOR HOMME SPORT MEN EDT 75ML | Diseñador | 74.00 |
+| Christian Dior | DIOR MISS DIOR BLOOMING BOUQUET EDT 150ML | Diseñador | 106.00 |
+| Christian Dior | DIOR SAUVAGE EDP 200ML | Diseñador | 145.00 |
+| Christian Dior | DIOR SAUVAGE EDT 100ML | Diseñador | 85.00 |
+| Christian Dior | DIOR SAUVAGE PARFUM 200ML MASC | Diseñador | 179.00 |
+| Christian Dior | TESTER DIOR HOMME PARFUM 75ML C/T | Tester | 88.00 |
+| Creed | CREED EROLFA EDP 100ML | Nicho | 290.00 |
+| Creed | CREED HIMALAYA EDP 100ML | Nicho | 290.00 |
+| Creed | CREED VIKING COLOGNE 100ML MASC (CX FEIA) | Nicho | 215.00 |
+| Creed | TESTER CREED ABSOLU AVENTUS EDP 100ML | Tester | 365.00 |
+| Creed | TESTER CREED AVENTUS COLOGNE 100ML MASC | Tester | 280.00 |
+| Creed | TESTER CREED CARMINA EDP 75ML FEM | Tester | 240.00 |
+| Creed | TESTER CREED ELADARIA EDP 75ML | Tester | 240.00 |
+| Creed | TESTER CREED EROLFA EDP 100ML | Tester | 220.00 |
+| Creed | TESTER CREED GREEN IRISH TWEED EDP 100ML | Tester | 220.00 |
+| Creed | TESTER CREED HIMALAYA EDP 100ML | Tester | 240.00 |
+| Creed | TESTER CREED JARDIN D'AMALFI EDP 75ML | Tester | 300.00 |
+| D'Hermosa | D.HERMOSA N. 1013 30ML | Árabe | 2.75 |
+| D'Hermosa | D.HERMOSA N. 1019 30ML | Árabe | 2.75 |
+| D'Hermosa | D.HERMOSA N. 1021 30ML | Árabe | 2.75 |
+| D'Hermosa | D.HERMOSA N. 2003 30ML | Árabe | 2.75 |
+| D'Hermosa | D.HERMOSA N. 2008 30ML | Árabe | 2.75 |
+| D'Hermosa | D.HERMOSA N. 2010 30ML | Árabe | 2.75 |
+| Diesel | DIESEL ONLY THE BRAVE STREET EDT 125ML | Diseñador | 42.00 |
+| Dolce & Gabbana | DOLCE&GABBANA LIGHT BLUE POUR HOMME EDT 125ML MASC | Diseñador | 46.00 |
+| Dolce & Gabbana | DOLCE&GABBANA THE ONE EDP INTENSE 100ML | Diseñador | 60.00 |
+| Dolce & Gabbana | DOLCE&GABBANA THE ONE GOLD INTENSE FOR MEN EDP 100ML MASC | Diseñador | 62.00 |
+| Dolce & Gabbana | TESTER DOLCE & GABBANA INTENSO EDP 125ML MASC | Tester | 42.00 |
+| Dolce & Gabbana | TESTER DOLCE & GABBANA THE ONE EDP 75ML | Tester | 49.50 |
+| Escada | ESCADA FAIRY LOVE EDT 100ML FEM | Diseñador | 30.00 |
+| Fragrance World | FRAGRANCE WORLD FIERO BLEU EDP 100ML MASC | Árabe | 13.25 |
+| French Avenue | FRENCH AVENUE FIRESTORM EDP 100ML MASC | Nicho | 29.00 |
+| French Avenue | FRENCH AVENUE MERINGUE EDP 100ML FEM | Nicho | 22.75 |
+| French Avenue | FRENCH AVENUE SWEET PARADISE EDP 100ML | Nicho | 24.00 |
+| Giorgio Armani | ARMANI EMPORIO STRONGER WITH YOU PARFUM EDP 100ML | Diseñador | 95.00 |
+| Givenchy | GIVENCHY AMARIGE EDT 100ML FEM | Diseñador | 53.50 |
+| Givenchy | GIVENCHY ANGE OU DEMON EDP 100ML FEM | Diseñador | 65.00 |
+| Givenchy | GIVENCHY L'INTERDIT EDP 80ML FEM | Diseñador | 75.00 |
+| Givenchy | GIVENCHY L'INTERDIT ROUGE EDP 80ML FEMININO | Diseñador | 78.00 |
+| Givenchy | GIVENCHY L'INTERDIT ROUGE ULTIME EDP 80ML | Diseñador | 76.00 |
+| Givenchy | GIVENCHY POUR HOMME BLUE LABEL EDT 100ML | Diseñador | 39.00 |
+| Givenchy | GIVENCHY POUR HOMME EDT 100ML | Diseñador | 42.00 |
+| Givenchy | TESTER GIVENCHY IRRESISTIBLE EDP 80ML | Tester | 67.00 |
+| Gritti | GRITTI HYSTERICA EDP 100ML FEM (CX FEIA) | Nicho | 162.00 |
+| Gritti | GRITTI REBRODE EDP 100ML UNISEX | Nicho | 110.00 |
+| Gritti | GRITTI SETA EXTRAIT DE PARFUM 100ML UNISEX | Nicho | 187.00 |
+| Gucci | GUCCI FLORA EDP 75ML | Diseñador | 80.00 |
+| Haute Fragrance Company | HFC HAUTE FRAGRANCE COMPANY DIAMOND IN THE SKY EDP 75ML FEM | Nicho | 300.00 |
+| Hugo Boss | HUGO BOSS DARK BLUE 75ML MASC | Diseñador | 22.00 |
+| Hugo Boss | HUGO BOSS XX EDT 100ML FEM | Diseñador | 22.50 |
+| Hugo Boss | HUGO BOSS XY EDT 100ML MASC | Diseñador | 25.00 |
+| Iscents | ISCENTS ACTIVE POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS BLU POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS BOLD GIRL POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS CERNIT LXS POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS CHANGE POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS CHEERS POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS CLASSIC BLACK POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS CLOVES POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS DARK BERRIES POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS DARKCITY POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS DARKER BLACK POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS DUSK NOIR POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS EAU DE SILVER INTENSE POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS EAU DE SILVER POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS EXCESS POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS FANTASIA POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS FLORAL POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS INTERCITY POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS LIKE BLACK POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS MADAME POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS MISS ROMANCE POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS MONTY POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS NOIR GEM POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS NOIR POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS NOIR XS POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS POUR SCENTS POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS ROSEE POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS ROYAL RAFTING POUR HOMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS RUMBLE POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS SECRET EXTREME POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS SECRET POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS SPLENDID PLUS POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS SUAVE POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS VELVET GIRL POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS WE ARE STRONG POUR HOMME EDT 100ML | Árabe | 6.50 |
+| Iscents | ISCENTS YOU ISCENT POUR FEMME EDP 100ML | Árabe | 6.50 |
+| Issey Miyake | ISSEY MIYAKE BLEUE D'ISSEY EDT 75ML MASC | Diseñador | 39.00 |
+| Issey Miyake | ISSEY MIYAKE KIT L'EAU D'ISSEY 100ML+75ML BODY CREAM | Diseñador | 55.00 |
+| Jacques Bogart | JACQUES BOGART SILVER SCENT EDT 100ML | Diseñador | 15.99 |
+| Jacques Bogart | TESTER JACQUES BOGART SILVER SCENT INTENSE EDT 100ML | Tester | 17.00 |
+| Jean Paul Gaultier | JEAN PAUL G LE MALE ELIXIR ABSOLU 200ML MASC | Diseñador | 115.00 |
+| Jean Paul Gaultier | JEAN PAUL G LE MALE ELIXIR PARFUM 200ML MASC | Diseñador | 105.00 |
+| Jean Paul Gaultier | JEAN PAUL G SCANDAL EDT 100ML+10ML + 75ML SG | Diseñador | 80.00 |
+| Jean Paul Gaultier | TESTER JEAN PAUL G DIVINE EDP 100ML S/T | Tester | 72.00 |
+| Jo Malone | JO MALONE LIME BASIL & MANDARIN COLOGNE 100ML | Nicho | 115.00 |
+| Jo Milano | JO MILANO GAME OF SPADES BONUS 100ML | Nicho | 63.00 |
+| Jo Milano | JO MILANO GAME OF SPADES ROYALE 100ML | Nicho | 51.00 |
+| Juicy Couture | JUICY COUTURE VIVA LA JUICY EDP 100ML | Diseñador | 48.00 |
+| Kajal | KAJAL FARIS EDP 100ML UNISEX | Nicho | 220.00 |
+| Kajal | KAJAL KAJAL III EDP 100ML UNISEX | Nicho | 220.00 |
+| Kenzo | TESTER KENZO FL BY K EDP 50ML FEM | Tester | 23.00 |
+| L'Affair | L'AFFAIR ATOOR MASHMALLOW EDP 100ML | Árabe | 14.00 |
+| L'Affair | L'AFFAIR ME EDP 100ML MASC | Árabe | 14.00 |
+| L'Affair | L'AFFAIR SWAG! EDP 100ML FEM | Árabe | 12.00 |
+| L'Affair | L'AFFAIR SYMPHONY NOTTE EDP 100ML | Árabe | 12.00 |
+| Lancome | LANCOME LA VIE EST BELLE L'ELIXIR EDP 100ML | Diseñador | 106.00 |
+| Lattafa | DESODORANTE LATTAFA SPRAY QAED AL FURSAN 200ML | Árabe | 2.75 |
+| Lattafa | LATTAFA ANGHAM EDP 100ML UNISSEX | Árabe | 18.90 |
+| Lattafa | LATTAFA ANGHAM SECOND SONG EDP 100ML | Árabe | 21.50 |
+| Lattafa | LATTAFA ASAD BOURBON EDP 100ML | Árabe | 23.90 |
+| Lattafa | LATTAFA ATHEERI EDP 100ML | Árabe | 43.00 |
+| Lattafa | LATTAFA DALAL EDP 100ML | Árabe | 32.00 |
+| Lattafa | LATTAFA HAYAATI (BLACK) EDP 100ML | Árabe | 10.75 |
+| Lattafa | LATTAFA HIS CONFESSION (BLACK) EDP 100ML | Árabe | 23.75 |
+| Lattafa | LATTAFA KIDS STOP WAIT GO EDP 75ML | Árabe | 9.90 |
+| Lattafa | LATTAFA KIT BADEE AL OUD COLLECTION KIT EDP 4X25ML | Árabe | 28.00 |
+| Lattafa | LATTAFA KIT KING OF ARABIA 3PCS EDP 100ML + 20ML + SPRAY 200ML | Árabe | 28.50 |
+| Lattafa | LATTAFA MAAHIR BLACK EDITION EDP 100ML | Árabe | 18.90 |
+| Lattafa | LATTAFA NICHE EMARATI TOLEEN EDP 80ML | Árabe | 26.00 |
+| Lattafa | LATTAFA PRIDE ANSAAM GOLD EDP 100ML | Árabe | 16.00 |
+| Lattafa | LATTAFA PRIDE LA COLLECTION D'ANTIQUITES 1886 (CAR) EDP 100ML | Árabe | 20.25 |
+| Lattafa | LATTAFA PRIDE MASA EDP 100ML | Árabe | 22.00 |
+| Lattafa | LATTAFA PRIDE PISA EDP 100ML | Árabe | 28.00 |
+| Lattafa | LATTAFA PRIDE SHAHEEN GOLD EDP 100ML | Árabe | 16.50 |
+| Lattafa | LATTAFA QUEEN OF ARABIA EDP 100ML | Árabe | 40.00 |
+| Lattafa | LATTAFA RAVE NOW WOMEN (ROSA) EDP 100ML | Árabe | 14.50 |
+| Lattafa | LATTAFA SHERIF EDP 100ML | Árabe | 21.20 |
+| Lattafa | LATTAFA THE KINGDOM EDP 100ML FEM (BEGE) | Árabe | 18.90 |
+| Lattafa | LATTAFA VELVET ROSE EDP 100ML | Árabe | 12.00 |
+| Lattafa | LATTAFA YARA CANDY EDP 100ML | Árabe | 16.48 |
+| Legacy King | LEGACY KING COLL.009 VICTORY 25ML | Árabe | 4.50 |
+| Legacy King | LEGACY KING COLL.013 COCO CHANEL 25ML | Árabe | 4.50 |
+| Maison Alhambra | MAISON ALHAMBRA BODY MIST B.A.D POUR FEMME 250ML | Árabe | 6.99 |
+| Maison Alhambra | MAISON ALHAMBRA BODY MIST INTRUDE 250ML | Árabe | 6.99 |
+| Maison Alhambra | MAISON ALHAMBRA BODY MIST LA VIVACITE 250ML | Árabe | 6.99 |
+| Maison Alhambra | MAISON ALHAMBRA BODY MIST PINK ECLIPSE 250ML | Árabe | 6.99 |
+| Maison Alhambra | MAISON ALHAMBRA BODY MIST PINK SHIMMER SECRET 250ML | Árabe | 6.99 |
+| Maison Alhambra | MAISON ALHAMBRA BODY MIST SO CANDID 250ML | Árabe | 6.99 |
+| Maison Alhambra | MAISON ALHAMBRA DARK AOUD EDP 30ML | Árabe | 4.70 |
+| Maison Alhambra | MAISON ALHAMBRA DARK AOUD EDP 80ML | Árabe | 13.00 |
+| Maison Alhambra | MAISON ALHAMBRA FLINT EDP 80ML | Árabe | 12.00 |
+| Maison Alhambra | MAISON ALHAMBRA GLACIER GOLD EDP 30ML | Árabe | 4.70 |
+| Maison Alhambra | MAISON ALHAMBRA JORGE DI PROFUMO (BLACK) EDP 100ML | Árabe | 11.90 |
+| Maison Alhambra | MAISON ALHAMBRA KINGSMAN EDP 100ML | Árabe | 12.50 |
+| Maison Alhambra | MAISON ALHAMBRA LUMINOUS VIVID 100ML | Árabe | 11.50 |
+| Maison Alhambra | MAISON ALHAMBRA OPERA NOIR EDP 30ML | Árabe | 4.70 |
+| Maison Alhambra | MAISON ALHAMBRA OPULENCE LEATHER EDP 30ML | Árabe | 4.70 |
+| Maison Alhambra | MAISON ALHAMBRA PERSEUS EXCLUSIF EDP 100ML | Árabe | 11.00 |
+| Maison Alhambra | MAISON ALHAMBRA PHILOS CENTRO EDP 100ML | Árabe | 10.90 |
+| Maison Alhambra | MAISON ALHAMBRA PHILOS OPUS NOIR EDP 100ML | Árabe | 11.00 |
+| Maison Alhambra | MAISON ALHAMBRA PHILOS SHINE EDP 100ML | Árabe | 11.00 |
+| Maison Alhambra | MAISON ALHAMBRA PINK VELVET EDP 30ML | Árabe | 4.70 |
+| Maison Alhambra | MAISON ALHAMBRA SALVO EDP 100ML | Árabe | 13.00 |
+| Maison Alhambra | MAISON ALHAMBRA SO CANDID POUR FEMME 100ML | Árabe | 12.50 |
+| Maison Alhambra | MAISON ALHAMBRA VICTORIA FLOWER ROSA LILIUM EDP 100ML | Árabe | 11.00 |
+| Maison Alhambra | MAISON ALHAMBRA VICTORIOSO FEARLESS EDP 100ML | Árabe | 10.50 |
+| Maison Alhambra | MAISON ALHAMBRA VICTORIOSO NERO EDP 100ML (BLACK) | Árabe | 13.75 |
+| Maison Alhambra | MAISON ALHAMBRA VOGUE ROUGE EDP 100ML | Árabe | 13.00 |
+| Maison Alhambra | MAISON ALHAMBRA YEAH MAN PARFUM EDP 100ML | Árabe | 15.00 |
+| Maison Francis Kurkdjian | MAISON FRANCIS KURKDJIAN AMYRIS FEMME EDP 70ML | Nicho | 230.00 |
+| Mancera Paris | MANCERA PARIS COCO VANILLE EDP 120ML | Nicho | 88.00 |
+| Marc Jacobs | MARC JACOBS PERFECT ELIXIR EDP 100ML | Diseñador | 96.00 |
+| Marina De Bourbon | MARINA DE BOURBON CLASSIQUE EDP 100ML | Diseñador | 21.90 |
+| Mawwal | MAWWAL POISON HIYAM 100ML | Árabe | 20.00 |
+| Mawwal | MAWWAL UNIVERSE SAMA 100ML | Árabe | 23.00 |
+| Mini Brand Collection | MINI BRAND COLLECTION NO.262 EDP 25ML | Árabe | 5.00 |
+| Mini Brand Collection | MINI BRAND COLLECTION NO.266 EDP 25ML | Árabe | 5.00 |
+| Mini Brand Collection | MINI BRAND COLLECTION NO.268 EDP 25ML | Árabe | 5.00 |
+| Mini Brand Collection | MINI BRAND COLLECTION NO.269 EDP 25ML | Árabe | 5.00 |
+| Montblanc | MONTBLANC EXPLORER EXTREME PARFUM 100ML | Diseñador | 57.00 |
+| Montblanc | MONTBLANC SIGNATURE EDP 90ML FEM | Diseñador | 47.00 |
+| Nishane | NISHANE HACIVAT EXTRAIT DE PARFUM 100ML | Nicho | 175.00 |
+| Nishane | NISHANE HACIVAT X EXTRAIT DE PARFUM 100ML | Nicho | 162.00 |
+| Orientica | ORIENTICA ARTE BELLISSIMO ROMANTIC EDP 75ML FEM | Árabe | 54.99 |
+| Paco Rabanne | PACO RABANNE 1 ONE MILLION EDT 100ML MASC | Diseñador | 52.00 |
+| Paco Rabanne | PACO RABANNE FAME IN LOVE PARFUM ELIXIR 80ML FEM | Diseñador | 79.00 |
+| Paco Rabanne | PACO RABANNE INVICTUS PARFUM 100ML MASC | Diseñador | 69.00 |
+| Paco Rabanne | PACO RABANNE MILLION GOLD FOR HER EDP 90ML FEM | Diseñador | 80.00 |
+| Paco Rabanne | PACO RABANNE MILLION GOLD INTENSE EDP 100ML MASC | Diseñador | 58.00 |
+| Paco Rabanne | PACO RABANNE MILLION GOLD PURE DIAMONDS EDP 90ML FEM | Diseñador | 105.00 |
+| Paco Rabanne | PACO RABANNE PHANTOM IN RED PARFUM ELIXIR 100ML MASC | Diseñador | 67.50 |
+| Paco Rabanne | TESTER PACO RABANNE 1 MILLION EDT 100ML MASC | Tester | 44.00 |
+| Paco Rabanne | TESTER PACO RABANNE INVICTUS VICTORY ABSOLU PARFUM INTENSE 100ML | Tester | 70.00 |
+| Paradis des Sens | TESTER PARADIS DES SENS ANELA EDP 100ML | Tester | 200.00 |
+| Parfums de Marly | PARFUMS DE MARLY ALTHAIR EDP 125ML | Nicho | 247.00 |
+| Parfums de Marly | PARFUMS DE MARLY DELINA EDP 75ML | Nicho | 240.00 |
+| Parfums de Marly | PARFUMS DE MARLY DELINA LA ROSEE EDP 30ML FEM | Nicho | 178.00 |
+| Parfums de Marly | PARFUMS DE MARLY KALAN EDP 125ML | Nicho | 245.00 |
+| Parfums de Marly | PARFUMS DE MARLY LAYTON EDP 125ML | Nicho | 250.00 |
+| Parfums de Marly | PARFUMS DE MARLY PALATINE EDP 75ML | Nicho | 227.00 |
+| Parfums de Marly | TESTER PARFUMS DE MARLY DELINA EDP 75ML | Tester | 215.00 |
+| Parfums de Marly | TESTER PARFUMS DE MARLY GREENLEY EDP 125ML | Tester | 230.00 |
+| Paris Corner | PARIS CORNER VOUX TURQUOISE 100ML | Árabe | 27.00 |
+| Prada | PRADA LUNA ROSSA BLACK EDP 100ML | Diseñador | 84.00 |
+| Rasasi | RASASI HAWAS MALIBU EDP 100ML | Árabe | 30.25 |
+| Rue Broca | RUE BROCA KIT PRIDE POUR FEMME EDP 100ML + S/G 100ML + B/L 100ML | Árabe | 19.50 |
+| Rue Broca | RUE BROCA KIT PRIDE POUR HOMME EDP 100ML + S/G 100ML + A/S 100ML | Árabe | 19.50 |
+| Sabrina Carpenter | SABRINA CARPENTER ME ESPRESSO EDP 75ML FEM | Diseñador | 23.00 |
+| Shakira | SHAKIRA ROJO EDP 80ML FEM | Diseñador | 18.50 |
+| Smart Collection | SMART COLLECTION N 002 EDP 25ML (FARENHEIT) | Árabe | 5.00 |
+| Smart Collection | SMART COLLECTION N 012 EDP 25ML (CHANEL NO 5) | Árabe | 5.00 |
+| Smart Collection | SMART COLLECTION N 216 EDP 25ML (EUPHORIA MEN) | Árabe | 5.00 |
+| Smart Collection | SMART COLLECTION N 287 EDP 25ML (GUCCI FLORA) | Árabe | 5.00 |
+| Smart Collection | SMART COLLECTION N 317 EDP 25ML (DIOR HOMME INTENSE) | Árabe | 5.00 |
+| Smart Collection | SMART COLLECTION N 443 EDP 25ML (AMWAGE) | Árabe | 5.00 |
+| Smart Collection | SMART COLLECTION N 448 EDP 25ML (212 VIP ROSE) | Árabe | 5.00 |
+| The House of Oud | THOO HOUSE GRAPE PEARLS EDP 75ML | Nicho | 195.00 |
+| The House of Oud | THOO HOUSE SACRED GROOVE EDP 75ML | Nicho | 237.00 |
+| Tom Ford | TOM FORD ROSE D'AMALFI EDP 100ML UNISEX | Diseñador | 240.00 |
+| Tubbees | TUBBEES TITANS SPLASH EDP 50ML | Árabe | 7.25 |
+| Valentino | VALENTINO DONNA BORN IN ROMA INTENSE EDP 100ML | Diseñador | 125.00 |
+| Versace | TESTER VERSACE DYLAN BLUE EDP 100ML FEM | Tester | 48.00 |
+| Versace | VERSACE EROS EDP 100ML MASC | Diseñador | 66.00 |
+| Versace | VERSACE EROS EDT 200ML MASC | Diseñador | 73.00 |
+| Versace | VERSACE EROS ENERGY POUR HOMME EDP 100ML MASC | Diseñador | 63.00 |
+| Versace | VERSACE EROS POUR FEMME EDP 100ML FEMININO | Diseñador | 65.00 |
+| Viktor & Rolf | VIKTOR&ROLF SPICEBOMB EXTREME EDP 90ML MASC | Diseñador | 76.00 |
+| Xerjoff | TESTER XERJOFF ERBA GOLD EDP 100ML | Tester | 150.00 |
+| Xerjoff | TESTER XERJOFF ERBA PURA EDP 100ML | Tester | 138.00 |
+| Yves Saint Laurent | (YSL) YVES SAINT LAURENT LA NUIT DE L'HOMME EDT 100ML | Diseñador | 72.00 |
+| Yves Saint Laurent | (YSL) YVES SAINT LAURENT MON PARIS EDP 90ML | Diseñador | 95.00 |
+| Yves Saint Laurent | (YSL) YVES SAINT LAURENT Y EDP 100ML MASC | Diseñador | 100.00 |
+| Zakat | ZAKAT AVITOR IBRAHIM EDP 100ML | Árabe | 18.00 |
+| Zakat | ZAKAT CRYSTAL AURUM EDP 115ML | Árabe | 18.00 |
+| Zimaya | ZIMAYA FATIMA VELVET LOVE EXTRAIT DE PARFUM 100ML FEM | Árabe | 15.95 |
+| Zimaya | ZIMAYA TIRAMISU COCO EDP 100ML | Árabe | 20.00 |
