@@ -136,7 +136,7 @@
         "show_vendor": true,
         "show_rating": false,
         "quick_add": "standard",
-        "show_price_no_tax": true,
+        "show_price_no_tax": false,
         "tax_rate": 21,
         "show_decant_hint": true,
         "decant_hint_threshold": 80000,
