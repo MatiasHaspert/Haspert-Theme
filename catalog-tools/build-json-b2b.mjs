@@ -29,7 +29,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { leerCsvObjetos, normalizar, FLAG_CLON, resolverSnapshots } from './lib/proveedor.mjs';
+import { BASE_URL, leerCsvObjetos, normalizar, FLAG_CLON, resolverSnapshots } from './lib/proveedor.mjs';
 import { gql, loadDotEnv } from './lib/shopify.mjs';
 
 const DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -127,6 +127,10 @@ for (const f of filas) {
     m: sanear(f.Marca),
     p: sanear(shortName(f.Marca, f.Producto)),
     ...(f.ml ? { l: Number(f.ml) } : {}),
+    // g: path de la foto relativo a meta.img_base (el host viaja una sola vez).
+    // El front la hotlinkea lazy desde el sitio del proveedor, con fallback a
+    // monograma si no carga. Sin foto (placeholder del sitio) → sin clave.
+    ...(f.imagen_url ? { g: sanear(f.imagen_url.replace(`${BASE_URL}/`, '')) } : {}),
     c: letra,
     a: precio,
     s: Number(f.stock_star) >= STOCK_ALTO ? 2 : 1,
@@ -160,13 +164,16 @@ const meta = {
   demo: !preciosReales,
   chunks: chunks.length,
   min: MIN_UNIDADES,
+  img_base: `${BASE_URL}/`,
 };
 const metaStr = escaparScript(JSON.stringify(meta));
 const chunkStrs = chunks.map((c) => escaparScript(JSON.stringify(c)));
 
 // ---- reporte ----
+const conFoto = items.filter((it) => it.g).length;
 console.log(`Snapshot ${base} → ${items.length} ítems B2B (de ${filas.length} filas)`);
 console.log(`  filtro: Árabe/Diseñador · no-clon · stock ≥ ${STOCK_MINIMO} · con precio${sinPrecio ? ` (${sinPrecio} excluidos sin precio)` : ''}`);
+console.log(`  con foto: ${conFoto}/${items.length} (los sin foto muestran monograma)`);
 console.log(`  meta: ${metaStr}`);
 chunkStrs.forEach((c, i) => console.log(`  chunk ${i + 1}/${chunkStrs.length}: ${(Buffer.byteLength(c, 'utf8') / 1024).toFixed(1)} KB · ${chunks[i].length} ítems`));
 

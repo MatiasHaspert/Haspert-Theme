@@ -265,6 +265,19 @@
   letter-spacing: 0.05em;
   flex: none;
   user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+/* La foto tapa el monograma; si no carga, el JS la saca y queda el monograma.
+   Fondo neutro propio: el packshot nunca queda sobre el tinte de fila elegida. */
+.myr-thumb__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  background: var(--nc-surface);
 }
 .myr-pinfo { min-width: 0; }
 .myr-pbrand {
