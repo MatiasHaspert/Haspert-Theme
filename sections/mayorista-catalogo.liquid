@@ -75,13 +75,9 @@
         {%- endif -%}
         <input type="hidden" name="contact[Asunto]" value="Solicitud de acceso mayorista">
         <div class="myr-form__grid">
-          <label class="myr-field">
-            <span>Razón social / nombre del negocio *</span>
-            <input type="text" name="contact[Razon social]" required autocomplete="organization">
-          </label>
-          <label class="myr-field">
-            <span>CUIT *</span>
-            <input type="text" name="contact[CUIT]" required inputmode="numeric" placeholder="30-12345678-9">
+          <label class="myr-field myr-field--full">
+            <span>Nombre del negocio *</span>
+            <input type="text" name="contact[Nombre del negocio]" required autocomplete="organization">
           </label>
           <label class="myr-field">
             <span>Email *</span>
