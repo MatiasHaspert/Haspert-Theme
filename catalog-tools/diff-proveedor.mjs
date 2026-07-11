@@ -14,7 +14,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { leerCsvObjetos, normalizar, FLAG_CLON, fechaLocalISO } from './lib/proveedor.mjs';
+import { leerCsvObjetos, normalizar, FLAG_CLON, fechaLocalISO, resolverSnapshots } from './lib/proveedor.mjs';
 
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const DIR_PROV = path.join(DIR, 'proveedor');
@@ -35,15 +35,7 @@ const FROM_ARG = argVal('--from');
 const TO_ARG = argVal('--to');
 
 // ---- resolver snapshots ----
-const RE_BASE = /^(\d{4}-\d{2}-\d{2})(?:-(\d+))?\.csv$/;
-const bases = fs.existsSync(DIR_SNAPSHOTS)
-  ? fs.readdirSync(DIR_SNAPSHOTS)
-      .map((f) => f.match(RE_BASE))
-      .filter(Boolean)
-      .map((m) => ({ base: m[0].slice(0, -4), fecha: m[1], corrida: m[2] ? parseInt(m[2], 10) : 1 }))
-      .sort((a, b) => (a.fecha === b.fecha ? a.corrida - b.corrida : a.fecha < b.fecha ? -1 : 1))
-      .map((x) => x.base)
-  : [];
+const bases = resolverSnapshots(DIR_SNAPSHOTS);
 
 if (!bases.length) {
   console.error('No hay snapshots en proveedor/snapshots/. Corré primero: node pull-proveedor.mjs');

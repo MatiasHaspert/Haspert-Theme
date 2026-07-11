@@ -243,6 +243,22 @@ export function urlListado(idCategoria, { pagina = 1, idManufacturer = null } = 
   return `${BASE_URL}/categoria-premium/${idCategoria}?${params.join('&')}`;
 }
 
+// ---------- snapshots ----------
+
+// Lista los snapshots de un directorio ordenados cronológicamente (fecha, corrida del día).
+// Devuelve los nombres base sin extensión: '2026-07-10', '2026-07-10-2', …
+// Compartido por diff-proveedor.mjs y build-json-b2b.mjs.
+export function resolverSnapshots(dirSnapshots) {
+  const RE = /^(\d{4}-\d{2}-\d{2})(?:-(\d+))?\.csv$/;
+  if (!fs.existsSync(dirSnapshots)) return [];
+  return fs.readdirSync(dirSnapshots)
+    .map((f) => f.match(RE))
+    .filter(Boolean)
+    .map((m) => ({ base: m[0].slice(0, -4), fecha: m[1], corrida: m[2] ? parseInt(m[2], 10) : 1 }))
+    .sort((a, b) => (a.fecha === b.fecha ? a.corrida - b.corrida : a.fecha < b.fecha ? -1 : 1))
+    .map((x) => x.base);
+}
+
 // ---------- fecha ----------
 
 export function fechaLocalISO(d = new Date()) {

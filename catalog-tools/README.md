@@ -300,6 +300,59 @@ sin `Costo USD`, y total ≥ 1.850 en corrida completa.
 > Pendiente (a propósito): GitHub Actions para la corrida programada — recién cuando el flujo
 > manual esté validado 2-3 corridas.
 
+## Canal mayorista (`build-json-b2b.mjs` + `/pages/mayorista`)
+
+Canal B2B v1 **sin apps y sin B2B nativo**: el catálogo viaja del pipeline del proveedor a
+metafields del **shop**, y la página lo muestra solo a clientes con tag `mayorista`.
+
+```
+pull-proveedor.mjs ─▶ build-json-b2b.mjs ─▶ metafields shop numen_b2b.* (chunked)
+                                                   │
+                     sections/mayorista-catalogo.liquid ── gate server-side por customer.tags
+                                                   │   (sin tag, el HTML no contiene NI UN precio)
+                                                   ▼
+                                    /pages/mayorista → pedido por WhatsApp
+```
+
+**⚠️ Por qué metafields y no un asset:** los assets del theme tienen URL de CDN pública y
+adivinable — un JSON de precios B2B ahí se descarga sin login y destruye el ancla del precio
+retail. El JSON solo se inyecta al HTML dentro de la rama Liquid del cliente con tag. Tampoco
+se emite stock crudo del proveedor: solo el tier `s` (2 = alta disponibilidad, 1 = disponible).
+
+```bash
+node build-json-b2b.mjs --demo --dry-run  # meta + 5 ítems + tamaño por chunk, no escribe
+node build-json-b2b.mjs --demo            # publica con precios placeholder (badge "demo" en la página)
+node build-json-b2b.mjs                   # requiere proveedor/precios-b2b.csv (Sprint 2): lista real
+```
+
+- **Gate de lanzamiento:** sin `proveedor/precios-b2b.csv` (columnas `id_star,precio_ars`) solo
+  corre con `--demo`; si el CSV existe, `--demo` se rechaza (no se pisan precios reales con
+  inventados). `meta.demo` gobierna el badge de la página: dato, no setting.
+- **Filtro de inclusión:** Árabe/Diseñador · sin flag clon · `stock_star ≥ 15` · con id y precio.
+- **Metafields:** `numen_b2b.catalogo_meta` + `numen_b2b.catalogo_1..N`, tipo `json`. Límite
+  vigente del tipo: **128 KB por valor** (verificado en shopify.dev, jul 2026); se chunkea a
+  ≤ 60 KB con margen. Se escriben chunks primero y el meta al final; los chunks sobrantes de
+  corridas anteriores se borran.
+- **Scopes:** verificado (jul 2026) que la app actual escribe metafields de shop con los scopes
+  que ya tiene. Si Shopify alguna vez lo rechaza por permisos, ampliá los scopes de la versión
+  publicada de la app en el Dev Dashboard — **no crear una app nueva**.
+
+**Flujo operativo completo:**
+
+1. `npm run proveedor:pull` → snapshot fresco del proveedor.
+2. `node build-json-b2b.mjs --demo` (o real cuando exista `precios-b2b.csv`).
+3. **Una sola vez:** crear la página en Admin → Tienda online → Páginas → "Mayorista"
+   con el template `page.mayorista` (URL `/pages/mayorista`).
+4. **Alta de cada mayorista (manual):** llega la solicitud por el mail del form de contacto →
+   Admin → Clientes → crear/editar → agregar tag `mayorista`. Listo: ve el catálogo al loguearse.
+5. **Leak-test** tras cualquier cambio en la sección (deslogueado, no alcanza con mirar):
+   `curl -s https://TU-DOMINIO/pages/mayorista | grep -c "b2b-data"` debe dar **0**.
+
+Sin metafields cargados la página muestra "Catálogo en actualización" (fail-soft). El mínimo de
+unidades, textos y WhatsApp del canal se editan en el theme editor (sección "Catálogo mayorista");
+el checkbox "Vista previa del catálogo en el editor" permite ver la rama mayorista sin login
+(solo afecta al editor).
+
 ## Notas / límites
 
 - **Inventario (mixto):** frasco/tester `tracked: true` + `DENY` (se agotan); decants `tracked: false`
