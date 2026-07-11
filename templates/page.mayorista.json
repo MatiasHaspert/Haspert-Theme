@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "mayorista-catalogo",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

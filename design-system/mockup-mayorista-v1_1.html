@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catálogo Mayorista — Numen · Mockup v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   MOCKUP /mayorista · v1 — Sistema Ultramar v2 (tokens de base.css)
+   Precios DEMO: (usd × 1510 + 5000) × 1.18, redondeo a $100.
+   El pricing real sale del Sprint 2 (lista mayorista Star).
+   ============================================================ */
+:root{
+  --nc-bg:#F7F8F9; --nc-surface:#FFFFFF; --nc-panel:#ECEEF1;
+  --nc-ink:#14161A; --nc-ink-2:#4A5058; --nc-ink-3:#626973;
+  --nc-line:#D8DCE1; --nc-line-soft:#EBEDF0;
+  --nc-accent:#1E34A8; --nc-accent-deep:#16267E; --nc-accent-press:#101C5E;
+  --nc-accent-soft:#DFE6F8; --nc-accent-rgb:30,52,168;
+  --ok:#1E7A46; --ok-soft:#E2F2E8;
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --ease-drawer:cubic-bezier(0.32,0.72,0,1);
+  --font-display:"Bebas Neue",Impact,sans-serif;
+  --font-ui:"Montserrat",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:var(--font-ui);color:var(--nc-ink);background:var(--nc-bg);
+  -webkit-font-smoothing:antialiased;line-height:1.5;
+  padding-bottom:120px; /* espacio para la barra de pedido */
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit;font-size:1rem;color:var(--nc-ink)}
+:focus-visible{outline:0.2rem solid var(--nc-accent);outline-offset:0.2rem;border-radius:4px}
+::selection{background:var(--nc-accent-soft)}
+
+/* ---------- Top bar: contexto de sesión mayorista ---------- */
+.topbar{
+  background:var(--nc-ink);color:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:10px 20px;font-size:.78rem;letter-spacing:.02em;
+}
+.topbar .brand{font-family:var(--font-display);font-size:1.15rem;letter-spacing:.14em;line-height:1}
+.topbar .session{display:flex;align-items:center;gap:10px;color:#C9CDD4;font-weight:500}
+.topbar .session strong{color:#fff;font-weight:600}
+.topbar .dot{width:7px;height:7px;border-radius:50%;background:#4ADE80;flex:none}
+.topbar a{color:#C9CDD4;text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- Header ---------- */
+.header{max-width:1180px;margin:0 auto;padding:40px 20px 20px}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.72rem;font-weight:700;letter-spacing:.18em;color:var(--nc-accent-deep);
+  text-transform:uppercase;margin-bottom:10px;
+}
+.eyebrow::before{content:"";width:22px;height:2px;background:var(--nc-accent)}
+h1{font-family:var(--font-display);font-size:clamp(2.6rem,6vw,4.2rem);letter-spacing:.03em;line-height:.95;font-weight:400}
+.header .sub{margin-top:10px;color:var(--nc-ink-2);font-size:.95rem;max-width:62ch}
+.header .sub b{color:var(--nc-ink);font-weight:600}
+
+.demo-flag{
+  display:inline-flex;align-items:center;gap:8px;margin-top:16px;
+  background:var(--nc-accent-soft);color:var(--nc-accent-deep);
+  font-size:.72rem;font-weight:700;letter-spacing:.06em;
+  padding:6px 12px;border-radius:999px;text-transform:uppercase;
+}
+.demo-flag svg{flex:none}
+
+/* Condiciones del canal */
+.terms{
+  max-width:1180px;margin:22px auto 0;padding:0 20px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+}
+.term{
+  background:var(--nc-surface);border:1px solid var(--nc-line-soft);border-radius:10px;
+  padding:13px 15px;font-size:.8rem;color:var(--nc-ink-2);line-height:1.45;
+}
+.term b{display:block;color:var(--nc-ink);font-weight:600;font-size:.82rem;margin-bottom:2px}
+
+/* ---------- Toolbar sticky ---------- */
+.toolbar-wrap{
+  position:sticky;top:0;z-index:40;background:rgba(247,248,249,.92);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--nc-line-soft);
+  margin-top:26px;
+}
+.toolbar{
+  max-width:1180px;margin:0 auto;padding:12px 20px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.search{
+  flex:1 1 240px;min-width:200px;display:flex;align-items:center;gap:9px;
+  background:var(--nc-surface);border:1px solid var(--nc-line);border-radius:9px;
+  padding:0 12px;height:44px;transition:border-color .15s ease,box-shadow .15s ease;
+}
+.search:focus-within{border-color:var(--nc-accent);box-shadow:0 0 0 3px rgba(var(--nc-accent-rgb),.12)}
+.search svg{flex:none;color:var(--nc-ink-3)}
+.search input{border:none;outline:none;background:none;width:100%;height:100%;font-size:.92rem}
+.search input::placeholder{color:var(--nc-ink-3)}
+
+.seg{display:flex;background:var(--nc-panel);border-radius:9px;padding:3px;gap:2px}
+.seg button{
+  height:38px;padding:0 16px;border-radius:7px;font-size:.85rem;font-weight:600;color:var(--nc-ink-2);
+  transition:background .15s ease,color .15s ease;white-space:nowrap;
+}
+.seg button[aria-pressed="true"]{background:var(--nc-surface);color:var(--nc-ink);box-shadow:0 1px 2px rgba(20,22,26,.08)}
+.seg button:active{transform:scale(.97)}
+
+.select{
+  height:44px;background:var(--nc-surface);border:1px solid var(--nc-line);border-radius:9px;
+  padding:0 34px 0 12px;font-size:.88rem;font-weight:500;appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%234A5058' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+}
+.count{font-size:.8rem;color:var(--nc-ink-3);font-weight:500;margin-left:auto;white-space:nowrap}
+.filter-btn{display:none}
+
+/* ---------- Lista ---------- */
+.list{max-width:1180px;margin:0 auto;padding:8px 20px 40px}
+.list-head{
+  display:grid;grid-template-columns:56px 1fr 150px 130px 148px;gap:16px;align-items:center;
+  padding:14px 12px 10px;font-size:.68rem;font-weight:700;letter-spacing:.12em;
+  color:var(--nc-ink-3);text-transform:uppercase;
+}
+.list-head span:nth-child(4){text-align:right}
+.list-head span:nth-child(5){text-align:center}
+
+.row{
+  display:grid;grid-template-columns:56px 1fr 150px 130px 148px;gap:16px;align-items:center;
+  padding:13px 12px;background:var(--nc-surface);border:1px solid var(--nc-line-soft);
+  border-radius:12px;margin-bottom:8px;position:relative;
+  transition:border-color .15s ease,background-color .2s ease;
+  animation:rowIn .3s var(--ease-out) both;
+}
+.row:nth-child(-n+9){animation-delay:calc(var(--i,0)*30ms)}
+@keyframes rowIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (hover:hover) and (pointer:fine){
+  .row:hover{border-color:var(--nc-line)}
+}
+.row.picked{border-color:rgba(var(--nc-accent-rgb),.45);background:linear-gradient(0deg,rgba(var(--nc-accent-rgb),.035),rgba(var(--nc-accent-rgb),.035)),var(--nc-surface)}
+
+.thumb{
+  width:56px;height:56px;border-radius:9px;background:var(--nc-panel);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:1.25rem;color:var(--nc-ink-3);letter-spacing:.05em;
+  flex:none;user-select:none;
+}
+.p-info{min-width:0}
+.p-brand{font-size:.68rem;font-weight:700;letter-spacing:.13em;color:var(--nc-accent-deep);text-transform:uppercase}
+.p-name{font-size:.9rem;font-weight:600;color:var(--nc-ink);line-height:1.3;margin:2px 0;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.p-meta{font-size:.74rem;color:var(--nc-ink-3);font-weight:500}
+.p-meta .sep{margin:0 5px;opacity:.5}
+
+.avail{display:flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;color:var(--nc-ink-2)}
+.avail .led{width:8px;height:8px;border-radius:50%;flex:none}
+.avail.hi .led{background:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
+.avail.ok .led{background:#C79A2A;box-shadow:0 0 0 3px #F7EDD4}
+
+.price{text-align:right}
+.price .ars{font-family:var(--font-display);font-size:1.45rem;letter-spacing:.02em;line-height:1;color:var(--nc-ink)}
+.price .unit{display:block;font-size:.68rem;color:var(--nc-ink-3);font-weight:500;margin-top:2px}
+
+.stepper{
+  display:flex;align-items:center;justify-content:center;gap:0;
+  background:var(--nc-panel);border-radius:9px;height:44px;width:132px;margin:0 auto;
+  transition:background-color .2s ease;
+}
+.row.picked .stepper{background:var(--nc-accent-soft)}
+.stepper button{
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  color:var(--nc-ink-2);border-radius:9px;transition:color .12s ease,transform .1s ease;
+}
+.stepper button:active{transform:scale(.9)}
+.stepper button:disabled{opacity:.35;cursor:default}
+.row.picked .stepper button{color:var(--nc-accent-deep)}
+.stepper input{
+  width:44px;text-align:center;border:none;background:none;font-weight:700;font-size:.95rem;
+  -moz-appearance:textfield;outline:none;color:inherit;
+}
+.stepper input::-webkit-inner-spin-button{-webkit-appearance:none}
+
+.empty{
+  text-align:center;padding:60px 20px;color:var(--nc-ink-3);font-size:.92rem;
+}
+.empty b{display:block;font-family:var(--font-display);font-size:1.6rem;letter-spacing:.04em;color:var(--nc-ink-2);margin-bottom:6px;font-weight:400}
+
+/* ---------- Barra de pedido (firma de la página) ---------- */
+.orderbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:60;
+  background:var(--nc-surface);border-top:1px solid var(--nc-line);
+  box-shadow:0 -8px 28px rgba(20,22,26,.10);
+  transform:translateY(110%);transition:transform .28s var(--ease-drawer);
+}
+.orderbar.show{transform:none}
+.orderbar-in{
+  max-width:1180px;margin:0 auto;padding:12px 20px;
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+}
+.ticks{display:flex;gap:4px;align-items:center}
+.tick{
+  width:14px;height:22px;border-radius:4px;background:var(--nc-panel);
+  transition:background-color .18s var(--ease-out),transform .18s var(--ease-out);
+}
+.tick.on{background:var(--nc-accent)}
+.tick.on:last-child{transform:scaleY(1.08)}
+.bar-count{display:flex;align-items:baseline;gap:8px}
+.bar-count .n{font-family:var(--font-display);font-size:2rem;line-height:1;letter-spacing:.02em}
+.bar-count .lbl{font-size:.75rem;color:var(--nc-ink-3);font-weight:600}
+.bar-min{
+  font-size:.74rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--nc-ink-3);
+}
+.bar-min.met{color:var(--ok)}
+.bar-total{margin-left:auto;text-align:right}
+.bar-total .t{font-family:var(--font-display);font-size:1.55rem;line-height:1}
+.bar-total .l{font-size:.68rem;color:var(--nc-ink-3);font-weight:500}
+.bar-actions{display:flex;gap:10px}
+.btn{
+  height:48px;padding:0 20px;border-radius:10px;font-weight:700;font-size:.9rem;
+  display:inline-flex;align-items:center;gap:9px;letter-spacing:.01em;
+  transition:background-color .15s ease,transform .1s ease,box-shadow .15s ease;
+}
+.btn:active{transform:scale(.97)}
+.btn-ghost{background:var(--nc-panel);color:var(--nc-ink)}
+.btn-primary{background:var(--nc-accent);color:#fff}
+.btn-primary:hover{background:var(--nc-accent-deep)}
+.btn-primary:active{background:var(--nc-accent-press)}
+.btn .badge{
+  background:rgba(255,255,255,.22);border-radius:999px;font-size:.75rem;
+  min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px;
+}
+.btn-ghost .badge{background:var(--nc-surface);color:var(--nc-ink)}
+
+/* ---------- Drawer "Tu pedido" ---------- */
+.scrim{
+  position:fixed;inset:0;background:rgba(20,22,26,.45);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .2s ease;
+}
+.scrim.show{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(430px,100%);z-index:80;
+  background:var(--nc-surface);display:flex;flex-direction:column;
+  transform:translateX(105%);transition:transform .3s var(--ease-drawer);
+  box-shadow:-12px 0 40px rgba(20,22,26,.18);
+}
+.drawer.show{transform:none}
+.drawer-head{
+  padding:20px 22px 14px;border-bottom:1px solid var(--nc-line-soft);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.drawer-head h2{font-family:var(--font-display);font-size:1.7rem;letter-spacing:.04em;font-weight:400}
+.icon-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:9px;color:var(--nc-ink-2);transition:background-color .12s ease}
+@media(hover:hover){.icon-btn:hover{background:var(--nc-panel)}}
+.drawer-list{flex:1;overflow-y:auto;padding:8px 22px}
+.d-item{
+  display:grid;grid-template-columns:1fr auto;gap:4px 14px;
+  padding:14px 0;border-bottom:1px solid var(--nc-line-soft);align-items:center;
+}
+.d-name{font-size:.83rem;font-weight:600;line-height:1.35}
+.d-name small{display:block;color:var(--nc-ink-3);font-weight:500;font-size:.71rem;margin-top:1px}
+.d-ctl{display:flex;align-items:center;gap:12px;grid-row:span 2}
+.d-ctl .stepper{width:118px;height:38px}
+.d-ctl .stepper button{width:38px;height:38px}
+.d-sub{font-size:.8rem;color:var(--nc-ink-2);font-weight:600}
+.d-remove{color:var(--nc-ink-3);font-size:.72rem;font-weight:600;text-decoration:underline;text-underline-offset:2px;justify-self:start}
+.drawer-foot{padding:16px 22px 22px;border-top:1px solid var(--nc-line);background:var(--nc-bg)}
+.d-total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.d-total .l{font-size:.85rem;font-weight:600;color:var(--nc-ink-2)}
+.d-total .v{font-family:var(--font-display);font-size:1.9rem;letter-spacing:.02em}
+.d-note{font-size:.72rem;color:var(--nc-ink-3);margin-bottom:14px;line-height:1.5}
+.drawer-foot .btn{width:100%;justify-content:center}
+.drawer-foot .btn+.btn{margin-top:8px}
+.link-clear{display:block;text-align:center;margin-top:12px;font-size:.75rem;color:var(--nc-ink-3);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- Modal WhatsApp ---------- */
+.modal{
+  position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;transition:opacity .18s ease;
+}
+.modal.show{opacity:1;pointer-events:auto}
+.modal-card{
+  width:min(560px,100%);max-height:86vh;background:var(--nc-surface);border-radius:16px;
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:scale(.96);opacity:0;transition:transform .22s var(--ease-out),opacity .18s ease;
+  box-shadow:0 24px 70px rgba(20,22,26,.30);
+}
+.modal.show .modal-card{transform:scale(1);opacity:1}
+.modal-head{padding:20px 24px 4px}
+.modal-head h3{font-family:var(--font-display);font-size:1.6rem;letter-spacing:.04em;font-weight:400}
+.modal-head p{font-size:.8rem;color:var(--nc-ink-2);margin-top:4px}
+.msg-preview{
+  margin:14px 24px;background:var(--nc-panel);border-radius:12px;padding:16px;
+  font-size:.8rem;line-height:1.6;white-space:pre-wrap;overflow-y:auto;flex:1;
+  border:1px solid var(--nc-line-soft);color:var(--nc-ink-2);
+}
+.msg-meta{padding:0 24px;font-size:.7rem;color:var(--nc-ink-3);font-weight:500}
+.msg-meta.warn{color:#A05A00}
+.modal-foot{display:flex;gap:10px;padding:16px 24px 22px}
+.modal-foot .btn{flex:1;justify-content:center}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:104px;left:50%;transform:translate(-50%,12px);z-index:100;
+  background:var(--nc-ink);color:#fff;font-size:.82rem;font-weight:600;
+  padding:11px 18px;border-radius:10px;opacity:0;pointer-events:none;
+  transition:opacity .18s ease,transform .22s var(--ease-out);
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- Responsive ---------- */
+@media(max-width:920px){
+  .terms{grid-template-columns:repeat(2,1fr)}
+  .list-head{display:none}
+  .row{grid-template-columns:48px 1fr;grid-template-rows:auto auto;gap:6px 12px;padding:14px}
+  .thumb{width:48px;height:48px;grid-row:span 2}
+  .avail{grid-column:2}
+  .price{grid-column:1/-1;display:flex;align-items:baseline;gap:8px;text-align:left;margin-top:2px}
+  .price .unit{margin:0}
+  .stepper{grid-column:1/-1;width:100%;margin:4px 0 0;justify-content:space-between}
+  .stepper input{flex:1}
+  .seg,.select{display:none}
+  .filter-btn{
+    display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px;
+    background:var(--nc-surface);border:1px solid var(--nc-line);border-radius:9px;
+    font-weight:600;font-size:.88rem;
+  }
+  .count{width:100%;margin:2px 0 0;order:9}
+  .orderbar-in{gap:12px;padding:10px 16px}
+  .ticks{display:none}
+  .bar-min{display:none}
+  .bar-total{margin-left:auto}
+  .bar-actions{width:100%;order:9}
+  .bar-actions .btn{flex:1;justify-content:center}
+  body{padding-bottom:150px}
+}
+/* Bottom sheet de filtros (patrón del PLP) */
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:80;background:var(--nc-surface);
+  border-radius:18px 18px 0 0;padding:10px 22px 26px;
+  transform:translateY(105%);transition:transform .3s var(--ease-drawer);
+  box-shadow:0 -14px 44px rgba(20,22,26,.2);
+}
+.sheet.show{transform:none}
+.sheet-grip{width:40px;height:4px;border-radius:99px;background:var(--nc-line);margin:6px auto 16px}
+.sheet h3{font-family:var(--font-display);font-size:1.5rem;letter-spacing:.04em;font-weight:400;margin-bottom:14px}
+.sheet .fgroup{margin-bottom:16px}
+.sheet .fgroup label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nc-ink-3);margin-bottom:8px}
+.sheet .seg{display:flex;width:100%}
+.sheet .seg button{flex:1}
+.sheet .select{display:block;width:100%}
+.sheet .btn{width:100%;justify-content:center;margin-top:6px}
+
+@media (prefers-reduced-motion:reduce){
+  .row{animation:none}
+  .orderbar,.drawer,.sheet,.modal-card,.toast{transition-duration:.01ms}
+}
+</style>
+</head>
+<body>
+
+<!-- Contexto: página visible solo para clientes con tag `mayorista` -->
+<div class="topbar">
+  <span class="brand">NUMEN</span>
+  <span class="session"><span class="dot"></span>Acceso mayorista · <strong>Perfumería Demo SRL</strong> · <a href="#">Salir</a></span>
+</div>
+
+<header class="header">
+  <span class="eyebrow">Canal mayorista</span>
+  <h1>Catálogo mayorista</h1>
+  <p class="sub">Fragancias <b>100% originales</b> importadas, con verificación de lote y video de unboxing. Precios netos por <b>transferencia bancaria</b>. Disponibilidad sincronizada con nuestro proveedor.</p>
+  <span class="demo-flag">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5M12 16.5v.01"/></svg>
+    Mockup · precios de demostración
+  </span>
+</header>
+
+<section class="terms" aria-label="Condiciones del canal mayorista">
+  <div class="term"><b>Mínimo 10 unidades</b>Surtido libre entre todo el catálogo.</div>
+  <div class="term"><b>Pago por transferencia</b>100% anticipado. Sin tarjetas ni cuotas.</div>
+  <div class="term"><b>Despacho hasta 15 días hábiles</b>Pedido a proveedor + envío a todo el país.</div>
+  <div class="term"><b>Faltantes</b>Envío parcial con reembolso proporcional. Te ofrecemos reemplazos antes por WhatsApp.</div>
+</section>
+
+<div class="toolbar-wrap">
+  <div class="toolbar">
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg>
+      <input id="q" type="search" placeholder="Buscar por marca o fragancia…" aria-label="Buscar en el catálogo">
+    </div>
+    <div class="seg" role="group" aria-label="Categoría">
+      <button data-cat="*" aria-pressed="true">Todos</button>
+      <button data-cat="A" aria-pressed="false">Árabes</button>
+      <button data-cat="D" aria-pressed="false">Diseñador</button>
+    </div>
+    <select id="brand" class="select" aria-label="Filtrar por marca"><option value="*">Todas las marcas</option></select>
+    <select id="sort" class="select" aria-label="Ordenar">
+      <option value="brand">Marca A–Z</option>
+      <option value="priceAsc">Precio: menor a mayor</option>
+      <option value="priceDesc">Precio: mayor a menor</option>
+      <option value="stock">Mayor disponibilidad</option>
+    </select>
+    <button class="filter-btn" id="openSheet">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+      Filtrar y ordenar
+    </button>
+    <span class="count" id="count"></span>
+  </div>
+</div>
+
+<main class="list">
+  <div class="list-head" aria-hidden="true">
+    <span></span><span>Producto</span><span>Disponibilidad</span><span>Precio unit.</span><span>Cantidad</span>
+  </div>
+  <div id="rows"></div>
+  <div class="empty" id="empty" hidden>
+    <b>Sin resultados</b>
+    Probá con otra búsqueda o quitá los filtros.
+  </div>
+</main>
+
+<!-- Barra de pedido -->
+<div class="orderbar" id="orderbar">
+  <div class="orderbar-in">
+    <div class="ticks" id="ticks" aria-hidden="true"></div>
+    <div class="bar-count"><span class="n" id="barN">0</span><span class="lbl">unidades</span></div>
+    <span class="bar-min" id="barMin">Mínimo 10 surtidas</span>
+    <div class="bar-total"><div class="t" id="barTotal">$0</div><div class="l">total estimado</div></div>
+    <div class="bar-actions">
+      <button class="btn btn-ghost" id="openDrawer">Ver pedido <span class="badge" id="badgeItems">0</span></button>
+      <button class="btn btn-primary" id="openModal">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91A9.87 9.87 0 0 0 12.04 2Zm5.83 14.16c-.25.7-1.44 1.33-1.99 1.41-.51.08-1.15.11-1.86-.12-.43-.14-.98-.32-1.69-.62-2.97-1.28-4.91-4.27-5.06-4.47-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.6-.37.8-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.06.92 2.21.07.15.12.33.02.53-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.61 2.01 1.11.99 2.04 1.29 2.33 1.44.29.15.46.12.63-.07.17-.2.72-.84.92-1.13.2-.3.39-.25.66-.15.27.1 1.72.81 2.02.96.3.15.49.22.57.35.07.12.07.72-.18 1.42Z"/></svg>
+        Enviar por WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Drawer pedido -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Tu pedido">
+  <div class="drawer-head">
+    <h2>Tu pedido</h2>
+    <button class="icon-btn" id="closeDrawer" aria-label="Cerrar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-list" id="drawerList"></div>
+  <div class="drawer-foot">
+    <div class="d-total"><span class="l" id="dCount">0 unidades</span><span class="v" id="dTotal">$0</span></div>
+    <p class="d-note">Total estimado. Los precios y el stock se confirman por WhatsApp antes de la transferencia.</p>
+    <button class="btn btn-primary" id="openModal2">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91A9.87 9.87 0 0 0 12.04 2Z"/></svg>
+      Enviar por WhatsApp
+    </button>
+    <button class="btn btn-ghost" id="copyOrder">Copiar pedido</button>
+    <a class="link-clear" href="#" id="clearOrder">Vaciar pedido</a>
+  </div>
+</aside>
+
+<!-- Modal mensaje -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Enviar pedido por WhatsApp">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>Tu pedido, listo para enviar</h3>
+      <p>Lo revisamos, confirmamos stock con el proveedor y te pasamos los datos para transferir.</p>
+    </div>
+    <pre class="msg-preview" id="msgPreview"></pre>
+    <span class="msg-meta" id="msgMeta"></span>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="copyMsg">Copiar mensaje</button>
+      <a class="btn btn-primary" id="waLink" href="#" target="_blank" rel="noopener">Abrir WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom sheet filtros (mobile) -->
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Filtrar y ordenar">
+  <div class="sheet-grip"></div>
+  <h3>Filtrar y ordenar</h3>
+  <div class="fgroup"><label>Categoría</label>
+    <div class="seg" role="group" id="segMobile">
+      <button data-cat="*" aria-pressed="true">Todos</button>
+      <button data-cat="A" aria-pressed="false">Árabes</button>
+      <button data-cat="D" aria-pressed="false">Diseñador</button>
+    </div>
+  </div>
+  <div class="fgroup"><label>Marca</label><select id="brandM" class="select"><option value="*">Todas las marcas</option></select></div>
+  <div class="fgroup"><label>Orden</label>
+    <select id="sortM" class="select">
+      <option value="brand">Marca A–Z</option>
+      <option value="priceAsc">Precio: menor a mayor</option>
+      <option value="priceDesc">Precio: mayor a menor</option>
+      <option value="stock">Mayor disponibilidad</option>
+    </select>
+  </div>
+  <button class="btn btn-primary" id="applySheet">Ver resultados</button>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ============ DATOS DEMO — 41 SKUs reales del snapshot 2026-07-10 ============ */
+const DATA = [{"id":8100,"m":"LATTAFA","p":"LATTAFA AL NOBLE SAFEER EDP 100ML","ml":100,"c":"A","usd":16.47,"st":3565},{"id":7490,"m":"LATTAFA","p":"LATTAFA BADEE AL OUD HONOR AND GLORY (WHITE) EDP 100ML","ml":100,"c":"A","usd":18.24,"st":3163},{"id":7489,"m":"LATTAFA","p":"LATTAFA BADEE AL OUD AMETHYST (PURPLE) EDP 100ML","ml":100,"c":"A","usd":17.25,"st":3009},{"id":10787,"m":"MAISON ALHAMBRA","p":"MAISON ALHAMBRA SCEPTRE MALACHITE 100ML","ml":100,"c":"A","usd":17.75,"st":2256},{"id":9566,"m":"MAISON ALHAMBRA","p":"MAISON ALHAMBRA JEAN LOWE IMMORTAL EDP 100ML","ml":100,"c":"A","usd":16.5,"st":1923},{"id":8111,"m":"MAISON ALHAMBRA","p":"MAISON ALHAMBRA LA ROUGE BAROQUE EDP 100ML","ml":100,"c":"A","usd":10.49,"st":1679},{"id":8649,"m":"AL WATANIAH","p":"AL WATANIAH SABAH AL WARD EDP 100ML FEM","ml":100,"c":"A","usd":12,"st":416},{"id":15478,"m":"AL WATANIAH","p":"AL WATANIAH SABAH AL WARD GARDEN OF EDEN EDP 100ML","ml":100,"c":"A","usd":23.5,"st":385},{"id":9105,"m":"AL WATANIAH","p":"AL WATANIAH SHAGAF AL WARD EDP 100ML","ml":100,"c":"A","usd":12.25,"st":337},{"id":9226,"m":"RASASI","p":"RASASI HAWAS FOR HIM EDP 100ML MASC","ml":100,"c":"A","usd":18.49,"st":2890},{"id":10339,"m":"RASASI","p":"RASASI HAWAS FOR HER (GOLD) EDP 100ML FEM","ml":100,"c":"A","usd":15,"st":2337},{"id":15593,"m":"RASASI","p":"RASASI HAWAS PINK EDP 100ML FEM","ml":100,"c":"A","usd":30.25,"st":1761},{"id":13356,"m":"ARMAF","p":"ARMAF CLUB DE NUIT BLING EDP 75ML","ml":75,"c":"A","usd":33.5,"st":10266},{"id":8454,"m":"ARMAF","p":"ARMAF CLUB DE NUIT ICONIC (BLUE) EDP 105ML","ml":105,"c":"A","usd":27.7,"st":6708},{"id":8839,"m":"ARMAF","p":"ARMAF CLUB DE NUIT UNTOLD EDP 105ML","ml":105,"c":"A","usd":26.99,"st":2188},{"id":8615,"m":"AFNAN","p":"AFNAN 9PM (BLACK) EDP 100ML MASC","ml":100,"c":"A","usd":20,"st":1200},{"id":11612,"m":"AFNAN","p":"AFNAN TURATHI ELECTRIC EDP 90ML","ml":90,"c":"A","usd":25,"st":541},{"id":8724,"m":"AFNAN","p":"AFNAN 9PM FEMME (PURPLE) EDP 100ML FEM","ml":100,"c":"A","usd":22,"st":289},{"id":15458,"m":"AL HARAMAIN","p":"AL HARAMAIN OLAF EDP 30ML","ml":30,"c":"A","usd":11,"st":3841},{"id":15457,"m":"AL HARAMAIN","p":"AL HARAMAIN LEIF EDP 30ML","ml":30,"c":"A","usd":11,"st":3840},{"id":15456,"m":"AL HARAMAIN","p":"AL HARAMAIN AZURE EDP 30ML","ml":30,"c":"A","usd":11,"st":3807},{"id":7000,"m":"CAROLINA HERRERA","p":"CAROLINA HERRERA 212 VIP EDP 80ML FEM","ml":80,"c":"D","usd":65,"st":134},{"id":8211,"m":"CAROLINA HERRERA","p":"CAROLINA HERRERA 212 SEXY EDP 100ML FEM","ml":100,"c":"D","usd":72.48,"st":133},{"id":9295,"m":"VERSACE","p":"VERSACE DYLAN BLUE POUR HOMME EDT 100ML MASC","ml":100,"c":"D","usd":50,"st":70},{"id":7008,"m":"VERSACE","p":"VERSACE POUR HOMME EDT 100ML MASC","ml":100,"c":"D","usd":47.5,"st":66},{"id":16219,"m":"JEAN PAUL GAULTIER","p":"JEAN PAUL G LE BEAU FLOWER EDP 125ML MASC","ml":125,"c":"D","usd":100,"st":49},{"id":12423,"m":"JEAN PAUL GAULTIER","p":"JEAN PAUL G LE BEAU LE PARFUM INTENSE 125ML","ml":125,"c":"D","usd":95,"st":37},{"id":8177,"m":"GIORGIO ARMANI","p":"ARMANI EMPORIO STRONGER WITH YOU INTENSELY EDP 100ML","ml":100,"c":"D","usd":85.5,"st":113},{"id":8619,"m":"GIORGIO ARMANI","p":"ARMANI EMPORIO STRONGER WITH YOU ABSOLUTELY EDP 100ML","ml":100,"c":"D","usd":92,"st":86},{"id":8188,"m":"YVES SAINT LAURENT","p":"YSL LIBRE LE PARFUM 90ML FEM","ml":90,"c":"D","usd":116,"st":104},{"id":8919,"m":"YVES SAINT LAURENT","p":"YSL MYSLF EDP 100ML MASC","ml":100,"c":"D","usd":109,"st":66},{"id":8181,"m":"PACO RABANNE","p":"PACO RABANNE OLYMPEA EDP 80ML FEM","ml":80,"c":"D","usd":64,"st":129},{"id":12274,"m":"PACO RABANNE","p":"PACO RABANNE MILLION GOLD ELIXIR PARFUM 100ML","ml":100,"c":"D","usd":85,"st":85},{"id":8032,"m":"DOLCE&GABBANA","p":"DOLCE&GABBANA LIGHT BLUE EDT 100ML FEM","ml":100,"c":"D","usd":51.9,"st":80},{"id":14537,"m":"DOLCE&GABBANA","p":"DOLCE&GABBANA THE ONE POUR HOMME EDT 150ML MASC","ml":150,"c":"D","usd":61,"st":61},{"id":8190,"m":"AZZARO","p":"AZZARO POUR HOMME EDT 200ML MASC","ml":200,"c":"D","usd":37.5,"st":460},{"id":10460,"m":"AZZARO","p":"AZZARO THE MOST WANTED EDP INTENSE 100ML","ml":100,"c":"D","usd":62,"st":240},{"id":8039,"m":"CALVIN KLEIN","p":"CALVIN KLEIN CK ONE EDT 100ML","ml":100,"c":"D","usd":21,"st":358},{"id":8405,"m":"CALVIN KLEIN","p":"CALVIN KLEIN CK ONE EDT 200ML","ml":200,"c":"D","usd":26.45,"st":242},{"id":16175,"m":"MONTBLANC","p":"MONTBLANC PRESENCE COOL EDT 75ML MASC","ml":75,"c":"D","usd":36,"st":45},{"id":8319,"m":"MONTBLANC","p":"MONTBLANC EXPLORER EDP 100ML MASC","ml":100,"c":"D","usd":45.5,"st":44}];
+
+/* Precio DEMO — placeholder hasta el modelo del Sprint 2 */
+const FX = 1510, FEE = 5000, MARGEN = 1.18;
+const precio = usd => Math.round((usd * FX + FEE) * MARGEN / 100) * 100;
+const fmt = n => "$" + n.toLocaleString("es-AR");
+const MIN = 10;
+const WA_NUM = "5493400000000"; // ← reemplazar por el número real del canal
+
+/* Nombre corto: saca la marca repetida del principio */
+const shortName = d => {
+  let n = d.p;
+  const pref = d.m.split(" ")[0];
+  if (n.toUpperCase().startsWith(d.m)) n = n.slice(d.m.length).trim();
+  else if (n.toUpperCase().startsWith(pref)) n = n.slice(pref.length).trim();
+  return n.replace(/^[-–·\s]+/, "");
+};
+const mono = m => m.split(/\s+/).slice(0,2).map(w=>w[0]).join("");
+
+/* ============ Estado ============ */
+const cart = new Map(); // id -> qty
+let cat = "*", brand = "*", sort = "brand", q = "";
+
+/* ============ Render lista ============ */
+const rowsEl = document.getElementById("rows");
+const emptyEl = document.getElementById("empty");
+const countEl = document.getElementById("count");
+
+function filtered(){
+  let list = DATA.filter(d =>
+    (cat === "*" || d.c === cat) &&
+    (brand === "*" || d.m === brand) &&
+    (q === "" || (d.m + " " + d.p).toLowerCase().includes(q))
+  );
+  const by = {
+    brand:(a,b)=>a.m.localeCompare(b.m)||a.p.localeCompare(b.p),
+    priceAsc:(a,b)=>precio(a.usd)-precio(b.usd),
+    priceDesc:(a,b)=>precio(b.usd)-precio(a.usd),
+    stock:(a,b)=>b.st-a.st
+  };
+  return list.sort(by[sort]);
+}
+
+function render(){
+  const list = filtered();
+  countEl.textContent = list.length + " de " + DATA.length + " referencias";
+  emptyEl.hidden = list.length > 0;
+  rowsEl.innerHTML = list.map((d,i) => {
+    const qty = cart.get(d.id) || 0;
+    const availHi = d.st >= 100;
+    return `<div class="row ${qty>0?"picked":""}" style="--i:${i}" data-id="${d.id}">
+      <div class="thumb" aria-hidden="true">${mono(d.m)}</div>
+      <div class="p-info">
+        <div class="p-brand">${d.m}</div>
+        <div class="p-name">${shortName(d)}</div>
+        <div class="p-meta">${d.ml ? d.ml+" ml" : ""}<span class="sep">·</span>Cód. ${d.id}<span class="sep">·</span>${d.c==="A"?"Árabe":"Diseñador"}</div>
+      </div>
+      <div class="avail ${availHi?"hi":"ok"}"><span class="led"></span>${availHi?"Alta disponibilidad":"Disponible"}</div>
+      <div class="price"><span class="ars">${fmt(precio(d.usd))}</span><span class="unit">por unidad · transf.</span></div>
+      <div class="stepper">
+        <button aria-label="Quitar una unidad" data-dec="${d.id}" ${qty===0?"disabled":""}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>
+        </button>
+        <input type="number" min="0" inputmode="numeric" value="${qty}" data-qty="${d.id}" aria-label="Cantidad de ${d.p}">
+        <button aria-label="Agregar una unidad" data-inc="${d.id}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ============ Carrito ============ */
+function setQty(id, qty){
+  qty = Math.max(0, Math.min(999, qty|0));
+  if (qty === 0) cart.delete(id); else cart.set(id, qty);
+  syncRow(id); updateBar(); renderDrawer();
+}
+function syncRow(id){
+  const row = rowsEl.querySelector(`.row[data-id="${id}"]`);
+  if (!row) return;
+  const qty = cart.get(id) || 0;
+  row.classList.toggle("picked", qty>0);
+  row.querySelector("[data-qty]").value = qty;
+  row.querySelector("[data-dec]").disabled = qty===0;
+}
+const totals = () => {
+  let units=0, total=0;
+  cart.forEach((qty,id)=>{ const d = DATA.find(x=>x.id===id); units+=qty; total+=qty*precio(d.usd); });
+  return {units,total,items:cart.size};
+};
+
+/* ============ Barra de pedido ============ */
+const orderbar = document.getElementById("orderbar");
+const ticksEl = document.getElementById("ticks");
+ticksEl.innerHTML = Array.from({length:MIN},()=>`<span class="tick"></span>`).join("");
+
+function updateBar(){
+  const {units,total,items} = totals();
+  orderbar.classList.toggle("show", units>0);
+  document.getElementById("barN").textContent = units;
+  document.getElementById("barTotal").textContent = fmt(total);
+  document.getElementById("badgeItems").textContent = items;
+  const min = document.getElementById("barMin");
+  if (units >= MIN){ min.textContent = "Mínimo alcanzado"; min.classList.add("met"); }
+  else { min.textContent = `Mínimo ${MIN} surtidas`; min.classList.remove("met"); }
+  ticksEl.querySelectorAll(".tick").forEach((t,i)=>t.classList.toggle("on", i<Math.min(units,MIN)));
+}
+
+/* ============ Drawer ============ */
+const drawer = document.getElementById("drawer");
+const scrim = document.getElementById("scrim");
+function renderDrawer(){
+  const list = [...cart.entries()].map(([id,qty])=>{
+    const d = DATA.find(x=>x.id===id);
+    return `<div class="d-item">
+      <div class="d-name">${d.m} — ${shortName(d)}<small>${fmt(precio(d.usd))} c/u · Cód. ${id}</small></div>
+      <div class="d-ctl">
+        <div class="stepper">
+          <button aria-label="Quitar" data-dec="${id}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+          <input type="number" min="0" inputmode="numeric" value="${qty}" data-qty="${id}" aria-label="Cantidad">
+          <button aria-label="Agregar" data-inc="${id}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        </div>
+        <span class="d-sub">${fmt(qty*precio(d.usd))}</span>
+      </div>
+      <a href="#" class="d-remove" data-remove="${id}">Quitar</a>
+    </div>`;
+  }).join("");
+  document.getElementById("drawerList").innerHTML = list || `<p style="padding:30px 0;color:var(--nc-ink-3);font-size:.88rem;text-align:center">Todavía no agregaste productos.</p>`;
+  const {units,total} = totals();
+  document.getElementById("dCount").textContent = units + (units===1?" unidad":" unidades");
+  document.getElementById("dTotal").textContent = fmt(total);
+}
+const openDrawer = ()=>{ renderDrawer(); drawer.classList.add("show"); scrim.classList.add("show"); };
+const closeAll = ()=>{ drawer.classList.remove("show"); scrim.classList.remove("show"); modal.classList.remove("show"); sheet.classList.remove("show"); };
+
+/* ============ Mensaje WhatsApp ============ */
+const modal = document.getElementById("modal");
+function buildMsg(){
+  const hoy = new Date().toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"numeric"});
+  const lines = [...cart.entries()].map(([id,qty])=>{
+    const d = DATA.find(x=>x.id===id);
+    return `${qty} × ${d.m} ${shortName(d)} — Cód. ${id}`;
+  });
+  const {units,total} = totals();
+  let msg = `PEDIDO MAYORISTA · Numen\nFecha: ${hoy}\nCliente: Perfumería Demo SRL\n\n${lines.join("\n")}\n\nTotal: ${units} unidades · Estimado ${fmt(total)} (transferencia)\n`;
+  if (units < MIN) msg += `\nNota: el pedido tiene menos de ${MIN} unidades, ¿lo revisamos juntos?\n`;
+  msg += `\nQuedo a la espera de la confirmación de stock y los datos para transferir. ¡Gracias!`;
+  return msg;
+}
+function openMsgModal(){
+  if (cart.size===0) return;
+  const msg = buildMsg();
+  document.getElementById("msgPreview").textContent = msg;
+  const enc = encodeURIComponent(msg);
+  const meta = document.getElementById("msgMeta");
+  const wa = document.getElementById("waLink");
+  if (enc.length > 1800){
+    meta.textContent = "Pedido largo: mejor copialo y pegalo en el chat para que no se corte.";
+    meta.classList.add("warn");
+    wa.href = "https://wa.me/" + WA_NUM;
+  } else {
+    meta.textContent = msg.length + " caracteres · se abre con el mensaje ya escrito";
+    meta.classList.remove("warn");
+    wa.href = "https://wa.me/" + WA_NUM + "?text=" + enc;
+  }
+  drawer.classList.remove("show");
+  modal.classList.add("show"); scrim.classList.add("show");
+}
+
+/* ============ Toast / copiar ============ */
+const toast = document.getElementById("toast");
+let toastT;
+function showToast(t){
+  toast.textContent = t; toast.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(()=>toast.classList.remove("show"), 2200);
+}
+async function copy(text, okMsg){
+  try { await navigator.clipboard.writeText(text); }
+  catch(e){
+    const ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy"); ta.remove();
+  }
+  showToast(okMsg);
+}
+
+/* ============ Eventos ============ */
+document.addEventListener("click", e=>{
+  const inc = e.target.closest("[data-inc]"); if (inc) return setQty(+inc.dataset.inc, (cart.get(+inc.dataset.inc)||0)+1);
+  const dec = e.target.closest("[data-dec]"); if (dec) return setQty(+dec.dataset.dec, (cart.get(+dec.dataset.dec)||0)-1);
+  const rem = e.target.closest("[data-remove]"); if (rem){ e.preventDefault(); return setQty(+rem.dataset.remove, 0); }
+});
+document.addEventListener("change", e=>{
+  const q = e.target.closest("[data-qty]"); if (q) setQty(+q.dataset.qty, +q.value);
+});
+document.getElementById("q").addEventListener("input", e=>{ q = e.target.value.trim().toLowerCase(); render(); });
+document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click", ()=>{
+  cat = b.dataset.cat;
+  document.querySelectorAll(`.seg button`).forEach(x=>x.setAttribute("aria-pressed", x.dataset.cat===cat));
+  render();
+}));
+const brandSel = document.getElementById("brand"), brandM = document.getElementById("brandM");
+[...new Set(DATA.map(d=>d.m))].sort().forEach(m=>{
+  brandSel.insertAdjacentHTML("beforeend", `<option>${m}</option>`);
+  brandM.insertAdjacentHTML("beforeend", `<option>${m}</option>`);
+});
+brandSel.addEventListener("change", e=>{ brand = e.target.value; brandM.value = brand; render(); });
+brandM.addEventListener("change", e=>{ brand = e.target.value; brandSel.value = brand; render(); });
+document.getElementById("sort").addEventListener("change", e=>{ sort = e.target.value; document.getElementById("sortM").value = sort; render(); });
+document.getElementById("sortM").addEventListener("change", e=>{ sort = e.target.value; document.getElementById("sort").value = sort; render(); });
+
+document.getElementById("openDrawer").addEventListener("click", openDrawer);
+document.getElementById("closeDrawer").addEventListener("click", closeAll);
+scrim.addEventListener("click", closeAll);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeAll(); });
+document.getElementById("openModal").addEventListener("click", openMsgModal);
+document.getElementById("openModal2").addEventListener("click", openMsgModal);
+document.getElementById("copyMsg").addEventListener("click", ()=>copy(buildMsg(), "Mensaje copiado"));
+document.getElementById("copyOrder").addEventListener("click", ()=>copy(buildMsg(), "Pedido copiado"));
+document.getElementById("clearOrder").addEventListener("click", e=>{
+  e.preventDefault(); cart.clear(); render(); updateBar(); renderDrawer(); closeAll();
+});
+
+/* Bottom sheet mobile */
+const sheet = document.getElementById("sheet");
+document.getElementById("openSheet").addEventListener("click", ()=>{ sheet.classList.add("show"); scrim.classList.add("show"); });
+document.getElementById("applySheet").addEventListener("click", closeAll);
+
+render(); updateBar();
+</script>
+</body>
+</html>

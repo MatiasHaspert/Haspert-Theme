@@ -1,0 +1,406 @@
+{%- comment -%}
+  Catálogo mayorista (/pages/mayorista, Sprint 3) — canal B2B v1 sin apps ni B2B nativo.
+
+  DATOS: metafields del SHOP `numen_b2b.catalogo_meta` + `numen_b2b.catalogo_1..N`,
+  escritos por catalog-tools/build-json-b2b.mjs desde el último snapshot del proveedor
+  (pull-proveedor.mjs). Si están vacíos/ilegibles la página muestra el estado
+  "Catálogo en actualización" con CTA WhatsApp (fail-soft, sin errores).
+
+  ⚠️ SEGURIDAD DE PRECIOS: los precios mayoristas NUNCA se hardcodean ni viajan en
+  assets públicos (URL de CDN adivinable). El JSON se inyecta EXCLUSIVAMENTE dentro
+  de la rama `customer.tags contains 'mayorista'`: sin ese tag, el HTML servido no
+  contiene ni un precio ni un ítem (verificable con view-source deslogueado).
+  meta.demo gobierna el badge "Precios de demostración" (dato, no setting).
+
+  GATE (3 ramas server-side):
+    1. customer con tag `mayorista`  → catálogo completo + inyección de datos + JS.
+    2. customer sin tag              → "todavía no tiene acceso" + form de solicitud.
+    3. anónimo                       → pitch corto + CTA login + form de solicitud.
+
+  ALTA OPERATIVA (manual, sin apps): la solicitud llega por el mail del form de
+  contacto → Admin → Clientes → crear/editar el cliente → agregar tag `mayorista`.
+  El tier de disponibilidad (s) reemplaza al stock crudo a propósito: el stock del
+  proveedor es información competitiva y no se emite al navegador.
+
+  EDITOR: `preview_editor` muestra el catálogo dentro del theme editor sin login
+  (solo con request.design_mode; en producción no tiene efecto).
+  El número de WhatsApp reusa el guard anti-placeholder-X de autenticidad-perfume.
+{%- endcomment -%}
+
+{{ 'component-numen-mayorista.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  # WhatsApp: override de la sección o el global, ignorando el placeholder con X.
+  assign wa_num = section.settings.wa_number_override | strip
+  if wa_num == blank
+    assign wa_num = settings.whatsapp_number
+  endif
+  if wa_num contains 'X' or wa_num contains 'x'
+    assign wa_num = ''
+  endif
+
+  assign minimo = section.settings.minimo_unidades | default: 10
+
+  assign es_mayorista = false
+  if customer and customer.tags contains 'mayorista'
+    assign es_mayorista = true
+  endif
+  if request.design_mode and section.settings.preview_editor
+    assign es_mayorista = true
+  endif
+
+  assign b2b_meta = shop.metafields.numen_b2b.catalogo_meta
+  assign n_chunks = 0
+  if b2b_meta != blank
+    assign n_chunks = b2b_meta.value.chunks | times: 1
+  endif
+-%}
+
+{%- capture form_solicitud -%}
+  <div class="myr-apply" id="solicitud">
+    {%- if section.settings.solicitud_title != blank -%}
+      <h2 class="myr-apply__title">{{ section.settings.solicitud_title | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.solicitud_text != blank -%}
+      <p class="myr-apply__text">{{ section.settings.solicitud_text | escape }}</p>
+    {%- endif -%}
+    {%- form 'contact', id: 'MayoristaSolicitud', class: 'myr-form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="myr-form__ok" role="status">{{ section.settings.solicitud_ok | escape }}</p>
+      {%- else -%}
+        {%- if form.errors -%}
+          <p class="myr-form__error" role="alert">
+            {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
+          </p>
+        {%- endif -%}
+        <input type="hidden" name="contact[Asunto]" value="Solicitud de acceso mayorista">
+        <div class="myr-form__grid">
+          <label class="myr-field">
+            <span>Razón social / nombre del negocio *</span>
+            <input type="text" name="contact[Razon social]" required autocomplete="organization">
+          </label>
+          <label class="myr-field">
+            <span>CUIT *</span>
+            <input type="text" name="contact[CUIT]" required inputmode="numeric" placeholder="30-12345678-9">
+          </label>
+          <label class="myr-field">
+            <span>Email *</span>
+            <input type="email" name="contact[email]" required autocomplete="email" value="{{ customer.email }}">
+          </label>
+          <label class="myr-field">
+            <span>WhatsApp *</span>
+            <input type="tel" name="contact[WhatsApp]" required autocomplete="tel" placeholder="549…">
+          </label>
+          <label class="myr-field">
+            <span>Localidad</span>
+            <input type="text" name="contact[Localidad]" autocomplete="address-level2">
+          </label>
+          <label class="myr-field">
+            <span>Canal de venta</span>
+            <input type="text" name="contact[Canal de venta]" placeholder="Local, online, redes…">
+          </label>
+        </div>
+        <button type="submit" class="myr-btn myr-btn--primary myr-form__submit">Enviar solicitud</button>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+{%- endcapture -%}
+
+<div class="myr color-{{ section.settings.color_scheme }} gradient">
+  <div class="section-{{ section.id }}-padding">
+    {%- if es_mayorista -%}
+      {%- comment -%} ============ RAMA 1 · cliente mayorista: catálogo completo ============ {%- endcomment -%}
+      <div class="page-width">
+        <div class="myr-session">
+          <span class="myr-session__dot" aria-hidden="true"></span>
+          <span>Acceso mayorista{% if customer %} · <strong>{{ customer.name | escape }}</strong>{% endif %}</span>
+          {%- if customer -%}<a href="{{ routes.account_logout_url }}">Salir</a>{%- endif -%}
+        </div>
+
+        <header class="myr-header">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="myr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h1 class="myr-title">{{ section.settings.heading | escape }}</h1>
+          {%- if section.settings.subtext != blank -%}
+            <div class="myr-sub rte">{{ section.settings.subtext }}</div>
+          {%- endif -%}
+          {%- if b2b_meta != blank and b2b_meta.value.demo -%}
+            <span class="myr-demo-flag">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5M12 16.5v.01"/></svg>
+              Precios de demostración
+            </span>
+          {%- endif -%}
+          {%- if n_chunks > 0 -%}
+            <p class="myr-listinfo">Lista actualizada al <b>{{ b2b_meta.value.fecha | date: '%d/%m/%Y' }}</b> · {{ b2b_meta.value.total }} referencias</p>
+          {%- endif -%}
+        </header>
+
+        <ul class="myr-terms" role="list" aria-label="Condiciones del canal mayorista">
+          {%- for i in (1..4) -%}
+            {%- liquid
+              assign tkey = 'term_' | append: i | append: '_title'
+              assign xkey = 'term_' | append: i | append: '_text'
+              assign t_title = section.settings[tkey]
+              assign t_text = section.settings[xkey]
+            -%}
+            {%- if t_title != blank -%}
+              <li class="myr-term"><b>{{ t_title | escape }}</b>{{ t_text | escape }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      {%- if n_chunks == 0 -%}
+        {%- comment -%} Metafields ausentes/ilegibles: fail-soft {%- endcomment -%}
+        <div class="page-width">
+          <div class="myr-updating">
+            <b>{{ section.settings.updating_title | escape }}</b>
+            <p>{{ section.settings.updating_text | escape }}</p>
+            {%- if wa_num != blank -%}
+              <a class="myr-btn myr-btn--primary" href="https://wa.me/{{ wa_num }}" target="_blank" rel="noopener">Pedir el catálogo por WhatsApp</a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- else -%}
+        <div class="myr-toolbar-wrap">
+          <div class="page-width myr-toolbar">
+            <div class="myr-search">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg>
+              <input id="myrQ" type="search" placeholder="Buscar por marca o fragancia…" aria-label="Buscar en el catálogo">
+            </div>
+            <div class="myr-seg" role="group" aria-label="Categoría" data-seg>
+              <button type="button" data-cat="*" aria-pressed="true">Todos</button>
+              <button type="button" data-cat="A" aria-pressed="false">Árabes</button>
+              <button type="button" data-cat="D" aria-pressed="false">Diseñador</button>
+            </div>
+            <select id="myrBrand" class="myr-select" aria-label="Filtrar por marca"><option value="*">Todas las marcas</option></select>
+            <select id="myrSort" class="myr-select" aria-label="Ordenar">
+              <option value="brand">Marca A–Z</option>
+              <option value="priceAsc">Precio: menor a mayor</option>
+              <option value="priceDesc">Precio: mayor a menor</option>
+              <option value="stock">Mayor disponibilidad</option>
+            </select>
+            <button type="button" class="myr-filter-btn" id="myrOpenSheet">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+              Filtrar y ordenar
+            </button>
+            <span class="myr-count" id="myrCount"></span>
+          </div>
+        </div>
+
+        <main class="page-width myr-list">
+          <div class="myr-list-head" aria-hidden="true">
+            <span></span><span>Producto</span><span>Disponibilidad</span><span>Precio unit.</span><span>Cantidad</span>
+          </div>
+          <div id="myrRows"></div>
+          <div class="myr-sentinel" id="myrSentinel" aria-hidden="true"></div>
+          <div class="myr-empty" id="myrEmpty" hidden>
+            <b>Sin resultados</b>
+            Probá con otra búsqueda o quitá los filtros.
+          </div>
+          <div class="myr-updating" id="myrError" hidden>
+            <b>{{ section.settings.updating_title | escape }}</b>
+            <p>{{ section.settings.updating_text | escape }}</p>
+            {%- if wa_num != blank -%}
+              <a class="myr-btn myr-btn--primary" href="https://wa.me/{{ wa_num }}" target="_blank" rel="noopener">Pedir el catálogo por WhatsApp</a>
+            {%- endif -%}
+          </div>
+        </main>
+
+        {%- comment -%} Barra de pedido {%- endcomment -%}
+        <div class="myr-orderbar" id="myrOrderbar">
+          <div class="page-width myr-orderbar__in">
+            <div class="myr-ticks" id="myrTicks" aria-hidden="true"></div>
+            <div class="myr-barcount" aria-live="polite"><span class="myr-barcount__n" id="myrBarN">0</span><span class="myr-barcount__lbl">unidades</span></div>
+            <span class="myr-barmin" id="myrBarMin"></span>
+            <div class="myr-bartotal"><div class="myr-bartotal__t" id="myrBarTotal">$0</div><div class="myr-bartotal__l">total estimado</div></div>
+            <div class="myr-baractions">
+              <button type="button" class="myr-btn myr-btn--ghost" id="myrOpenDrawer">Ver pedido <span class="myr-badge" id="myrBadge">0</span></button>
+              <button type="button" class="myr-btn myr-btn--primary" id="myrOpenModal">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91A9.87 9.87 0 0 0 12.04 2Zm5.83 14.16c-.25.7-1.44 1.33-1.99 1.41-.51.08-1.15.11-1.86-.12-.43-.14-.98-.32-1.69-.62-2.97-1.28-4.91-4.27-5.06-4.47-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.6-.37.8-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.06.92 2.21.07.15.12.33.02.53-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.61 2.01 1.11.99 2.04 1.29 2.33 1.44.29.15.46.12.63-.07.17-.2.72-.84.92-1.13.2-.3.39-.25.66-.15.27.1 1.72.81 2.02.96.3.15.49.22.57.35.07.12.07.72-.18 1.42Z"/></svg>
+                Enviar por WhatsApp
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} Drawer pedido {%- endcomment -%}
+        <div class="myr-scrim" id="myrScrim"></div>
+        <aside class="myr-drawer" id="myrDrawer" role="dialog" aria-modal="true" aria-label="Tu pedido">
+          <div class="myr-drawer__head">
+            <h2>Tu pedido</h2>
+            <button type="button" class="myr-iconbtn" id="myrCloseDrawer" aria-label="Cerrar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+          <div class="myr-drawer__list" id="myrDrawerList"></div>
+          <div class="myr-drawer__foot">
+            <div class="myr-dtotal"><span class="myr-dtotal__l" id="myrDCount">0 unidades</span><span class="myr-dtotal__v" id="myrDTotal">$0</span></div>
+            <p class="myr-dnote">{{ section.settings.drawer_note | escape }}</p>
+            <button type="button" class="myr-btn myr-btn--primary" id="myrOpenModal2">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91A9.87 9.87 0 0 0 12.04 2Z"/></svg>
+              Enviar por WhatsApp
+            </button>
+            <button type="button" class="myr-btn myr-btn--ghost" id="myrCopyOrder">Copiar pedido</button>
+            <button type="button" class="myr-clear" id="myrClearOrder">Vaciar pedido</button>
+          </div>
+        </aside>
+
+        {%- comment -%} Modal mensaje WhatsApp {%- endcomment -%}
+        <div class="myr-modal" id="myrModal" role="dialog" aria-modal="true" aria-label="Enviar pedido por WhatsApp">
+          <div class="myr-modal__card">
+            <div class="myr-modal__head">
+              <h3>Tu pedido, listo para enviar</h3>
+              <p>{{ section.settings.modal_sub | escape }}</p>
+            </div>
+            <pre class="myr-msg" id="myrMsgPreview"></pre>
+            <span class="myr-msgmeta" id="myrMsgMeta"></span>
+            <div class="myr-modal__foot">
+              <button type="button" class="myr-btn myr-btn--ghost" id="myrCopyMsg">Copiar mensaje</button>
+              <a class="myr-btn myr-btn--primary" id="myrWaLink" href="#" target="_blank" rel="noopener">Abrir WhatsApp</a>
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} Bottom sheet filtros (mobile) {%- endcomment -%}
+        <div class="myr-sheet" id="myrSheet" role="dialog" aria-modal="true" aria-label="Filtrar y ordenar">
+          <div class="myr-sheet__grip" aria-hidden="true"></div>
+          <h3>Filtrar y ordenar</h3>
+          <div class="myr-fgroup"><span class="myr-fgroup__label">Categoría</span>
+            <div class="myr-seg" role="group" data-seg>
+              <button type="button" data-cat="*" aria-pressed="true">Todos</button>
+              <button type="button" data-cat="A" aria-pressed="false">Árabes</button>
+              <button type="button" data-cat="D" aria-pressed="false">Diseñador</button>
+            </div>
+          </div>
+          <div class="myr-fgroup"><label class="myr-fgroup__label" for="myrBrandM">Marca</label>
+            <select id="myrBrandM" class="myr-select"><option value="*">Todas las marcas</option></select>
+          </div>
+          <div class="myr-fgroup"><label class="myr-fgroup__label" for="myrSortM">Orden</label>
+            <select id="myrSortM" class="myr-select">
+              <option value="brand">Marca A–Z</option>
+              <option value="priceAsc">Precio: menor a mayor</option>
+              <option value="priceDesc">Precio: mayor a menor</option>
+              <option value="stock">Mayor disponibilidad</option>
+            </select>
+          </div>
+          <button type="button" class="myr-btn myr-btn--primary" id="myrApplySheet">Ver resultados</button>
+        </div>
+
+        <div class="myr-toast" id="myrToast" role="status"></div>
+
+        {%- comment -%} ⚠️ Inyección de datos: SOLO dentro de esta rama (gate server-side).
+            Los values son json serializado; el filtro | json re-escapa seguro. {%- endcomment -%}
+        <script type="application/json" id="b2b-data">{"meta":{{ b2b_meta.value | json }},"chunks":[{% for i in (1..n_chunks) %}{% assign ck = 'catalogo_' | append: i %}{{ shop.metafields.numen_b2b[ck].value | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]}</script>
+        <script type="application/json" id="b2b-cfg">
+          {
+            "wa": {{ wa_num | json }},
+            "min": {{ minimo }},
+            "cliente": {{ customer.name | default: '' | json }},
+            "tienda": {{ shop.name | json }},
+            "fecha": {{ b2b_meta.value.fecha | date: '%d/%m/%Y' | json }}
+          }
+        </script>
+        <script src="{{ 'numen-mayorista.js' | asset_url }}" defer="defer"></script>
+      {%- endif -%}
+
+    {%- elsif customer -%}
+      {%- comment -%} ============ RAMA 2 · logueado sin tag: solicitud ============ {%- endcomment -%}
+      <div class="page-width myr-gatewrap">
+        <header class="myr-header myr-header--gate">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="myr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h1 class="myr-title">{{ section.settings.noaccess_title | escape }}</h1>
+          {%- if section.settings.noaccess_text != blank -%}
+            <p class="myr-sub">{{ section.settings.noaccess_text | escape }}</p>
+          {%- endif -%}
+        </header>
+        {{ form_solicitud }}
+      </div>
+
+    {%- else -%}
+      {%- comment -%} ============ RAMA 3 · anónimo: pitch + login + solicitud ============ {%- endcomment -%}
+      <div class="page-width myr-gatewrap">
+        <header class="myr-header myr-header--gate">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="myr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h1 class="myr-title">{{ section.settings.pitch_title | escape }}</h1>
+          {%- if section.settings.pitch_text != blank -%}
+            <div class="myr-sub rte">{{ section.settings.pitch_text }}</div>
+          {%- endif -%}
+          <a class="myr-btn myr-btn--ghost myr-login" href="{{ routes.account_login_url }}">
+            {{- section.settings.login_label | escape -}}
+          </a>
+        </header>
+        {{ form_solicitud }}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Catálogo mayorista",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "default": "scheme-1" },
+    { "type": "header", "content": "Encabezado" },
+    { "type": "text", "id": "eyebrow", "label": "Overline", "default": "Canal mayorista" },
+    { "type": "text", "id": "heading", "label": "Título", "default": "Catálogo mayorista" },
+    { "type": "richtext", "id": "subtext", "label": "Bajada", "info": "No pongas precios a mano: quedan viejos.", "default": "<p>Fragancias <strong>100% originales</strong> importadas, con verificación de lote y video de unboxing. Precios netos por <strong>transferencia bancaria</strong>. Disponibilidad sincronizada con nuestro proveedor.</p>" },
+    { "type": "header", "content": "Condiciones del canal (4 cards)" },
+    { "type": "paragraph", "content": "El badge \"Precios de demostración\" no se configura acá: lo gobierna el dato (meta.demo del build)." },
+    { "type": "text", "id": "term_1_title", "label": "Card 1 · título", "info": "Actualizalo si cambiás el mínimo de unidades.", "default": "Mínimo 10 unidades" },
+    { "type": "text", "id": "term_1_text", "label": "Card 1 · texto", "default": "Surtido libre entre todo el catálogo." },
+    { "type": "text", "id": "term_2_title", "label": "Card 2 · título", "default": "Pago por transferencia" },
+    { "type": "text", "id": "term_2_text", "label": "Card 2 · texto", "info": "No pongas precios a mano: quedan viejos.", "default": "100% anticipado. Sin tarjetas ni cuotas." },
+    { "type": "text", "id": "term_3_title", "label": "Card 3 · título", "default": "Despacho hasta 15 días hábiles" },
+    { "type": "text", "id": "term_3_text", "label": "Card 3 · texto", "default": "Pedido a proveedor + envío a todo el país." },
+    { "type": "text", "id": "term_4_title", "label": "Card 4 · título", "default": "Faltantes" },
+    { "type": "text", "id": "term_4_text", "label": "Card 4 · texto", "info": "Política firmada: envío parcial + reembolso proporcional, reemplazos antes por WhatsApp.", "default": "Envío parcial con reembolso proporcional. Te ofrecemos reemplazos antes por WhatsApp." },
+    { "type": "header", "content": "Pedido y WhatsApp" },
+    { "type": "range", "id": "minimo_unidades", "min": 5, "max": 50, "step": 1, "label": "Mínimo de unidades (blando)", "info": "Alimenta los ticks, el contador y la nota del mensaje. Nunca bloquea el envío.", "default": 10 },
+    { "type": "text", "id": "wa_number_override", "label": "WhatsApp del canal (override)", "info": "Vacío = usa el WhatsApp global (Configuración del tema → WhatsApp / Contacto). Una X en el número lo desactiva." },
+    { "type": "text", "id": "drawer_note", "label": "Nota del pedido", "default": "Total estimado. Los precios y el stock se confirman por WhatsApp antes de la transferencia." },
+    { "type": "text", "id": "modal_sub", "label": "Bajada del modal de envío", "default": "Lo revisamos, confirmamos stock con el proveedor y te pasamos los datos para transferir." },
+    { "type": "header", "content": "Catálogo en actualización" },
+    { "type": "text", "id": "updating_title", "label": "Título", "default": "Catálogo en actualización" },
+    { "type": "text", "id": "updating_text", "label": "Texto", "default": "Estamos renovando la lista de precios. Escribinos y te la pasamos por WhatsApp." },
+    { "type": "header", "content": "Sin acceso (logueado sin tag)" },
+    { "type": "text", "id": "noaccess_title", "label": "Título", "default": "Tu cuenta todavía no tiene acceso mayorista" },
+    { "type": "text", "id": "noaccess_text", "label": "Texto", "default": "Completá la solicitud y te habilitamos el catálogo en menos de 48 h hábiles." },
+    { "type": "header", "content": "Pitch (visitante sin login)" },
+    { "type": "text", "id": "pitch_title", "label": "Título", "default": "Comprá al por mayor" },
+    { "type": "richtext", "id": "pitch_text", "label": "Texto", "default": "<p>Perfumería árabe y de diseñador, 100% original, con precios netos para revendedores. Mínimo de 10 unidades surtidas y pago por transferencia.</p>" },
+    { "type": "text", "id": "login_label", "label": "CTA login", "default": "Ya tengo cuenta: iniciar sesión" },
+    { "type": "header", "content": "Solicitud de acceso" },
+    { "type": "text", "id": "solicitud_title", "label": "Título del form", "default": "Solicitá acceso mayorista" },
+    { "type": "text", "id": "solicitud_text", "label": "Texto del form", "default": "Contanos de tu negocio. Respondemos por WhatsApp o mail en menos de 48 h hábiles." },
+    { "type": "text", "id": "solicitud_ok", "label": "Mensaje de éxito", "default": "¡Recibimos tu solicitud! Te contactamos en menos de 48 h hábiles." },
+    { "type": "header", "content": "Editor" },
+    { "type": "checkbox", "id": "preview_editor", "label": "Vista previa del catálogo en el editor", "info": "Solo afecta al theme editor: muestra la rama mayorista sin login. En la tienda real no tiene efecto.", "default": false },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding superior", "default": 36 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding inferior", "default": 48 }
+  ],
+  "presets": [{ "name": "Catálogo mayorista" }]
+}
+{% endschema %}
