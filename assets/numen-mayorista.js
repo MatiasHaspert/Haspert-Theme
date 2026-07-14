@@ -2,6 +2,8 @@
    design-system/mockup-mayorista-v1_1.html con los deltas de producción del brief:
    · render progresivo: 60 filas + IntersectionObserver en lotes de 60 (payload 700-900);
    · búsqueda sobre marca+nombre normalizados sin tildes (NFD);
+   · select de marca dependiente de la categoría (solo marcas con ítems en la
+     categoría activa; si la marca elegida queda afuera, vuelve a "Todas");
    · el precio YA viene calculado del build (a = ARS entero) y el stock crudo no existe
      acá: solo el tier s (2 = alta disponibilidad, 1 = disponible);
    · si el mensaje codificado supera ~1800 caracteres, el CTA primario pasa a
@@ -344,16 +346,29 @@
   document.querySelectorAll('[data-seg] button').forEach((b) => b.addEventListener('click', () => {
     cat = b.dataset.cat;
     document.querySelectorAll('[data-seg] button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.cat === cat)));
+    poblarMarcas();
     render();
   }));
 
   const brandSel = $('myrBrand');
   const brandM = $('myrBrandM');
-  [...new Set(ITEMS.map((d) => d.m))].sort((a, b) => a.localeCompare(b)).forEach((m) => {
-    const op = `<option>${esc(m)}</option>`;
-    brandSel.insertAdjacentHTML('beforeend', op);
-    brandM.insertAdjacentHTML('beforeend', op);
-  });
+  const catsPorMarca = new Map(); // marca -> Set de categorías donde tiene ítems
+  for (const d of ITEMS) {
+    if (!catsPorMarca.has(d.m)) catsPorMarca.set(d.m, new Set());
+    catsPorMarca.get(d.m).add(d.c);
+  }
+  const MARCAS = [...catsPorMarca.keys()].sort((a, b) => a.localeCompare(b));
+
+  // El select de marca depende de la categoría activa: solo marcas con ítems
+  // en esa categoría. Si la marca elegida queda afuera, vuelve a "Todas".
+  function poblarMarcas() {
+    const lista = cat === '*' ? MARCAS : MARCAS.filter((m) => catsPorMarca.get(m).has(cat));
+    if (brand !== '*' && lista.indexOf(brand) === -1) brand = '*';
+    const html = '<option value="*">Todas las marcas</option>'
+      + lista.map((m) => `<option>${esc(m)}</option>`).join('');
+    [brandSel, brandM].forEach((sel) => { sel.innerHTML = html; sel.value = brand; });
+  }
+  poblarMarcas();
   brandSel.addEventListener('change', (e) => { brand = e.target.value; brandM.value = brand; render(); });
   brandM.addEventListener('change', (e) => { brand = e.target.value; brandSel.value = brand; render(); });
   $('myrSort').addEventListener('change', (e) => { sort = e.target.value; $('myrSortM').value = sort; render(); });
