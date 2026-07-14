@@ -14,6 +14,7 @@
 //     por eso un tile sin "N In Stock" se registra como stock 0 y se avisa por consola.
 
 import fs from 'node:fs';
+import path from 'node:path';
 import * as cheerio from 'cheerio';
 
 export const BASE_URL = 'https://www.starcompany-py.com';
@@ -141,6 +142,22 @@ export function clasificarCategoria({ nombre, slugCategoria, marca }, mapaMarcas
   return mapaMarcas.get(normalizar(marca)) || 'REVISAR';
 }
 
+// ---------- canal B2B ----------
+
+// Filtro de inclusión del universo mayorista, compartido por build-json-b2b.mjs y
+// sync-fotos-b2b.mjs (si divergen, el payload referencia fotos que nunca se sincronizaron
+// o al revés). El precio NO es parte del filtro: es responsabilidad del build.
+export const B2B_STOCK_MINIMO = 15; // umbral B2B (mínimo mayorista 10 + colchón)
+export const B2B_CATEGORIAS = new Map([['ARABE', 'A'], ['DISENADOR', 'D']]);
+
+export function esFilaB2B(f) {
+  if (!B2B_CATEGORIAS.has(normalizar(f['Categoría']))) return false;
+  if (f.Comentario === FLAG_CLON) return false;
+  if (Number(f.stock_star) < B2B_STOCK_MINIMO) return false;
+  if (!f.id_star) return false;
+  return true;
+}
+
 // ---------- CSV (RFC 4180: coma, comillas dobles, CRLF; UTF-8 con BOM como el original) ----------
 
 export function parseCsv(texto) {
@@ -257,6 +274,15 @@ export function resolverSnapshots(dirSnapshots) {
     .map((m) => ({ base: m[0].slice(0, -4), fecha: m[1], corrida: m[2] ? parseInt(m[2], 10) : 1 }))
     .sort((a, b) => (a.fecha === b.fecha ? a.corrida - b.corrida : a.fecha < b.fecha ? -1 : 1))
     .map((x) => x.base);
+}
+
+// Último snapshot como objetos, o null si no hay ninguno (el caller decide el mensaje).
+export function ultimoSnapshot(dirSnapshots) {
+  const bases = resolverSnapshots(dirSnapshots);
+  if (!bases.length) return null;
+  const base = bases[bases.length - 1];
+  const { filas } = leerCsvObjetos(path.join(dirSnapshots, `${base}.csv`));
+  return { base, filas };
 }
 
 // ---------- fecha ----------

@@ -17,7 +17,8 @@
     "stock": "node set-stock.mjs",
     "pull": "node pull-stock.mjs",
     "proveedor:pull": "node pull-proveedor.mjs",
-    "proveedor:diff": "node diff-proveedor.mjs"
+    "proveedor:diff": "node diff-proveedor.mjs",
+    "proveedor:fotos": "node sync-fotos-b2b.mjs"
   },
   "dependencies": {
     "cheerio": "^1.2.0",
