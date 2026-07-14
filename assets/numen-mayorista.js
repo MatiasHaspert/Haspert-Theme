@@ -57,12 +57,11 @@
   const porId = new Map();
   for (const d of ITEMS) { d._q = norm(d.m + ' ' + d.p); porId.set(d.i, d); }
 
-  // Fotos: path relativo a meta.img_base (hotlink al sitio del proveedor, lazy).
-  // Para el thumb se usa la variante small_default de PrestaShop (~12KB vs ~150KB);
-  // si no existe, el onerror reintenta con la original y recién después cae al monograma.
+  // Fotos: URL del CDN de Shopify (sufijo g sobre meta.img_base, o g absoluta), lazy.
+  // El thumb pide una variante chica por parámetro del CDN: width=112 = 2× la caja de 56px.
   const IMG_BASE = String(meta.img_base || '');
   const imgSrc = (d) => (d.g ? (/^https?:/.test(d.g) ? d.g : IMG_BASE + d.g) : '');
-  const imgThumb = (src) => src.replace('-home_default/', '-small_default/');
+  const imgThumb = (src) => src + (src.includes('?') ? '&' : '?') + 'width=112';
 
   /* ============ Estado ============ */
   const cart = new Map(); // i -> qty
@@ -97,7 +96,7 @@
     const hi = d.s >= 2;
     const img = imgSrc(d);
     return `<div class="myr-row ${qty > 0 ? 'picked' : ''}" style="--i:${Math.min(i, 8)}" data-id="${d.i}">
-      <div class="myr-thumb" aria-hidden="true">${esc(mono(d.m))}${img ? `<img class="myr-thumb__img" src="${esc(imgThumb(img))}" data-full="${esc(img)}" alt="" loading="lazy" decoding="async" width="56" height="56">` : ''}</div>
+      <div class="myr-thumb" aria-hidden="true">${esc(mono(d.m))}${img ? `<img class="myr-thumb__img" src="${esc(imgThumb(img))}" alt="" loading="lazy" decoding="async" width="56" height="56">` : ''}</div>
       <div class="myr-pinfo">
         <div class="myr-pbrand">${esc(d.m)}</div>
         <div class="myr-pname">${esc(d.p)}</div>
@@ -314,18 +313,11 @@
   }
 
   /* ============ Eventos ============ */
-  // Foto que no carga: primero se reintenta con la imagen original (por si la
-  // variante small no existe); si también falla, se saca el <img> y queda el
-  // monograma. `error` no burbujea → listener en fase de captura.
+  // Foto que no carga: se saca el <img> y queda el monograma de abajo.
+  // `error` no burbujea → listener en fase de captura.
   document.addEventListener('error', (e) => {
     const t = e.target;
-    if (!t || !t.classList || !t.classList.contains('myr-thumb__img')) return;
-    if (t.dataset.full && t.src !== t.dataset.full) {
-      t.src = t.dataset.full;
-      t.removeAttribute('data-full');
-    } else {
-      t.remove();
-    }
+    if (t && t.classList && t.classList.contains('myr-thumb__img')) t.remove();
   }, true);
 
   document.addEventListener('click', (e) => {

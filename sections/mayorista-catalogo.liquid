@@ -81,7 +81,7 @@
           </label>
           <label class="myr-field">
             <span>Email *</span>
-            <input type="email" name="contact[email]" required autocomplete="email" value="{{ customer.email }}">
+            <input type="email" name="contact[email]" required autocomplete="email" value="{{ customer.email | escape }}">
           </label>
           <label class="myr-field">
             <span>WhatsApp *</span>
