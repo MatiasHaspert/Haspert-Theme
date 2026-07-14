@@ -327,7 +327,7 @@
           {%- if section.settings.pitch_text != blank -%}
             <div class="myr-sub rte">{{ section.settings.pitch_text }}</div>
           {%- endif -%}
-          <a class="myr-btn myr-btn--ghost myr-login" href="{{ routes.account_login_url }}">
+          <a class="myr-btn myr-btn--ghost myr-login" href="{%- render 'login-url' -%}">
             {{- section.settings.login_label | escape -}}
           </a>
         </header>
