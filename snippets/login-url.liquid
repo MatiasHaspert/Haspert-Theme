@@ -1,13 +1,9 @@
 {%- comment -%}
-  URL de login. En el template page.mayorista agrega return_to a la ruta
-  actual: con cuentas de cliente nuevas, sin ese parámetro Shopify deja al
-  cliente en su cuenta hosteada (shopify.com/…/account/orders) en vez de
-  devolverlo al gate B2B. return_to solo acepta rutas relativas y requiere
-  la ruta /customer_authentication/login (routes.account_login_url la
-  descarta). Doc: https://shopify.dev/docs/storefronts/themes/sign-in
+  URL de login con vuelta a la página actual: con cuentas de cliente nuevas,
+  sin return_to Shopify deja al cliente en su cuenta hosteada
+  (shopify.com/…/account/orders) en vez de devolverlo al storefront.
+  return_to solo acepta rutas relativas y requiere la ruta
+  /customer_authentication/login (routes.account_login_url la descarta).
+  Doc: https://shopify.dev/docs/storefronts/themes/sign-in
 {%- endcomment -%}
-{%- if template.suffix == 'mayorista' -%}
-  /customer_authentication/login?return_to={{ request.path | url_encode }}
-{%- else -%}
-  {{- routes.account_login_url -}}
-{%- endif -%}
+/customer_authentication/login?return_to={{ request.path | url_encode -}}
