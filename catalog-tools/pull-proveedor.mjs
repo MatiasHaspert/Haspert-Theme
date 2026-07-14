@@ -128,15 +128,47 @@ function registrar(productos, fuente) {
 }
 
 // ---- fila del schema v2 desde un producto crudo ----
+
+// Overrides puntuales de Categoría por id_star para errores de carga DEL SITIO de Star
+// (no nuestros). 11898: nombre "LATTAFA PETRA EDP 100ML" pero marca EMPER y slug
+// emper-phatom-my-hero → identidad ambigua; se fuerza REVISAR para que no entre al B2B
+// hasta que Star lo corrija.
+const CATEGORIA_OVERRIDE_POR_ID = new Map([['11898', 'REVISAR']]);
+
+// Tile sin link de marca (hoy: la línea NEW NOTES sale sin .scp-brand): la marca se
+// deriva de las primeras palabras del nombre. Si dos palabras (o una) matchean una marca
+// del seed, se confía y la cascada clasifica normal; si no, queda la adivinanza de dos
+// palabras con Categoría = REVISAR (ni el slug la salva: la marca es un invento nuestro).
+// El prefijo TESTER se salta al derivar, pero la regla Tester de la cascada sigue ganando.
+function derivarMarca(nombre) {
+  const palabras = limpiarTexto(nombre).replace(/^TESTER\s+/i, '').split(' ');
+  const dos = palabras.slice(0, 2).join(' ');
+  if (mapaMarcas.has(normalizar(dos))) return { marca: dos, enSeed: true };
+  if (mapaMarcas.has(normalizar(palabras[0]))) return { marca: palabras[0], enSeed: true };
+  return { marca: dos, enSeed: false };
+}
+
 function filaDesde(p) {
+  let marca = p.marca;
+  let categoria;
+  if (marca) {
+    categoria = clasificarCategoria({ nombre: p.nombre, slugCategoria: p.slugCategoria, marca }, mapaMarcas);
+  } else {
+    const fb = derivarMarca(p.nombre);
+    marca = fb.marca;
+    categoria = clasificarCategoria({ nombre: p.nombre, slugCategoria: p.slugCategoria, marca }, mapaMarcas);
+    if (!fb.enSeed && categoria !== 'Tester') categoria = 'REVISAR';
+  }
+  categoria = CATEGORIA_OVERRIDE_POR_ID.get(p.idStar) || categoria;
+
   let comentario = '';
-  if (clones.has(normalizar(p.marca))) comentario = FLAG_CLON;
+  if (clones.has(normalizar(marca))) comentario = FLAG_CLON;
   else comentario = comentarioPorId.get(p.idStar) || comentarioPorNombre.get(normalizar(p.nombre)) || '';
   return {
-    Marca: p.marca,
+    Marca: marca,
     Producto: p.nombre,
     ml: extraerMl(p.nombre),
-    'Categoría': clasificarCategoria({ nombre: p.nombre, slugCategoria: p.slugCategoria, marca: p.marca }, mapaMarcas),
+    'Categoría': categoria,
     'Costo USD': p.costoUsd,
     Comentario: comentario,
     id_star: p.idStar,
