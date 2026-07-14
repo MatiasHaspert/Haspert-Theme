@@ -286,8 +286,11 @@ si no → `REVISAR` (el pull las lista al final; agregarlas al seed y re-correr)
   script **aborta y reporta**; no escalar a headless sin decisión explícita.
 - **El listado oculta los productos sin stock** (nunca aparece "0 In Stock"): un agotado se ve
   como "baja" temporal, no como stock 0 — por eso la gracia de 1 corrida en el master.
-- Hay tiles **sin marca** (línea NEW NOTES): quedan con `Marca` vacía y categoría REVISAR/Nicho
-  según slug; es un faltante del sitio, no del parseo.
+- Hay tiles **sin marca** (línea NEW NOTES): la marca se deriva de las primeras palabras del
+  nombre del producto — si matchea una marca del seed se clasifica normal (NEW NOTES → Nicho);
+  si no, queda la adivinanza de dos palabras con categoría `REVISAR`. Errores de carga del
+  propio sitio (ej. id 11898 "LATTAFA PETRA" etiquetado EMPER) se fuerzan a `REVISAR` vía
+  `CATEGORIA_OVERRIDE_POR_ID` en `pull-proveedor.mjs`.
 
 **Validación dura antes de escribir** (si falla, aborta sin pisar nada): 0 filas sin `id_star` o
 sin `Costo USD`, y total ≥ 1.850 en corrida completa.
@@ -306,8 +309,10 @@ Canal B2B v1 **sin apps y sin B2B nativo**: el catálogo viaja del pipeline del 
 metafields del **shop**, y la página lo muestra solo a clientes con tag `mayorista`.
 
 ```
-pull-proveedor.mjs ─▶ build-json-b2b.mjs ─▶ metafields shop numen_b2b.* (chunked)
-                                                   │
+pull-proveedor.mjs ─▶ sync-fotos-b2b.mjs ─▶ proveedor/fotos-b2b.json (fotos re-hosteadas
+        │                                    en Shopify Files; lento, corre poco)
+        └───────────▶ build-json-b2b.mjs ─▶ metafields shop numen_b2b.* (chunked; rápido,
+                                                   │                     corre seguido)
                      sections/mayorista-catalogo.liquid ── gate server-side por customer.tags
                                                    │   (sin tag, el HTML no contiene NI UN precio)
                                                    ▼
@@ -323,7 +328,39 @@ se emite stock crudo del proveedor: solo el tier `s` (2 = alta disponibilidad, 1
 node build-json-b2b.mjs --demo --dry-run  # meta + 5 ítems + tamaño por chunk, no escribe
 node build-json-b2b.mjs --demo            # publica con precios placeholder (badge "demo" en la página)
 node build-json-b2b.mjs                   # requiere proveedor/precios-b2b.csv (Sprint 2): lista real
+node build-json-b2b.mjs --sin-fotos       # hotfix: publica sin imágenes (si Star rompe algo)
 ```
+
+### Fotos propias (`sync-fotos-b2b.mjs`) — Sprint 3.1
+
+Las fotos del catálogo B2B **no se hotlinkean al proveedor**: se descargan de Star una sola
+vez y se re-hostean en **Shopify Files** con nombre propio (`b2b-{id_star}.jpg`). El HTML
+servido queda sin ninguna mención a "starcompany" (un mayorista no puede identificar al
+proveedor con click derecho) y sin dependencia de su server.
+
+```bash
+node sync-fotos-b2b.mjs --dry-run          # pendientes + 5 ejemplos, sin tocar la red
+node sync-fotos-b2b.mjs --limit 5          # smoke test real
+npm run proveedor:fotos                    # corrida completa (~700 la primera vez, ~12 min)
+node sync-fotos-b2b.mjs --force 8100,9226  # re-subir ids puntuales (pisa el archivo en Files)
+```
+
+- **Estado (commiteado):** `proveedor/fotos-b2b.json` = `{ id_star: { url, src, fecha } }`.
+  Es la **única fuente de imagen** de `build-json-b2b.mjs`: sin este archivo el build aborta
+  (el hotfix consciente es `--sin-fotos`). El build emite `meta.img_base` = prefijo común de
+  las URLs y `g` = sufijo por ítem, y **aborta si el payload contiene "starcompany"**.
+- **Cortesía con Star** (mismas reglas del pull): descargas en serie a 1 req/s con jitter,
+  UA identificado, 3 reintentos, timeout 20 s. **La primera corrida (~700 fotos) hacela en
+  horario valle.** Subidas a Shopify: hasta 4 en paralelo.
+- **Idempotente / reanudable:** lo que está en el estado no se re-procesa; un archivo que
+  quedó en Files sin registrar (corrida interrumpida) se **adopta** por filename sin
+  re-subir; `fileCreate` va con `duplicateResolutionMode: REPLACE` (no acumula basura).
+- Se valida `content-type: image/*` y tamaño 3 KB–2 MB; lo inválido se reporta y queda
+  pendiente. Ojo: Star sirve algunos PNG nombrados `.jpg` — Shopify corrige la extensión,
+  por eso la adopción matchea por id, no por nombre exacto.
+- **Scopes:** necesita `write_files` + `read_files` (ya están en la lista de la app, §1).
+- *Mejora futura anotada:* detectar fotos **cambiadas** en Star (v1 = solo altas): comparar
+  el `src` del estado contra el `imagen_url` del snapshot y re-bajar si difiere.
 
 - **Gate de lanzamiento:** sin `proveedor/precios-b2b.csv` (columnas `id_star,precio_ars`) solo
   corre con `--demo`; si el CSV existe, `--demo` se rechaza (no se pisan precios reales con
@@ -340,13 +377,18 @@ node build-json-b2b.mjs                   # requiere proveedor/precios-b2b.csv (
 **Flujo operativo completo:**
 
 1. `npm run proveedor:pull` → snapshot fresco del proveedor.
-2. `node build-json-b2b.mjs --demo` (o real cuando exista `precios-b2b.csv`).
-3. **Una sola vez:** crear la página en Admin → Tienda online → Páginas → "Mayorista"
+2. `npm run proveedor:fotos` → re-hostea en Shopify Files las fotos que falten (incremental;
+   la primera corrida es larga → horario valle).
+3. `node build-json-b2b.mjs --demo` (o real cuando exista `precios-b2b.csv`). El build lee
+   `fotos-b2b.json` y **ya sube los metafields**: la página sirve la lista nueva al toque.
+4. **Una sola vez:** crear la página en Admin → Tienda online → Páginas → "Mayorista"
    con el template `page.mayorista` (URL `/pages/mayorista`).
-4. **Alta de cada mayorista (manual):** llega la solicitud por el mail del form de contacto →
+5. **Alta de cada mayorista (manual):** llega la solicitud por el mail del form de contacto →
    Admin → Clientes → crear/editar → agregar tag `mayorista`. Listo: ve el catálogo al loguearse.
-5. **Leak-test** tras cualquier cambio en la sección (deslogueado, no alcanza con mirar):
-   `curl -s https://TU-DOMINIO/pages/mayorista | grep -c "b2b-data"` debe dar **0**.
+6. **Leak-test** tras cualquier cambio en la sección o el build:
+   - deslogueado (no alcanza con mirar): `curl -s https://TU-DOMINIO/pages/mayorista | grep -c "b2b-data"` debe dar **0**;
+   - logueado como mayorista: view-source completo **sin la cadena "starcompany"**
+     (el build además aborta solo si la detecta en el payload).
 
 Sin metafields cargados la página muestra "Catálogo en actualización" (fail-soft). El mínimo de
 unidades, textos y WhatsApp del canal se editan en el theme editor (sección "Catálogo mayorista");
