@@ -5,6 +5,11 @@
 //   node build-json-b2b.mjs --demo            # precios placeholder (marca meta.demo=true)
 //   node build-json-b2b.mjs --demo --dry-run  # imprime meta + 5 ítems + tamaño por chunk, no escribe
 //   node build-json-b2b.mjs                   # requiere proveedor/precios-b2b.csv (Sprint 2)
+//   node build-json-b2b.mjs --sin-fotos       # hotfix: publica sin imágenes (si Star rompe algo)
+//
+// FOTOS (Sprint 3.1): la fuente de imagen es proveedor/fotos-b2b.json (URLs del CDN de
+// Shopify, lo escribe sync-fotos-b2b.mjs). La URL del sitio del proveedor NO puede
+// aparecer en el payload — hay un guard que aborta si detecta "starcompany".
 //
 // ⚠️ SEGURIDAD DE PRECIOS (la razón de esta arquitectura): los precios B2B NUNCA viajan en
 // un asset del theme ni en ningún recurso público (las URLs de CDN son adivinables sin
@@ -16,9 +21,10 @@
 // de precios existe, --demo se rechaza para no pisar precios reales con inventados.
 //
 // Contrato de escritura (lo lee la sección vía shop.metafields.numen_b2b):
-//   numen_b2b.catalogo_meta   (json)  { fecha, total, demo, chunks, min }
-//   numen_b2b.catalogo_1..N   (json)  array de ítems { i, m, p, l?, c, a, s }
-//     i id_star · m marca · p nombre SIN marca repetida (shortName) · l ml · c A/D ·
+//   numen_b2b.catalogo_meta   (json)  { fecha, total, demo, chunks, min, img_base? }
+//   numen_b2b.catalogo_1..N   (json)  array de ítems { i, m, p, l?, g?, c, a, s }
+//     i id_star · m marca · p nombre SIN marca repetida (shortName) · l ml ·
+//     g foto: sufijo de img_base o URL completa, siempre CDN de Shopify · c A/D ·
 //     a precio ARS entero · s tier de stock
 // Chunks ≤ 60 KB (límite vigente del tipo json: 128 KB por valor — verificado en
 // shopify.dev/docs/apps/build/metafields/metafield-limits, jul 2026 — se chunkea con
@@ -29,17 +35,19 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BASE_URL, leerCsvObjetos, normalizar, FLAG_CLON, resolverSnapshots } from './lib/proveedor.mjs';
+import {
+  leerCsvObjetos, normalizar, ultimoSnapshot, esFilaB2B, B2B_CATEGORIAS, B2B_STOCK_MINIMO,
+} from './lib/proveedor.mjs';
 import { gql, loadDotEnv } from './lib/shopify.mjs';
 
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const DIR_SNAPSHOTS = path.join(DIR, 'proveedor', 'snapshots');
 const RUTA_PRECIOS = path.join(DIR, 'proveedor', 'precios-b2b.csv');
+const RUTA_FOTOS = path.join(DIR, 'proveedor', 'fotos-b2b.json');
 
 const NAMESPACE = 'numen_b2b';
 const KEY_META = 'catalogo_meta';
 const MAX_CHUNK_BYTES = 60_000; // margen amplio bajo el límite de 128 KB del tipo json
-const STOCK_MINIMO = 15;        // umbral B2B (mínimo mayorista 10 + colchón)
 const STOCK_ALTO = 100;         // tier s=2
 const MIN_UNIDADES = 10;
 
@@ -53,6 +61,22 @@ const precioDemo = (usd) => Math.round((usd * DEMO_FX + DEMO_FEE) * DEMO_MARGEN 
 const args = process.argv.slice(2);
 const DEMO = args.includes('--demo');
 const DRY = args.includes('--dry-run');
+const SIN_FOTOS = args.includes('--sin-fotos');
+
+// ---- fotos re-hosteadas (Sprint 3.1) ----
+// Única fuente de imagen del payload. Sin el estado no se publica (sería volver a
+// hotlinkear al proveedor); --sin-fotos es el hotfix consciente para publicar sin imágenes.
+let fotos = null;
+if (!SIN_FOTOS) {
+  if (!fs.existsSync(RUTA_FOTOS)) {
+    console.error(
+      'ABORTADO: no existe proveedor/fotos-b2b.json (fotos re-hosteadas en el CDN de Shopify).\n' +
+      'Corré antes: node sync-fotos-b2b.mjs   (o usá --sin-fotos para publicar sin imágenes)',
+    );
+    process.exit(1);
+  }
+  fotos = JSON.parse(fs.readFileSync(RUTA_FOTOS, 'utf8'));
+}
 
 // ---- fuente de precio (gate de lanzamiento) ----
 const hayPreciosReales = fs.existsSync(RUTA_PRECIOS);
@@ -77,14 +101,32 @@ const preciosReales = hayPreciosReales
   : null;
 
 // ---- último snapshot ----
-const bases = resolverSnapshots(DIR_SNAPSHOTS);
-if (!bases.length) {
+const snap = ultimoSnapshot(DIR_SNAPSHOTS);
+if (!snap) {
   console.error('ABORTADO: no hay snapshots en proveedor/snapshots/. Corré primero: node pull-proveedor.mjs');
   process.exit(1);
 }
-const base = bases[bases.length - 1];
+const { base, filas } = snap;
 const fechaLista = base.slice(0, 10); // '2026-07-10-2' → '2026-07-10'
-const { filas } = leerCsvObjetos(path.join(DIR_SNAPSHOTS, `${base}.csv`));
+
+// ---- img_base: prefijo común más largo entre las URLs del estado de fotos ----
+// El host del CDN viaja una sola vez en el meta y cada ítem lleva solo el sufijo. Si el
+// prefijo no es útil (< 30 chars: URLs heterogéneas), se emiten URLs completas en g e
+// img_base queda vacío — el front ya resuelve ambos casos (/^https?:/).
+function prefijoComun(urls) {
+  if (!urls.length) return '';
+  let pref = urls[0];
+  for (const u of urls) {
+    let i = 0;
+    while (i < pref.length && i < u.length && pref[i] === u[i]) i++;
+    pref = pref.slice(0, i);
+    if (!pref) break;
+  }
+  return pref;
+}
+const urlsFotos = fotos ? Object.values(fotos).map((x) => x && x.url).filter(Boolean) : [];
+let imgBase = prefijoComun(urlsFotos);
+if (imgBase.length < 30) imgBase = '';
 
 // ---- filtro de inclusión + payload ----
 // Nombre corto: saca la marca repetida del principio (portado del mockup; corre acá,
@@ -102,15 +144,11 @@ function shortName(marca, producto) {
 // proveedor no los usan; esto es defensa en profundidad, además del escape <\/ de abajo).
 const sanear = (s) => String(s ?? '').replace(/[<>]/g, '').trim();
 
-const CAT_LETRA = new Map([['ARABE', 'A'], ['DISENADOR', 'D']]);
 const items = [];
 let sinPrecio = 0;
 for (const f of filas) {
-  const letra = CAT_LETRA.get(normalizar(f['Categoría']));
-  if (!letra) continue;
-  if (f.Comentario === FLAG_CLON) continue;
-  if (Number(f.stock_star) < STOCK_MINIMO) continue;
-  if (!f.id_star) continue;
+  if (!esFilaB2B(f)) continue; // filtro compartido con sync-fotos-b2b (lib/proveedor)
+  const letra = B2B_CATEGORIAS.get(normalizar(f['Categoría']));
 
   let precio;
   if (preciosReales) {
@@ -122,15 +160,16 @@ for (const f of filas) {
     precio = precioDemo(usd);
   }
 
+  // g: sufijo de la URL del CDN de Shopify relativo a meta.img_base (o URL completa
+  // si no hubo prefijo útil). Ítem sin foto re-hosteada → sin clave (monograma en el
+  // front). La URL del sitio del proveedor NUNCA entra al payload (Sprint 3.1).
+  const foto = fotos ? fotos[f.id_star] : null;
   const item = {
     i: Number(f.id_star),
     m: sanear(f.Marca),
     p: sanear(shortName(f.Marca, f.Producto)),
     ...(f.ml ? { l: Number(f.ml) } : {}),
-    // g: path de la foto relativo a meta.img_base (el host viaja una sola vez).
-    // El front la hotlinkea lazy desde el sitio del proveedor, con fallback a
-    // monograma si no carga. Sin foto (placeholder del sitio) → sin clave.
-    ...(f.imagen_url ? { g: sanear(f.imagen_url.replace(`${BASE_URL}/`, '')) } : {}),
+    ...(foto && foto.url ? { g: sanear(imgBase ? foto.url.slice(imgBase.length) : foto.url) } : {}),
     c: letra,
     a: precio,
     s: Number(f.stock_star) >= STOCK_ALTO ? 2 : 1,
@@ -164,16 +203,24 @@ const meta = {
   demo: !preciosReales,
   chunks: chunks.length,
   min: MIN_UNIDADES,
-  img_base: `${BASE_URL}/`,
+  ...(SIN_FOTOS ? {} : { img_base: imgBase }),
 };
 const metaStr = escaparScript(JSON.stringify(meta));
 const chunkStrs = chunks.map((c) => escaparScript(JSON.stringify(c)));
 
+// ---- guard anti-leak (cinturón y tiradores del leak-test del Sprint 3.1) ----
+// El nombre del proveedor no puede aparecer en NINGÚN byte del payload servido.
+if (/starcompany/i.test(metaStr + chunkStrs.join(''))) {
+  console.error('ABORTADO: el payload contiene "starcompany" (leak del proveedor). Revisá proveedor/fotos-b2b.json y el snapshot.');
+  process.exit(1);
+}
+
 // ---- reporte ----
 const conFoto = items.filter((it) => it.g).length;
 console.log(`Snapshot ${base} → ${items.length} ítems B2B (de ${filas.length} filas)`);
-console.log(`  filtro: Árabe/Diseñador · no-clon · stock ≥ ${STOCK_MINIMO} · con precio${sinPrecio ? ` (${sinPrecio} excluidos sin precio)` : ''}`);
-console.log(`  con foto: ${conFoto}/${items.length} (los sin foto muestran monograma)`);
+console.log(`  filtro: Árabe/Diseñador · no-clon · stock ≥ ${B2B_STOCK_MINIMO} · con precio${sinPrecio ? ` (${sinPrecio} excluidos sin precio)` : ''}`);
+if (SIN_FOTOS) console.log('  fotos: OMITIDAS (--sin-fotos): toda la lista muestra monograma');
+else console.log(`  con foto: ${conFoto}/${items.length} vía CDN de Shopify${imgBase ? ` (img_base ${imgBase})` : ' (URLs completas: sin prefijo común útil)'} — los sin foto muestran monograma`);
 console.log(`  meta: ${metaStr}`);
 chunkStrs.forEach((c, i) => console.log(`  chunk ${i + 1}/${chunkStrs.length}: ${(Buffer.byteLength(c, 'utf8') / 1024).toFixed(1)} KB · ${chunks[i].length} ítems`));
 
@@ -221,7 +268,7 @@ async function setMetafields(defs) {
 
 await setMetafields(chunkStrs.map((value, i) => ({ key: `catalogo_${i + 1}`, value })));
 await setMetafields([{ key: KEY_META, value: metaStr }]);
-console.log(`Escritos ${chunkStrs.length} chunks + ${KEY_META} en ${NAMESPACE} (shop ${shop.id})`);
+console.log(`Payload regenerado y metafields YA actualizados: ${chunkStrs.length} chunks + ${KEY_META} en ${NAMESPACE} (shop ${shop.id}) — tamaños arriba.`);
 
 // Chunks viejos que sobran (una corrida anterior con más chunks): se borran para no
 // dejar datos stale; el meta ya no los referencia, es solo higiene.
