@@ -67,7 +67,16 @@
       assign fix_ratio = true
     endif
   endif
+
+  # Sin video cargado no se publica nada (evita el poster placeholder con un play
+  # que no reproduce). En el editor sí se muestra, para poder configurarla.
+  assign has_video = false
+  if section.settings.video != null or section.settings.video_url != null
+    assign has_video = true
+  endif
 -%}
+
+{%- if has_video or request.design_mode -%}
 
 {%- capture sizes -%}
   {% if section.settings.full_width -%}
@@ -188,6 +197,7 @@
     </div>
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -242,29 +252,27 @@
     
     {
       "type": "header",
-      "content": "Botones de Segmentación"
+      "content": "Botones"
     },
     {
       "type": "text",
       "id": "button_label_1",
-      "label": "Texto del Botón 1 (Bebés)",
-      "default": "Ver línea Bebés"
+      "label": "Botón 1 · texto"
     },
     {
       "type": "url",
       "id": "button_link_1",
-      "label": "Enlace del Botón 1 (Bebés)"
+      "label": "Botón 1 · enlace"
     },
     {
       "type": "text",
       "id": "button_label_2",
-      "label": "Texto del Botón 2 (Mascotas)",
-      "default": "Ver línea Mascotas"
+      "label": "Botón 2 · texto"
     },
     {
       "type": "url",
       "id": "button_link_2",
-      "label": "Enlace del Botón 2 (Mascotas)"
+      "label": "Botón 2 · enlace"
     },
     {
       "type": "checkbox",
@@ -293,7 +301,6 @@
       "type": "video_url",
       "id": "video_url",
       "accept": ["youtube", "vimeo"],
-      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
       "label": "t:sections.video.settings.video_url.label",
       "info": "t:sections.video.settings.video_url.info"
     },

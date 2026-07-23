@@ -57,11 +57,90 @@
         "compare_link": "",
         "compare_title": "Original vs. réplica: cómo notar la diferencia",
         "compare_text": "Guía con las señales que mira nuestro equipo.",
-        "link_1_label": "",
-        "link_1_url": "",
+        "link_1_label": "Decodificar la fecha de fabricación (CheckFresh)",
+        "link_1_url": "https://www.checkfresh.com",
         "link_2_label": "",
         "link_2_url": "",
         "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "pruebas": {
+      "type": "pruebas-autenticidad",
+      "blocks": {
+        "prueba_matching": {
+          "type": "prueba",
+          "settings": {
+            "caption": "Código de lote",
+            "heading": "Caja y frasco: el mismo código",
+            "text": "El código se repite en las dos bases. Tienen que coincidir."
+          }
+        },
+        "prueba_ean": {
+          "type": "prueba",
+          "settings": {
+            "caption": "Código de barras",
+            "heading": "El código de barras devuelve este producto",
+            "text": "Buscá el número online: exactamente este perfume, en esta presentación."
+          }
+        },
+        "prueba_etiquetado": {
+          "type": "prueba",
+          "settings": {
+            "caption": "Etiquetado",
+            "heading": "Etiquetado completo, sin errores",
+            "text": "Ingredientes y advertencias en más de diez idiomas. Las réplicas recortan."
+          }
+        },
+        "prueba_checkfresh": {
+          "type": "prueba",
+          "settings": {
+            "caption": "Fecha de fabricación",
+            "heading": "La fecha de fabricación, a un click",
+            "text": "Pegás el código de lote en CheckFresh y te dice cuándo salió de fábrica.",
+            "link_label": "Abrir CheckFresh",
+            "link_url": "https://www.checkfresh.com"
+          }
+        }
+      },
+      "block_order": [
+        "prueba_matching",
+        "prueba_ean",
+        "prueba_etiquetado",
+        "prueba_checkfresh"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "accent_color": "#1e34a8",
+        "microbadge": "Verificalo vos mismo",
+        "heading": "Qué mirás cuando abrís la caja",
+        "subheading": "Chequeos que podés hacer solo, en dos minutos y sin saber nada de perfumería.",
+        "show_numbers": true,
+        "image_ratio": "landscape",
+        "image_fit": "contain",
+        "enable_zoom": true,
+        "zoom_label": "Ampliar",
+        "footnote": "<p>Las fotos son de frascos de nuestro stock, sin retoque.</p>",
+        "padding_top": 48,
+        "padding_bottom": 40
+      }
+    },
+    "video_verificacion": {
+      "type": "video",
+      "settings": {
+        "heading": "Mirá el chequeo completo",
+        "heading_size": "h2",
+        "subheading": "<p>El mismo chequeo, sobre un frasco real.</p>",
+        "button_label_1": "",
+        "button_link_1": "",
+        "button_label_2": "",
+        "button_link_2": "",
+        "enable_video_looping": false,
+        "video_url": "",
+        "description": "Verificación de autenticidad: el código de lote de la caja y el del frasco, uno al lado del otro.",
+        "full_width": false,
+        "color_scheme": "",
+        "padding_top": 32,
         "padding_bottom": 48
       }
     },
@@ -143,7 +222,7 @@
         "closing": "Por eso cada compra incluye garantía de originalidad y devolución sin vueltas.",
         "show_button": true,
         "button_label": "Ver catálogo",
-        "button_link": "",
+        "button_link": "/collections/all",
         "padding_top": 48,
         "padding_bottom": 48
       }
@@ -189,6 +268,8 @@
   "order": [
     "main",
     "auth",
+    "pruebas",
+    "video_verificacion",
     "compare",
     "faq"
   ]

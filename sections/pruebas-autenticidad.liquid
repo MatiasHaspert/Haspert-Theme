@@ -1,0 +1,325 @@
+{%- comment -%}
+  Pruebas de autenticidad — filas de evidencia (foto + título + una línea).
+  Es la "prueba visual" de /pages/autenticidad: cada fila es un chequeo que el
+  comprador puede repetir con el frasco en la mano. Orden = orden de chequeo,
+  por eso es <ol> (los números son semánticos, no decorativos).
+
+  100% editable por theme editor: foto, copy y link salen de blocks/settings.
+  Nada hardcodeado. Un block sin foto NO se renderiza en la tienda (sí en el
+  editor, con placeholder) — así la fila del teléfono/CheckFresh aparece sola
+  cuando subís la foto, y la sección entera se oculta si no hay ninguna.
+{%- endcomment -%}
+
+{%- liquid
+  # Acento de marca con contraste AA: oscurece sólo sobre fondos claros.
+  assign accent = section.settings.accent_color
+  assign scheme_bg = section.settings.color_scheme.settings.background
+  assign bg_bright = scheme_bg | color_brightness
+  assign accent_ink = accent
+  if scheme_bg == blank or bg_bright > 140
+    assign accent_ink = accent | color_darken: 22
+  endif
+
+  # ¿Hay al menos una fila publicable? (evita el cascarón vacío en producción)
+  assign visible = 0
+  for block in section.blocks
+    if block.settings.image != blank
+      assign visible = visible | plus: 1
+    endif
+  endfor
+
+  assign ratio_style = ''
+  case section.settings.image_ratio
+    when 'square'
+      assign ratio_style = '1 / 1'
+    when 'portrait'
+      assign ratio_style = '3 / 4'
+    when 'wide'
+      assign ratio_style = '16 / 9'
+    when 'landscape'
+      assign ratio_style = '4 / 3'
+  endcase
+-%}
+
+{%- if visible > 0 or request.design_mode -%}
+  <div class="pav color-{{ section.settings.color_scheme }} gradient">
+    <div class="page-width section-{{ section.id }}-padding">
+      {%- if section.settings.microbadge != blank or section.settings.heading != blank or section.settings.subheading != blank -%}
+        <div class="pav__head">
+          {%- if section.settings.microbadge != blank -%}
+            <span class="pav__badge">{{ section.settings.microbadge }}</span>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="pav__title">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.subheading != blank -%}
+            <p class="pav__subtitle">{{ section.settings.subheading }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <ol class="pav__list{% unless section.settings.show_numbers %} pav__list--nonum{% endunless %}">
+        {%- assign step = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image == blank -%}
+            {%- unless request.design_mode -%}
+              {%- continue -%}
+            {%- endunless -%}
+          {%- endif -%}
+          {%- liquid
+            assign step = step | plus: 1
+            assign img_alt = block.settings.image.alt | default: block.settings.heading | strip_html
+          -%}
+          <li class="pav__row" {{ block.shopify_attributes }}>
+            <div class="pav__media">
+              <div
+                class="pav__frame pav__frame--{{ section.settings.image_fit }}{% if ratio_style != blank %} pav__frame--ratio{% endif %}"
+                {% if ratio_style != blank %}style="aspect-ratio: {{ ratio_style }};"{% endif %}
+              >
+                {%- if block.settings.image != blank -%}
+                  {%- if section.settings.enable_zoom -%}
+                    <a
+                      class="pav__zoom"
+                      href="{{ block.settings.image | image_url: width: 2400 }}"
+                      target="_blank"
+                      rel="noopener"
+                      aria-label="{{ section.settings.zoom_label }}: {{ block.settings.heading | strip_html | escape }}"
+                    >
+                  {%- endif -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 1600
+                    | image_tag:
+                      loading: 'lazy',
+                      sizes: '(min-width: 990px) 48rem, (min-width: 750px) 44vw, calc(100vw - 4rem)',
+                      widths: '400, 600, 800, 1000, 1400, 1600',
+                      class: 'pav__img',
+                      alt: img_alt
+                  }}
+                  {%- if section.settings.enable_zoom -%}
+                      <span class="pav__zoom-pill" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" width="13" height="13"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="M15.8 15.8L20 20M11 8.6v4.8M8.6 11h4.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        {{ section.settings.zoom_label }}
+                      </span>
+                    </a>
+                  {%- endif -%}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'pav__ph' }}
+                {%- endif -%}
+              </div>
+            </div>
+
+            <div class="pav__body">
+              {%- if section.settings.show_numbers -%}
+                <span class="pav__n" aria-hidden="true">{{ step }}</span>
+              {%- endif -%}
+              <div class="pav__text">
+                {%- if block.settings.caption != blank -%}
+                  <p class="pav__caption">{{ block.settings.caption }}</p>
+                {%- endif -%}
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="pav__h">{{ block.settings.heading }}</h3>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <p class="pav__p">{{ block.settings.text }}</p>
+                {%- endif -%}
+                {%- if block.settings.link_label != blank and block.settings.link_url != blank -%}
+                  <a class="pav__link" href="{{ block.settings.link_url }}" target="_blank" rel="noopener nofollow">
+                    {{- block.settings.link_label -}}
+                    <svg viewBox="0 0 24 24" fill="none" width="15" height="15" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                {%- endif -%}
+              </div>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ol>
+
+      {%- if section.settings.footnote != blank -%}
+        <div class="pav__footnote rte">{{ section.settings.footnote }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} {
+    --pav-accent: {{ accent }};
+    --pav-accent-rgb: {{ accent.red }}, {{ accent.green }}, {{ accent.blue }};
+    --pav-accent-ink: {{ accent_ink }};
+  }
+{%- endstyle -%}
+
+{% stylesheet %}
+.pav__head { text-align: center; max-width: 64rem; margin: 0 auto 3rem; }
+.pav__badge {
+  display: inline-block;
+  font-size: 1.2rem; letter-spacing: 0.06rem; text-transform: uppercase;
+  padding: 0.5rem 1.1rem;
+  border: 0.1rem solid var(--pav-accent-ink); color: var(--pav-accent-ink);
+  border-radius: var(--badge-corner-radius, 0.2rem);
+  margin-bottom: 1.4rem;
+}
+.pav__title { margin: 0 0 0.8rem; }
+.pav__subtitle { margin: 0; opacity: 0.8; }
+
+.pav__list {
+  list-style: none; margin: 0 auto; padding: 0;
+  max-width: 104rem;
+  display: flex; flex-direction: column; gap: 2.4rem;
+}
+.pav__row { display: flex; flex-direction: column; gap: 1.4rem; }
+
+.pav__frame {
+  position: relative; overflow: hidden;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.14);
+  border-radius: var(--media-radius, 0.8rem);
+  background: var(--nc-shot-bg, #F1F2F4);
+}
+.pav__img { display: block; width: 100%; height: auto; }
+.pav__frame--ratio .pav__img { height: 100%; }
+.pav__frame--ratio.pav__frame--cover .pav__img { object-fit: cover; }
+.pav__frame--ratio.pav__frame--contain .pav__img { object-fit: contain; }
+.pav__ph { display: block; width: 100%; height: auto; opacity: 0.3; }
+
+.pav__zoom { display: block; width: 100%; text-decoration: none; }
+.pav__frame--ratio .pav__zoom { height: 100%; }
+.pav__zoom-pill {
+  position: absolute; right: 0.9rem; bottom: 0.9rem;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(var(--color-background), 0.92);
+  border: 0.1rem solid rgba(var(--color-foreground), 0.16);
+  border-radius: 0.4rem;
+  font-size: 1.1rem; font-weight: 600; letter-spacing: 0.03em;
+  color: rgba(var(--color-foreground), 0.78);
+}
+.pav__zoom:focus-visible { outline: 0.2rem solid var(--pav-accent); outline-offset: 0.2rem; }
+@media (hover: hover) {
+  .pav__zoom:hover .pav__zoom-pill { color: var(--pav-accent-ink); border-color: var(--pav-accent); }
+}
+
+.pav__body { display: flex; gap: 1.1rem; align-items: flex-start; }
+.pav__n {
+  flex: none; width: 2.6rem; height: 2.6rem; border-radius: 50%;
+  background: rgba(var(--pav-accent-rgb), 0.12); color: var(--pav-accent-ink);
+  font-weight: 700; font-size: 1.3rem; line-height: 1;
+  display: grid; place-items: center;
+  margin-top: 0.2rem;
+}
+.pav__text { min-width: 0; }
+.pav__caption {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.55);
+}
+.pav__h { margin: 0 0 0.5rem; font-size: 1.9rem; line-height: 1.25; }
+.pav__p { margin: 0; font-size: 1.5rem; line-height: 1.5; color: rgba(var(--color-foreground), 0.78); }
+.pav__link {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  margin-top: 0.9rem;
+  font-size: 1.3rem; font-weight: 600; color: var(--pav-accent-ink);
+  text-decoration: underline; text-underline-offset: 0.3rem;
+}
+.pav__link:focus-visible { outline: 0.2rem solid var(--pav-accent); outline-offset: 0.2rem; }
+.pav__footnote {
+  max-width: 64rem; margin: 2.6rem auto 0; text-align: center;
+  font-size: 1.3rem; color: rgba(var(--color-foreground), 0.62);
+}
+.pav__footnote > :first-child { margin-top: 0; }
+.pav__footnote > :last-child { margin-bottom: 0; }
+
+@media screen and (min-width: 750px) {
+  .pav__list { gap: 4rem; }
+  .pav__row {
+    flex-direction: row; align-items: center; gap: 3.2rem;
+  }
+  .pav__row:nth-child(even) { flex-direction: row-reverse; }
+  .pav__media { flex: 1 1 50%; min-width: 0; }
+  .pav__body { flex: 1 1 50%; min-width: 0; }
+  .pav__h { font-size: 2.2rem; }
+  .pav__p { font-size: 1.6rem; }
+  .pav__list--nonum .pav__body { padding-inline: 0.4rem; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Pruebas autenticidad",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Esquema de color", "default": "scheme-1" },
+    { "type": "color", "id": "accent_color", "label": "Color de acento", "default": "#1E34A8" },
+    { "type": "text", "id": "microbadge", "label": "Micro-badge (texto chico arriba)" },
+    { "type": "inline_richtext", "id": "heading", "label": "Título (H2)", "default": "Qué podés chequear cuando te llega" },
+    { "type": "text", "id": "subheading", "label": "Subtítulo" },
+    { "type": "header", "content": "Filas" },
+    { "type": "checkbox", "id": "show_numbers", "label": "Numerar las filas", "info": "El orden de los blocks es el orden del chequeo.", "default": true },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Proporción de la foto",
+      "info": "\"Natural\" respeta el recorte original; el resto empareja todas las filas.",
+      "options": [
+        { "value": "adapt", "label": "Natural" },
+        { "value": "landscape", "label": "Horizontal 4:3" },
+        { "value": "square", "label": "Cuadrada 1:1" },
+        { "value": "portrait", "label": "Vertical 3:4" },
+        { "value": "wide", "label": "Panorámica 16:9" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Encuadre",
+      "info": "Si el recorte corta el código, pasá a \"Entera\".",
+      "options": [
+        { "value": "cover", "label": "Rellenar (puede recortar)" },
+        { "value": "contain", "label": "Entera (sin recortar)" }
+      ],
+      "default": "cover"
+    },
+    { "type": "checkbox", "id": "enable_zoom", "label": "Permitir ampliar la foto", "info": "Abre la foto en tamaño real en otra pestaña. Clave para que se lea el código.", "default": true },
+    { "type": "text", "id": "zoom_label", "label": "Texto del botón ampliar", "default": "Ampliar" },
+    { "type": "header", "content": "Pie" },
+    { "type": "richtext", "id": "footnote", "label": "Nota al pie" },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding superior", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding inferior", "default": 48 }
+  ],
+  "blocks": [
+    {
+      "type": "prueba",
+      "name": "Prueba",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Foto", "info": "Sin foto, la fila no se publica." },
+        { "type": "text", "id": "caption", "label": "Etiqueta chica (opcional)" },
+        { "type": "text", "id": "heading", "label": "Título", "default": "Título de la prueba" },
+        { "type": "inline_richtext", "id": "text", "label": "Una línea", "default": "Explicá en una línea qué tiene que ver el comprador." },
+        { "type": "text", "id": "link_label", "label": "Link · texto (opcional)" },
+        { "type": "url", "id": "link_url", "label": "Link · URL" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Pruebas autenticidad",
+      "blocks": [{ "type": "prueba" }, { "type": "prueba" }, { "type": "prueba" }]
+    }
+  ]
+}
+{% endschema %}
