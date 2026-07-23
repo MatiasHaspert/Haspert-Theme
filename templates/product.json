@@ -99,7 +99,7 @@
         "paso-2": {
           "type": "paso",
           "settings": {
-            "text": "<p>Podés cruzar ese código en verificadores públicos de batch para confirmar fabricante y fecha.</p>"
+            "text": "<p>Cuando te llega, compará el código de la caja con el de la base del frasco: tienen que coincidir. El código de barras también podés buscarlo online: devuelve este producto exacto.</p>"
           }
         },
         "paso-3": {

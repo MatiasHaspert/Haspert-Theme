@@ -12,8 +12,8 @@
     "main": {
       "type": "main-page",
       "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
+        "padding_top": 16,
+        "padding_bottom": 0
       }
     },
     "auth": {
@@ -28,7 +28,7 @@
         "paso_2": {
           "type": "paso",
           "settings": {
-            "text": "<p>Podés cruzar ese código en verificadores públicos de batch para confirmar fabricante y fecha.</p>"
+            "text": "<p>Cuando te llega, compará el código de la caja con el de la base del frasco: tienen que coincidir. El código de barras también podés buscarlo online: devuelve este producto exacto.</p>"
           }
         },
         "paso_3": {
@@ -61,8 +61,8 @@
         "link_1_url": "https://www.checkfresh.com",
         "link_2_label": "",
         "link_2_url": "",
-        "padding_top": 48,
-        "padding_bottom": 48
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
     "pruebas": {
@@ -223,8 +223,8 @@
         "show_button": true,
         "button_label": "Ver catálogo",
         "button_link": "/collections/all",
-        "padding_top": 48,
-        "padding_bottom": 48
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
     "faq": {
@@ -235,7 +235,7 @@
           "settings": {
             "icon": "shield",
             "question": "¿Los perfumes son 100% originales?",
-            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>"
+            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío, sin límite de tiempo.</p>"
           }
         },
         "qa_replica": {
@@ -243,7 +243,7 @@
           "settings": {
             "icon": "lock",
             "question": "¿Cómo sé que no es una réplica?",
-            "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. Si querés, te mandamos el unboxing por WhatsApp antes de comprar.</p>"
+            "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. En esta página podes encontrar un video de unboxing con su respectivo visualización del lote.</p>"
           }
         }
       },
@@ -260,8 +260,8 @@
         "more_url": "",
         "emit_schema": false,
         "legal_text": "<p><strong>Derecho de arrepentimiento.</strong> Tenés 10 días corridos desde la recepción para revocar la compra sin costo (art. 34, Ley 24.240; Disposición 954/2025, que deroga la Res. 424/2020). El botón de arrepentimiento está en el inicio del sitio. Excepción: los decants abiertos quedan excluidos (art. 1.116 CCyC).</p>",
-        "padding_top": 48,
-        "padding_bottom": 48
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     }
   },
