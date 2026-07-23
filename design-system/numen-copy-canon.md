@@ -2,7 +2,7 @@
 
 Fuente única de verdad para el copy de la tienda. Antes de editar cualquier texto (theme editor, admin, políticas, locale), chequeá contra este doc. Fue creado para frenar el problema recurrente de toda la auditoría: una decisión tomada en un lado que no se propaga a los demás ("curada" que revivía, "video del frasco", "30 días", "10 vs 15 días", "verano en invierno").
 
-- **Versión:** v1 — 7 de julio de 2026
+- **Versión:** v1.1 — 21 de julio de 2026 (+§10 verificación de autenticidad)
 - **Alcance:** copy, voz, términos, políticas y normativa. No es un doc de diseño visual ni de arquitectura de theme.
 - **Leyenda:** ✅ cerrado y aplicable · ⏳ pendiente de definir (bloquea o condiciona copy)
 
@@ -132,6 +132,32 @@ Fue el error más repetido de toda la auditoría. Tres promesas distintas, no la
 - ✅ **`los-mas-elegidos` está vacía** → curar en admin antes de linkearla en nav o hero. Un gancho sobre una grilla vacía es peor que nada.
 - ✅ **`alternativas-a-los-clasicos`** = la versión brand-safe del "inspirado en" a nivel colección (Opción A). Si se elige A, su gancho puede jugar con "el perfil que buscás, sin el precio del diseñador", sin nombrar marcas.
 - **Índice `/collections`:** en la tarjeta de diseñador, "al mejor precio" → "a buen precio" (antihype).
+
+---
+
+## 10. Verificación de autenticidad (cerrado)
+
+✅ **Paso 2 de "Cómo verificás que es original" (texto locked, 3 instancias: home, PDP, /pages/autenticidad):**
+> "Cuando te llega, compará el código de la caja con el de la base del frasco: tienen que coincidir. El código de barras también podés buscarlo online: devuelve este producto exacto."
+
+El paso NO promete verificadores públicos de batch: son bases de terceros con cobertura irregular, y el catálogo árabe mayoritariamente no decodifica. La verificación base es la que controlamos: matching caja↔frasco + EAN + video del lote por WhatsApp.
+
+✅ **Verificadores de lote — CheckFresh sí, checkcosmetic no.**
+- Único verificador linkeable: **checkfresh.com** (validado con lote real Azzaro `38Z52LG` → 2025-05, jul 2026).
+- **Prohibido linkear o mencionar checkcosmetic.net:** no soporta el formato L'Oréal de 7 caracteres — el propio producto "falla" ese test y fabrica la duda que queremos matar.
+
+✅ **El claim de decodificación es por marca + lote testeado, nunca blanket.**
+- Solo se afirma/linkea en productos con `custom.checkfresh_url` cargado, y ese metafield se carga únicamente después de probar el código del lote real al ingresar stock. Protocolo de ingreso de lote: foto de base + test en CheckFresh + anotar sí/no.
+- Que una marca tenga página en CheckFresh no significa que decodifique (patrón conocido del sitio). Lattafa: página existe, decode sin verificar hasta el primer lote real.
+- Convención de slots: en la instancia PDP, `link_1`/`link_2` quedan vacíos (el link CheckFresh es propiedad del metafield). En /pages/autenticidad, `link_1` = link genérico a checkfresh.com.
+
+✅ **Label locked del link:** "Decodificar la fecha de fabricación (CheckFresh)".
+
+✅ **DataMatrix del estuche ≠ QR de consumidor.** Es serialización logística (GS1): no resuelve a ninguna página. Prohibido publicarlo como "QR de verificación", como paso, o como fila de la tabla original-vs-réplica.
+
+✅ **Fechas de fabricación: nunca estáticas en la web.** Envejecen solas y varían por lote. El contenido muestra el mecanismo (demo con el caso Azzaro); la fecha puntual del lote de cada cliente viaja por WhatsApp. Sellado, un perfume dura años — el 24M es post-apertura: no dejar que "1 año y pico" se lea como vencido.
+
+✅ **Tabla original-vs-réplica: 5 filas** (celofán · código de lote · EAN · etiquetado · garantía). La fila "QR" murió con el DataMatrix. La fila Garantía va **sin tope de tiempo** (corrección "30 días" aplicada — ver §4).
 
 ---
 
