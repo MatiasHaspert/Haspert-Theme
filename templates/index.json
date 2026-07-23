@@ -141,7 +141,7 @@
         "paso_2": {
           "type": "paso",
           "settings": {
-            "text": "<p>Podés cruzar ese código en verificadores públicos de batch para confirmar fabricante y fecha.</p>"
+            "text": "<p>Cuando te llega, compará el código de la caja con el de la base del frasco: tienen que coincidir. El código de barras también podés buscarlo online: devuelve este producto exacto.</p>"
           }
         },
         "paso_3": {
@@ -162,6 +162,7 @@
         "heading": "Nuestra promesa",
         "title": "Cómo verificás que es original",
         "show_photo": false,
+        "lote_image": "shopify://shop_images/WhatsApp_Image_2026-07-22_at_10.03.46_PM_1.jpg",
         "lote_badge": "Foto real del lote",
         "whatsapp_label": "Pedir video del lote por WhatsApp",
         "whatsapp_message": "¡Hola! Quiero ver el video del lote de un perfume antes de comprar.",
