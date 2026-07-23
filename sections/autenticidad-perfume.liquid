@@ -99,14 +99,22 @@
           if section.settings.link_2_label != blank and section.settings.link_2_url != blank
             assign has_link_2 = true
           endif
+          assign mf_checkfresh = product.metafields.custom.checkfresh_url.value
+          assign has_mf_link = false
+          if mf_checkfresh != blank and section.settings.checkfresh_label != blank
+            assign has_mf_link = true
+          endif
         -%}
-        {%- if has_link_1 or has_link_2 -%}
+        {%- if has_link_1 or has_link_2 or has_mf_link -%}
           <div class="auth__links">
             {%- if has_link_1 -%}
               <a class="auth__links-item" href="{{ section.settings.link_1_url }}">{{ section.settings.link_1_label | escape }}</a>
             {%- endif -%}
             {%- if has_link_2 -%}
               <a class="auth__links-item" href="{{ section.settings.link_2_url }}">{{ section.settings.link_2_label | escape }}</a>
+            {%- endif -%}
+            {%- if has_mf_link -%}
+              <a class="auth__links-item" href="{{ mf_checkfresh }}" target="_blank" rel="noopener nofollow">{{ section.settings.checkfresh_label | escape }}</a>
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -255,6 +263,7 @@
     { "type": "url", "id": "link_1_url", "label": "Link 1 · URL" },
     { "type": "text", "id": "link_2_label", "label": "Link 2 · label" },
     { "type": "url", "id": "link_2_url", "label": "Link 2 · URL" },
+    { "type": "text", "id": "checkfresh_label", "label": "Link CheckFresh (metafield) · label", "default": "Decodificar la fecha de fabricación (CheckFresh)" },
     { "type": "header", "content": "Espaciado" },
     { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding superior", "default": 48 },
     { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Padding inferior", "default": 48 }
