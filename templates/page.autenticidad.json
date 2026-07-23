@@ -156,7 +156,7 @@
           "settings": {
             "icon": "shield",
             "question": "¿Los perfumes son 100% originales?",
-            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío dentro de los 30 días.</p>"
+            "answer": "<p>Sí. Marca auténtica, sellados de fábrica y con lote verificable. Si comprobás que no es original, te devolvemos el 100% + el envío, sin límite de tiempo.</p>"
           }
         },
         "qa_replica": {
@@ -164,7 +164,7 @@
           "settings": {
             "icon": "lock",
             "question": "¿Cómo sé que no es una réplica?",
-            "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. Si querés, te mandamos el unboxing por WhatsApp antes de comprar.</p>"
+            "answer": "<p>Trabajamos solo con marca auténtica sellada de fábrica. Las fotos que ves son de nuestro stock real, con su lote/serial visible — y en los perfumes de marca podés verificar vos mismo el código de lote. En esta página podes encontrar un video de unboxing con su respectivo visualización del lote.</p>"
           }
         }
       },
