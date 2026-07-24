@@ -61,6 +61,7 @@
         "link_1_url": "https://www.checkfresh.com",
         "link_2_label": "",
         "link_2_url": "",
+        "checkfresh_label": "Decodificar la fecha de fabricación (CheckFresh)",
         "padding_top": 0,
         "padding_bottom": 0
       }
@@ -71,30 +72,40 @@
         "prueba_matching": {
           "type": "prueba",
           "settings": {
+            "image": "shopify://shop_images/azzaro_edt_intense.jpg",
             "caption": "Código de lote",
             "heading": "Caja y frasco: el mismo código",
-            "text": "El código se repite en las dos bases. Tienen que coincidir."
+            "text": "El código se repite en las dos bases. Tienen que coincidir.",
+            "link_label": "",
+            "link_url": ""
           }
         },
         "prueba_ean": {
           "type": "prueba",
           "settings": {
+            "image": "shopify://shop_images/azzaro_edt_intense_2.jpg",
             "caption": "Código de barras",
             "heading": "El código de barras devuelve este producto",
-            "text": "Buscá el número online: exactamente este perfume, en esta presentación."
+            "text": "Buscá el número online: exactamente este perfume, en esta presentación.",
+            "link_label": "",
+            "link_url": ""
           }
         },
         "prueba_etiquetado": {
           "type": "prueba",
           "settings": {
+            "image": "shopify://shop_images/azzaro_edt_intense_3.jpg",
             "caption": "Etiquetado",
             "heading": "Etiquetado completo, sin errores",
-            "text": "Ingredientes y advertencias en más de diez idiomas. Las réplicas recortan."
+            "text": "Ingredientes y advertencias en más de diez idiomas. Las réplicas recortan.",
+            "link_label": "",
+            "link_url": ""
           }
         },
         "prueba_checkfresh": {
           "type": "prueba",
           "settings": {
+            "image": "shopify://shop_images/azzaro_edt_intense_4.jpg",
             "caption": "Fecha de fabricación",
             "heading": "La fecha de fabricación, a un click",
             "text": "Pegás el código de lote en CheckFresh y te dice cuándo salió de fábrica.",
@@ -136,6 +147,7 @@
         "button_label_2": "",
         "button_link_2": "",
         "enable_video_looping": false,
+        "video": "shopify://files/videos/WhatsApp Video 2026-07-22 at 9.54.29 PM.mp4",
         "video_url": "",
         "description": "Verificación de autenticidad: el código de lote de la caja y el del frasco, uno al lado del otro.",
         "full_width": false,
