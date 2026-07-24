@@ -72,7 +72,7 @@
         "prueba_matching": {
           "type": "prueba",
           "settings": {
-            "image": "shopify://shop_images/WhatsApp_Image_2026-07-22_at_10.03.46_PM_1.jpg",
+            "image": "shopify://shop_images/azzaro_edt_intense.jpg",
             "caption": "Código de lote",
             "heading": "Caja y frasco: el mismo código",
             "text": "El código se repite en las dos bases. Tienen que coincidir.",
@@ -83,6 +83,7 @@
         "prueba_ean": {
           "type": "prueba",
           "settings": {
+            "image": "shopify://shop_images/azzaro_edt_intense_2.jpg",
             "caption": "Código de barras",
             "heading": "El código de barras devuelve este producto",
             "text": "Buscá el número online: exactamente este perfume, en esta presentación.",
@@ -93,6 +94,7 @@
         "prueba_etiquetado": {
           "type": "prueba",
           "settings": {
+            "image": "shopify://shop_images/azzaro_edt_intense_3.jpg",
             "caption": "Etiquetado",
             "heading": "Etiquetado completo, sin errores",
             "text": "Ingredientes y advertencias en más de diez idiomas. Las réplicas recortan.",
@@ -103,6 +105,7 @@
         "prueba_checkfresh": {
           "type": "prueba",
           "settings": {
+            "image": "shopify://shop_images/azzaro_edt_intense_4.jpg",
             "caption": "Fecha de fabricación",
             "heading": "La fecha de fabricación, a un click",
             "text": "Pegás el código de lote en CheckFresh y te dice cuándo salió de fábrica.",
